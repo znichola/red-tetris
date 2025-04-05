@@ -1,33 +1,25 @@
 # red-tetris
 
-## Stack
-socket.io
-JEST
+Install node moduels.
+```bash
+npm install
+```
 
-### Backend
-express
+Start the [HMR](https://vite.dev/guide/features.html#hot-module-replacement) frontend dev server, (it uses vite).
+```bash
+npm run dev
+```
 
-### Frontend
-react
-redux
+Build the prod version of the app.
+```bash
+npm run build
+```
 
-## Types
-Grid : a grid of Blocks
-Block: int? representing different colors
-Move: direction | rotation | vertical move (seed doc)
-GameState : Grid & Specter of all players
-RoomState : pending  | playing | ended
-Specter : 1 D array of block height 
+Run express backend server, make sure there is a build of the client to serve (`npm run build`).
+```bash
+npm run serv
+```
 
+> :warning: TODO add unit testing. 
 
-## Game Messages
-DoMove : Move
-UpdateGameState:   GameState
-
-## Room messages
-UpdateRoomState : RoomState
-
-# Testing
-The subject is all about line coverage and unittesting, it might be nice to try dev this using [TDD](https://en.wikipedia.org/wiki/Test-driven_development) so a good testing setup at the beginning is important.
-
-
+> :warning: TODO add hmr to the express app, looking at vite-node, node-hmr etc..
