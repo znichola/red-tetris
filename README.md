@@ -27,3 +27,7 @@ UpdateGameState:   GameState
 ## Room messages
 UpdateRoomState : RoomState
 
+# Testing
+The subject is all about line coverage and unittesting, it might be nice to try dev this using [TDD](https://en.wikipedia.org/wiki/Test-driven_development) so a good testing setup at the beginning is important.
+
+
