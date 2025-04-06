@@ -7,7 +7,7 @@ Vite: [localhost:5173](http://localhost:5173)
 Express: [localhost:3000](http://localhost:3000)
 
 ```bash
-docker componse up
+docker compose up
 ```
 
 Connect to the running container and get a shell, use for npm install or any other node commands. Local folder is mounted to container, so changes are reflected on disc.
