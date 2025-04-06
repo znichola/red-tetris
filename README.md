@@ -1,16 +1,20 @@
 # red-tetris
 
-Launch the dockerized app for development.
+Launch the dockerized app for development, this deploys the two apps for development on:
+
+Vite: [localhost:5173](http://localhost:5173)
+
+Express: [localhost:3000](http://localhost:3000)
 
 ```bash
 docker componse up
 ```
 
-This deploys the two apps for development on:
+Connect to the running container and get a shell, use for npm install or any other node commands. Local folder is mounted to container, so changes are reflected on disc.
 
-Vite: [localhost:5173](http://localhost:5173)
-
-Express: [localhost:3000](http://localhost:3000)
+```bash
+docker exec -it red-tetris sh
+```
 
 ## node scripts
 
