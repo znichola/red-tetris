@@ -49,3 +49,7 @@ npm run serv
 > :warning: TODO add unit testing. 
 
 > :warning: TODO add hmr to the express app, looking at vite-node, node-hmr etc..
+
+## TYPES
+
+We like types, but docs say no TypeScript, so [JSDocs](https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html#param-and-returns) is the way. In vscode you can generate them with a `/**` before a function.
