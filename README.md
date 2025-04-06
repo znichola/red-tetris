@@ -16,6 +16,14 @@ Connect to the running container and get a shell, use for npm install or any oth
 docker exec -it red-tetris sh
 ```
 
+Sometimes when updating packages idk what happens to the docker state but it's all broken. It's easy-est to nuke the container, image and local node_modules the redo the `up`.
+
+```bash
+docker container rm red-teris
+docker image rm node:22-alpine
+rm node_modules
+```
+
 ## node scripts
 
 Install node moduels.
