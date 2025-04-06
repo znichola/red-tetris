@@ -7,7 +7,7 @@ The app is a state machine, and any appstate is a combination and ordering of `m
 >
 > **View** React is the view for the app, using the "reduced" state from redux.
 >
-> **Controler** The express backend is acts as controller, issuing state change messages (update game ticks, player joins room, game end, etc..), some actions can also be initiated client side, (join room, move piece, etc..).
+> **Controler** The express backend acts as controller, issuing state change messages (update game ticks, player joins room, game end, etc..), some actions can also be initiated client side, (join room, move piece, etc..).
 
 # TODO
 
