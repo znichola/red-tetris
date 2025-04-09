@@ -2,7 +2,7 @@ import { expect, describe, it, afterAll, vi } from "vitest";
 import { logRoomConfig } from "./server";
 
 describe("Server example test", () => {
-  it("log funciton should print to console the info", () => {
+  it("log function should print to console the info", () => {
     const consoleMock = vi
       .spyOn(console, "log")
       .mockImplementation(() => undefined);
