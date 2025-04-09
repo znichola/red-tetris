@@ -5,7 +5,6 @@ export default defineConfig({
   test: {
     workspace: ["client", "server"],
     coverage: {
-      // exclude: ["params.js", "main.jsx", ...coverageConfigDefaults.exclude],
       exclude: ['params.js', 'client/src/main.jsx', 'client/vitest.setup.js', ...coverageConfigDefaults.exclude]
     }
   },

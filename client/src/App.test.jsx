@@ -4,7 +4,7 @@ import App from "./App";
 
 
 describe("App home scren", () => {
-  it("Red tetirs must be displayed", () => {
+  it("Red tetris must be displayed", () => {
     render(<App />);
     expect(screen.getByText("Red Tetris")).toBeVisible();
   });
