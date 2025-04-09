@@ -53,3 +53,18 @@ npm run serv
 ## TYPES
 
 We like types, but docs say no TypeScript, so [JSDocs](https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html#param-and-returns) is the way. In vscode you can generate them with a `/**` before a function.
+
+## Pre-commit hook
+
+There is a node script that will run the linter, format check and tests `npm run precommit`.  Apply the following command to create the precommit hook, (it's just a file inside a folder of git) and it will run this script before a commit and only allow the commit if it exits with 0;
+
+```bash
+echo '#!/bin/sh
+docker exec red-tetris npm run precommit' > .git/hooks/pre-commit
+chmod +x .git/hooks/pre-commit
+```
+
+If the precommit hook every gets annoying, you can bypass it like this:
+```bash
+git commit --no-verify
+```
