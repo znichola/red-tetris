@@ -27,26 +27,30 @@ rm node_modules
 ## node scripts
 
 Install node moduels.
+
 ```bash
 npm install
 ```
 
 Start the [HMR](https://vite.dev/guide/features.html#hot-module-replacement) frontend dev server, (it uses vite).
+
 ```bash
 npm run dev
 ```
 
 Build the prod version of the app.
+
 ```bash
 npm run build
 ```
 
 Run express backend server, make sure there is a build of the client to serve (`npm run build`).
+
 ```bash
 npm run serv
 ```
 
-> :warning: TODO add unit testing. 
+> :warning: TODO add unit testing.
 
 > :warning: TODO add hmr to the express app, looking at vite-node, node-hmr etc..
 
@@ -56,7 +60,7 @@ We like types, but docs say no TypeScript, so [JSDocs](https://www.typescriptlan
 
 ## Pre-commit hook
 
-There is a node script that will run the linter, format check and tests `npm run precommit`.  Apply the following command to create the precommit hook, (it's just a file inside a folder of git) and it will run this script before a commit and only allow the commit if it exits with 0;
+There is a node script that will run the linter, format check and tests `npm run precommit`. Apply the following command to create the precommit hook, (it's just a file inside a folder of git) and it will run this script before a commit and only allow the commit if it exits with 0;
 
 ```bash
 echo '#!/bin/sh
@@ -65,6 +69,7 @@ chmod +x .git/hooks/pre-commit
 ```
 
 If the precommit hook every gets annoying, you can bypass it like this:
+
 ```bash
 git commit --no-verify
 ```

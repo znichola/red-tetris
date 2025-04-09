@@ -12,6 +12,8 @@ describe("Server example test", () => {
     });
     logRoomConfig("foobar", "george");
     expect(consoleMock).toHaveBeenCalledOnce();
-    expect(consoleMock).toHaveBeenLastCalledWith("Room: foobar, Player: george");
+    expect(consoleMock).toHaveBeenLastCalledWith(
+      "Room: foobar, Player: george",
+    );
   });
 });
