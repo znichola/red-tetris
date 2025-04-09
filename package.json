@@ -9,6 +9,9 @@
     "coverage": "vitest run --coverage",
     "build": "vite build",
     "lint": "eslint .",
+    "format": "npx prettier . --check",
+    "format:write": "npx prettier . --write",
+    "precommit": "npm run lint && npm run format && npx vitest --run",
     "preview": "vite preview",
     "serv": "node server/server.js",
     "devserv": "nodemon server/server.js"
@@ -28,11 +31,13 @@
     "@vitejs/plugin-react-swc": "^3.8.0",
     "@vitest/coverage-v8": "^3.1.1",
     "eslint": "^9.21.0",
+    "eslint-config-prettier": "^10.1.1",
     "eslint-plugin-react-hooks": "^5.1.0",
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^15.15.0",
     "jsdom": "^26.0.0",
     "nodemon": "^3.1.9",
+    "prettier": "3.5.3",
     "vite": "^6.2.0",
     "vitest": "^3.1.1"
   }

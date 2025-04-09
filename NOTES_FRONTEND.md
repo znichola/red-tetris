@@ -2,7 +2,6 @@
 
 The app is a state machine, and any appstate is a combination and ordering of `messages`, Redux/[Redux-toolkit](https://redux.js.org/introduction/why-rtk-is-redux-today) is used to manage this state change.
 
-
 > **Model** Redux stores the model and handles state changes via `messages`, express needs it's own model as well.
 >
 > **View** React is the view for the app, using the "reduced" state from redux.

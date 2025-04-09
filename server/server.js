@@ -42,12 +42,11 @@ app.listen(params.server.port, params.server.host, () => {
 // extracted for test example
 
 /**
- * @param {string} room 
- * @param {string} player_name 
+ * @param {string} room
+ * @param {string} player_name
  */
 function logRoomConfig(room, player_name) {
   console.log(`Room: ${room}, Player: ${player_name}`);
 }
-
 
 export { logRoomConfig };
