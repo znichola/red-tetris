@@ -9,6 +9,9 @@
     "coverage": "vitest run --coverage",
     "build": "vite build",
     "lint": "eslint .",
+    "format" : "npx prettier . --check",
+    "format:write" : "npx prettier . --write",
+    "precommit": "npm run lint && npm run format && npm run test",
     "preview": "vite preview",
     "serv": "node server/server.js"
   },
