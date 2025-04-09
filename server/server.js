@@ -8,20 +8,22 @@ const react_app = path.join(__dirname, "../dist");
 
 const app = express();
 
-// Routes are match in topdown order!
+// Routes are matched in topdown order!
 
 // serve the static website bundle files
 app.use(express.static(react_app));
 
 app.get("/:room/:player_name", (req) => {
   const { room, player_name } = req.params;
-  console.log(`Room: ${room}, Player: ${player_name}`);
+  logRoomConfig(room, player_name);
 
-  // This should start a socket connection and the first message should
-  // be information about the room, (client will display a loading spinner)
+  // This should send a message over the socket which contains
+  // information about the room, (client will display a loading spinner)
   // we can only send the bundle over http, all else must be sockets.
   //
   // ps feel free to remove & modify as you please
+
+  // no response to conform to the docs, will fallthrough and send index.html
 });
 
 // catch all route, make it a SPA
@@ -36,3 +38,16 @@ app.listen(params.server.port, params.server.host, () => {
     console.error(`⚠️ React app is empty, run 'npm run build'`);
   }
 });
+
+// extracted for test example
+
+/**
+ * @param {string} room 
+ * @param {string} player_name 
+ */
+function logRoomConfig(room, player_name) {
+  console.log(`Room: ${room}, Player: ${player_name}`);
+}
+
+
+export { logRoomConfig };
