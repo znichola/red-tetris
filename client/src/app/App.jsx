@@ -4,16 +4,10 @@ import { Room } from "../routes/Room";
 import { Home } from "../routes/Home";
 
 function App() {
-
   return (
     <>
       <h1>Red Tetris</h1>
-      <Router
-        routes={{
-          "/": Home,
-          "/room": Room,
-        }}
-      />
+      <Router routes={[{ "/": Home }, { "/:room/:player": Room }]} />
     </>
   );
 }

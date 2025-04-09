@@ -11,7 +11,6 @@ function Home() {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          console.log({ roomName, playerName });
           navigate(`/${roomName}/${playerName}`);
         }}
       >

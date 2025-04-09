@@ -3,7 +3,7 @@
  * @param {string} to
  */
 function navigate(to) {
-  window.history.pushState({}, "", to);
+  window.history.pushState({}, "", to || "/");
   window.dispatchEvent(new PopStateEvent("popstate"));
 }
 
