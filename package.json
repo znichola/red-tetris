@@ -10,7 +10,8 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "serv": "node server/server.js"
+    "serv": "node server/server.js",
+    "devserv": "nodemon server/server.js"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.6.1",
@@ -31,6 +32,7 @@
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^15.15.0",
     "jsdom": "^26.0.0",
+    "nodemon": "^3.1.9",
     "vite": "^6.2.0",
     "vitest": "^3.1.1"
   }
