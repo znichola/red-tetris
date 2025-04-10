@@ -1,4 +1,3 @@
-import { _NEVER } from "@reduxjs/toolkit/query";
 import { CellTypes } from "./TetrisConsts.js";
 
 export class Grid {
