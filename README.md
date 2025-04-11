@@ -50,7 +50,17 @@ Run express backend server, make sure there is a build of the client to serve (`
 npm run serv
 ```
 
-> :warning: TODO add unit testing.
+Same as above, but with live reload.
+
+```bash
+npm run devserv
+```
+
+Run tests.
+
+```bash
+npm run coverage
+```
 
 > :warning: TODO add hmr to the express app, looking at vite-node, node-hmr etc..
 

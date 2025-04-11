@@ -13,13 +13,15 @@
     "format:write": "npx prettier . --write",
     "precommit": "npm run lint && npm run format && npx vitest --run",
     "preview": "vite preview",
-    "serv": "node server/server.js"
+    "serv": "node server/server.js",
+    "devserv": "nodemon --inspect=0.0.0.0 server/server.js"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.6.1",
     "express": "^5.1.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "seedrandom": "^3.0.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
@@ -35,6 +37,7 @@
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^15.15.0",
     "jsdom": "^26.0.0",
+    "nodemon": "^3.1.9",
     "prettier": "3.5.3",
     "vite": "^6.2.0",
     "vitest": "^3.1.1"

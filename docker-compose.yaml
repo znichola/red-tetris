@@ -10,4 +10,5 @@ services:
     ports:
       - "3000:3000"
       - "5173:5173"
-    command: sh -c "set +x && npm install && npm run build && npm run serv & npx vite --host"
+      - "127.0.0.1:9229:9229"
+    command: sh -c "set +x && npm install && npm run build && npm run devserv & npx vite --host"
