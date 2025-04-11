@@ -6,10 +6,7 @@ export default class TetrisGame {
   #lastLoopTime = new Date();
 
   constructor(playerNames, randomSeed) {
-    randomSeed =
-      randomSeed !== null || randomSeed !== undefined
-        ? randomSeed
-        : this.#lastLoopTime;
+    randomSeed = randomSeed ?? this.#lastLoopTime;
     this.gameStates = playerNames.map((playerName) => ({
       playerName,
       grid: new TetrisGrid(seedrandom(randomSeed)),
