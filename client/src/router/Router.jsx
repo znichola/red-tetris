@@ -26,9 +26,10 @@ function Router({ routes }) {
   useEffect(() => {
     for (const routeObj of routes) {
       const [path, Comp] = Object.entries(routeObj)[0];
-      const isMatch = matchParams(path, currentPath);
-      if (isMatch !== null) {
-        setComponent(<Comp params={isMatch} />);
+      const params = matchParams(path, currentPath);
+      const isMatch = params !== null;
+      if (isMatch) {
+        setComponent(<Comp params={params} />);
         return;
       }
     }
@@ -43,7 +44,7 @@ function Router({ routes }) {
  * @param {Object} props
  * @param {string} props.to
  * @param {React.ReactNode} props.children
- * @returns {JSX.Element}
+ * @returns {React.JSX.Element}
  */
 function Link({ to, href, children, ...props }) {
   const handleClick = (e) => {
@@ -68,16 +69,16 @@ function NotFound() {
 
 /**
  *
- * @param {string} routePath
- * @param {string} currentPath
+ * @param {string} routePattern
+ * @param {string} browserPath
  * @returns {Object<string, string> | null} - a key value map or the seach params.
  */
-function matchParams(routePath, currentPath) {
-  const routePathParts = routePath.split("/").filter((v) => v != "");
-  const currentPathParts = currentPath.split("/").filter((v) => v != "");
+function matchParams(routePattern, browserPath) {
+  const routePathParts = routePattern.split("/").filter((v) => v != "");
+  const currentPathParts = browserPath.split("/").filter((v) => v != "");
 
   var res = {};
-  if (routePath === currentPath) return res;
+  if (routePattern === browserPath) return res;
   if (routePathParts.length != currentPathParts.length) return null;
 
   const goodMatches = routePathParts.map((id, i) => {

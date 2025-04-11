@@ -36,8 +36,8 @@ describe("Router", () => {
     { "/": MockHome },
     { "/somepage": MockSomepage },
     { "/links": MockLinks },
-    { "/params/:first/:second": MockParams2 },
-    { "/one/two/three/:first": MockParams1 },
+    { "/onePathElement/:first/:second": MockParams2 },
+    { "/multiple/path/elements/:first": MockParams1 },
   ];
 
   it("renders Home page for '/' path", () => {
@@ -67,7 +67,6 @@ describe("Router", () => {
     await act(async () => {
       screen.getByText("home").click();
     });
-
     expect(await screen.findByText("Home Page")).toBeInTheDocument();
   });
 
@@ -75,7 +74,7 @@ describe("Router", () => {
     render(<Router routes={routes} />);
     expect(screen.getByText("Home Page")).toBeInTheDocument();
     await act(async () => {
-      navigate("/one/two/three/foobar");
+      navigate("/multiple/path/elements/foobar");
     });
     expect(await screen.findByText("foobar")).toBeInTheDocument();
   });
@@ -84,16 +83,16 @@ describe("Router", () => {
     render(<Router routes={routes} />);
     expect(screen.getByText("Home Page")).toBeInTheDocument();
     await act(async () => {
-      navigate("/params/two/three");
+      navigate("/onePathElement/one/two");
     });
-    expect(await screen.findByText("two+three")).toBeInTheDocument();
+    expect(await screen.findByText("one+two")).toBeInTheDocument();
   });
 
   it("Params should miss path that's too long", async () => {
     render(<Router routes={routes} />);
     expect(screen.getByText("Home Page")).toBeInTheDocument();
     await act(async () => {
-      navigate("/params/two/three/foo/bar");
+      navigate("/onePathElement/one/two/three/foo/bar");
     });
     expect(await screen.findByText("Not found")).toBeInTheDocument();
   });
