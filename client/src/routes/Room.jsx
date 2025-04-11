@@ -1,10 +1,10 @@
-import { Link } from "../router/Router";
+import { Link } from "../router/Router.jsx";
 
 /**
  *
  * @param {Object} props
  * @param {Object<string, string>} props.params
- * @returns {JSX.Element}
+ * @returns {React.JSX.Element}
  */
 function Room({ params }) {
   return (
