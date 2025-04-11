@@ -2,10 +2,9 @@ import express from "express";
 import { existsSync } from "node:fs";
 import path from "node:path";
 import params from "../params.js";
+
 const __dirname = import.meta.dirname;
-
 const react_app = path.join(__dirname, "../dist");
-
 const app = express();
 
 //NOTE: Routes are matched in topdown order!

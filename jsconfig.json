@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "checkJs": true,
+    "strict": false,
+    "target": "ES2020",
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ESNext"
+    ],
+    "module": "NodeNext",
+    "maxNodeModuleJsDepth": 0
+  },
+  "include": [
+    //TODO: uncomment this when all errors are fixed in the client
+    // "client/**/*", 
+    "server/**/*"
+  ]
+}
