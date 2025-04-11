@@ -1,7 +1,7 @@
-import { Grid } from "./Grid.js";
+import Grid from "./Grid.js";
 import { CellTypes } from "./TetrisConsts.js";
 
-export class Tetromino extends Grid {
+export default class Tetromino extends Grid {
   #position = { x: 4, y: 0 };
   //TODO: Implement all tetromino types, for now we have only the O:
   // eslint-disable-next-line no-unused-private-class-members

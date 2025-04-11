@@ -1,7 +1,7 @@
 import { act, render, screen } from "@testing-library/react";
 import { describe, it, expect, beforeEach } from "vitest";
-import { Link, Router } from "./Router";
-import { navigate } from "./navigate";
+import { Link, Router } from "./Router.jsx";
+import { navigate } from "./navigate.js";
 
 describe("Router", () => {
   beforeEach(() => {
@@ -14,7 +14,7 @@ describe("Router", () => {
   const MockLinks = () => (
     <>
       <h1>Links Page</h1>
-      <Link href="/">home</Link>
+      <Link to="/">home</Link>
     </>
   );
   const MockParams2 = ({ params }) => (

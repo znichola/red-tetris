@@ -1,6 +1,6 @@
 import { CellTypes } from "./TetrisConsts.js";
 
-export class Grid {
+export default class Grid {
   constructor(array, rows, cols) {
     if (Array.isArray(array) && array.length > 0) {
       this.array = array;

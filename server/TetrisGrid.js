@@ -1,9 +1,9 @@
-import { Grid } from "./Grid.js";
+import Grid from "./Grid.js";
 import { DROP_RATE } from "./TetrisConfig.js";
 import { TetrominoTypes } from "./TetrisConsts.js";
-import { Tetromino } from "./Tetromino.js";
+import Tetromino from "./Tetromino.js";
 
-export class TetrisGrid {
+export default class TetrisGrid {
   #grid = Grid.fromRowsCols(20, 10);
   #prng = null;
   #gameOver = false;

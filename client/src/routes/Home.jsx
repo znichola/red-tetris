@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { navigate } from "../router/navigate";
+import { navigate } from "../router/navigate.js";
 
 function Home() {
   const [roomName, setRoomName] = useState("");

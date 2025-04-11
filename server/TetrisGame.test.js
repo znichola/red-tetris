@@ -1,7 +1,7 @@
 import { expect, describe, it, vi, beforeEach, afterEach } from "vitest";
-import { TetrisGame } from "./TetrisGame";
-import { CellTypes } from "./TetrisConsts";
-import { DROP_RATE } from "./TetrisConfig";
+import TetrisGame from "./TetrisGame.js";
+import { CellTypes } from "./TetrisConsts.js";
+import { DROP_RATE } from "./TetrisConfig.js";
 
 describe("TetrisGame", () => {
   beforeEach(() => {
@@ -52,7 +52,8 @@ async function dropXTimes(times) {
 }
 
 function createTetrisGame(playerNames) {
-  return new TetrisGame(playerNames);
+  const randomSeed = 42;
+  return new TetrisGame(playerNames, randomSeed);
 }
 
 function expectValidGameStates(gameStates, playerCount) {
