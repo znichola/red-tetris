@@ -19,7 +19,7 @@ export default class TetrisGame {
   async gameLoop() {
     while (this.hasMultipleActivePlayers()) {
       const currentTime = new Date();
-      const deltaTime = currentTime - this.#lastLoopTime;
+      const deltaTime = currentTime.getTime() - this.#lastLoopTime.getTime();
       this.#lastLoopTime = currentTime;
       this.#processInputs();
       this.#updateGrids(deltaTime);
