@@ -62,5 +62,7 @@ describe("Grid", () => {
     const superimposedGrid = Grid.superimpose(gridA, gridB);
 
     expect(superimposedGrid.array).toEqual(superimposedArray);
+    expect(gridA.array).toEqual(arrayA);
+    expect(gridB.array).toEqual(arrayB);
   });
 });
