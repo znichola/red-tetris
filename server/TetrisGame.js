@@ -1,15 +1,18 @@
 import seedrandom from "seedrandom";
-import { TetrisGrid } from "./TetrisGrid.js";
+import TetrisGrid from "./TetrisGrid.js";
 import { TICK_RATE } from "./TetrisConfig.js";
 
-export class TetrisGame {
+export default class TetrisGame {
   #lastLoopTime = new Date();
 
-  constructor(playerNames) {
-    this.playerNames = playerNames;
+  constructor(playerNames, randomSeed) {
+    randomSeed =
+      randomSeed !== null || randomSeed !== undefined
+        ? randomSeed
+        : this.#lastLoopTime;
     this.gameStates = playerNames.map((playerName) => ({
       playerName,
-      grid: new TetrisGrid(seedrandom(this.#lastLoopTime)),
+      grid: new TetrisGrid(seedrandom(randomSeed)),
     }));
   }
 
