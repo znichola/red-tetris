@@ -1,3 +1,4 @@
+/** @readonly @enum {number} */
 export const TetrominoTypes = Object.freeze({
   I: 1,
   O: 2,
@@ -8,6 +9,7 @@ export const TetrominoTypes = Object.freeze({
   Z: 7,
 });
 
+/** @readonly @enum {number} */
 export const CellTypes = Object.freeze({
   None: 0,
   ...TetrominoTypes,

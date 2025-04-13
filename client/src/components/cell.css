@@ -1,0 +1,6 @@
+.cell {
+  width: 100%;
+  max-width: 100%;
+  aspect-ratio: 1 / 1;
+  background-color: lightblue; /* Example background color */
+}
