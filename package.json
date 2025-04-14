@@ -11,7 +11,8 @@
     "lint": "eslint .",
     "format": "npx prettier . --check",
     "format:write": "npx prettier . --write",
-    "precommit": "npm run lint && npm run format && npx vitest --run",
+    "typecheck": "npx tsc --project ./jsconfig.json --noEmit",
+    "precommit": "npm run lint && npm run format && npm run typecheck && npx vitest --run",
     "preview": "vite preview",
     "serv": "node server/server.js",
     "devserv": "nodemon --inspect=0.0.0.0 server/server.js"
@@ -27,6 +28,7 @@
     "@eslint/js": "^9.21.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
+    "@types/express": "^5.0.1",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react-swc": "^3.8.0",
@@ -39,6 +41,7 @@
     "jsdom": "^26.0.0",
     "nodemon": "^3.1.9",
     "prettier": "3.5.3",
+    "typescript": "^5.8.3",
     "vite": "^6.2.0",
     "vitest": "^3.1.1"
   }

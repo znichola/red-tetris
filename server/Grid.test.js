@@ -1,6 +1,6 @@
 import { expect, describe, it } from "vitest";
-import { CellTypes } from "./TetrisConsts";
-import { Grid } from "./Grid";
+import { CellTypes } from "./TetrisConsts.js";
+import Grid from "./Grid.js";
 
 describe("Grid", () => {
   it("should create a grid with the correct dimensions", () => {
