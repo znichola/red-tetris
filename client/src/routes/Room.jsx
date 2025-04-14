@@ -1,5 +1,5 @@
 import { CellTypes as CT } from "../../../shared/TetrisConsts.js";
-import { Board } from "../components/Board.jsx";
+import { Board } from "../components/board/Board.jsx";
 import { Link } from "../router/Router.jsx";
 
 // prettier-ignore
