@@ -1,4 +1,3 @@
-// import { coverageConfigDefaults, defineConfig } from 'vite'
 import { coverageConfigDefaults, defineConfig } from "vitest/config";
 
 export default defineConfig({

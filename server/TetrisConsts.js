@@ -16,13 +16,9 @@ export const CellType = Object.freeze({
   ...TetrominoType,
 });
 
-/**
- * @typedef {CellType[][]} GridArray
- */
+/** @typedef {CellType[][]} GridArray */
 
-/**
- * @typedef {number} RotationType
- */
+/** @typedef {number} RotationType */
 
 export const RotationType = Object.freeze({
   Rotation0: 0,
