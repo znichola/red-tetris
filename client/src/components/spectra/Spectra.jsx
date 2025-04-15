@@ -11,9 +11,8 @@ import "./spectra.css";
  */
 
 /**
- *
- * @param {Object} params
- * @param {PlayerInfo[]} params.allPlayers
+ * @param {Object} props
+ * @param {PlayerInfo[]} props.allPlayers
  * @returns {React.JSX.Element}
  */
 function SpectraOverview({ allPlayers }) {
@@ -32,9 +31,8 @@ function SpectraOverview({ allPlayers }) {
 }
 
 /**
- *
- * @param {Object} params
- * @param {PlayerInfo} params.playerInfo
+ * @param {Object} props
+ * @param {PlayerInfo} props.playerInfo
  * @returns {React.JSX.Element}
  */
 function PlayerView({ playerInfo }) {
@@ -47,9 +45,8 @@ function PlayerView({ playerInfo }) {
 }
 
 /**
- *
- * @param {Object} params
- * @param {Spectra} params.spectra
+ * @param {Object} props
+ * @param {Spectra} props.spectra
  * @returns
  */
 function SpectraView({ spectra }) {

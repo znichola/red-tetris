@@ -44,7 +44,6 @@ const allPlayers = [
 ];
 
 /**
- *
  * @param {Object} props
  * @param {Object<string, string>} props.params
  * @returns {React.JSX.Element}

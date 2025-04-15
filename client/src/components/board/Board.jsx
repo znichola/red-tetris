@@ -12,11 +12,10 @@ import { useEffect, useState } from "react";
 import { useKeyPress } from "../../hooks/useKeyPress.js";
 
 /**
- *
- * @param {Object} params
- * @param {CellTypes[][]} params.grid
- * @param {string} params.room
- * @param {string} params.player
+ * @param {Object} props
+ * @param {CellTypes[][]} props.grid
+ * @param {string} props.room
+ * @param {string} props.player
  * @returns {React.JSX.Element}
  */
 function Board({ room, player, grid }) {
@@ -33,9 +32,8 @@ function Board({ room, player, grid }) {
 }
 
 /**
- *
- * @param {Object} params
- * @param {CellTypes[][]} params.grid
+ * @param {Object} props
+ * @param {CellTypes[][]} props.grid
  * @returns {React.JSX.Element}
  */
 function Grid({ grid }) {
@@ -58,14 +56,12 @@ function Grid({ grid }) {
 }
 
 /**
- *
  * @param {Object} props
  * @param {CellTypes} props.tet_color
  * @returns {React.JSX.Element}
  */
 function Cell({ tet_color }) {
   /**
-   *
    * @param {CellTypes} cellType
    * @returns {string} - color variable from index.css
    */
@@ -129,7 +125,6 @@ function Keypad() {
 }
 
 /**
- *
  * @param {Object} props
  * @param {import("lucide-react").LucideIcon} props.icon
  * @param {() => void} props.onClick
