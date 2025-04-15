@@ -6,7 +6,6 @@ import {
   ArrowBigLeft,
   ArrowBigRight,
   ArrowBigUp,
-  Key,
   Space,
 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -16,9 +15,30 @@ import { useKeyPress } from "../../hooks/useKeyPress.js";
  *
  * @param {Object} params
  * @param {CellTypes[][]} params.grid
+ * @param {string} params.room
+ * @param {string} params.player
  * @returns {React.JSX.Element}
  */
-function Board({ grid }) {
+function Board({ room, player, grid }) {
+  return (
+    <div className="standard-dialog thing">
+      <div className="title-bar">
+        <h1 className="title">
+          {room}/{player}
+        </h1>
+      </div>
+      <Grid grid={grid} />
+    </div>
+  );
+}
+
+/**
+ *
+ * @param {Object} params
+ * @param {CellTypes[][]} params.grid
+ * @returns {React.JSX.Element}
+ */
+function Grid({ grid }) {
   return (
     <>
       <div className="grid">
@@ -75,16 +95,16 @@ function Keypad() {
   return (
     <div className="keypad-line">
       <Button
+        className="space"
+        icon={Space}
+        shortcutKeyCodes={["Space"]}
+        onClick={() => console.log("space")}
+      />
+      <Button
         className="up"
         icon={ArrowBigUp}
         shortcutKeyCodes={["ArrowUp", "KeyW"]}
         onClick={() => console.log("up")}
-      />
-      <Button
-        className="down"
-        icon={ArrowBigDown}
-        shortcutKeyCodes={["ArrowDown", "KeyS"]}
-        onClick={() => console.log("down")}
       />
       <Button
         className="left"
@@ -93,16 +113,16 @@ function Keypad() {
         onClick={() => console.log("left")}
       />
       <Button
+        className="down"
+        icon={ArrowBigDown}
+        shortcutKeyCodes={["ArrowDown", "KeyS"]}
+        onClick={() => console.log("down")}
+      />
+      <Button
         className="right"
         icon={ArrowBigRight}
         shortcutKeyCodes={["ArrowRight", "KeyD"]}
         onClick={() => console.log("right")}
-      />
-      <Button
-        className="space"
-        icon={Space}
-        shortcutKeyCodes={["Space"]}
-        onClick={() => console.log("space")}
       />
     </div>
   );

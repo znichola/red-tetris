@@ -1,6 +1,8 @@
 import { CellTypes as CT } from "../../../shared/TetrisConsts.js";
 import { Board } from "../components/board/Board.jsx";
-import { Link } from "../router/Router.jsx";
+import { GameState } from "../components/game_state/GameState.jsx";
+import { SpectraOverview } from "../components/spectra/Spectra.jsx";
+import "./room.css";
 
 // prettier-ignore
 const grid = [
@@ -26,6 +28,21 @@ const grid = [
   [CT.I,    CT.T   , CT.None, CT.None, CT.None, CT.None, CT.None, CT.None, CT.None, CT.I],
 ];
 
+const allPlayers = [
+  {
+    player: "Alice",
+    spectra: [9, 2, 1, 0, 0, 3, 2, 5, 8, 3],
+  },
+  {
+    player: "Bobby",
+    spectra: [0, 1, 3, 0, 4, 5, 6, 3, 3, 0],
+  },
+  {
+    player: "Celina",
+    spectra: [3, 4, 1, 0, 2, 3, 4, 0, 0, 0],
+  },
+];
+
 /**
  *
  * @param {Object} props
@@ -34,16 +51,10 @@ const grid = [
  */
 function Room({ params }) {
   return (
-    <div>
-      <Link to="/">home</Link>
-      <div className="standard-dialog thing">
-        <div className="title-bar">
-          <h1 className="title">
-            {params.room}/{params.player}
-          </h1>
-        </div>
-        <Board grid={grid} />
-      </div>
+    <div className="layout">
+      <Board grid={grid} player={params.player} room={params.room} />
+      <GameState />
+      <SpectraOverview allPlayers={allPlayers} />
     </div>
   );
 }

@@ -36,8 +36,9 @@
   text-align: center;
 }
 
+/* TODO : rename to something smart */
 .thing {
   width: 100%;
   max-width: 20em;
-  margin: 0 auto;
+  height: 100%;
 }

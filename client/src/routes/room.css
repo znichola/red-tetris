@@ -1,0 +1,11 @@
+.layout {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  align-content: center;
+  justify-content: flex-start;
+  gap: 1em;
+  @media (min-width: 50em) {
+    max-height: 52em;
+  }
+}
