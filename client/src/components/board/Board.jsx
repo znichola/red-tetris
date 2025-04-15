@@ -9,7 +9,8 @@ import {
   Key,
   Space,
 } from "lucide-react";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
+import { useKeyPress } from "../../hooks/useKeyPress.js";
 
 /**
  *
@@ -119,39 +120,22 @@ function Keypad() {
 function Button({ icon, className, shortcutKeyCodes = [], onClick }) {
   const [keyPressed, setKeyPressed] = useState(false);
 
-  const handlePress = useCallback(
-    (/** @type {boolean} */ keyPressed) => {
-      if (!keyPressed) {
-        onClick();
-        setKeyPressed(true);
-        setTimeout(() => {
-          setKeyPressed(false);
-        }, 200);
-      }
-    },
-    [onClick],
-  );
-
   useEffect(() => {
-    if (!shortcutKeyCodes || shortcutKeyCodes.length <= 0) return;
+    if (keyPressed == false) return;
+    const timer = setTimeout(() => {
+      setKeyPressed(false);
+    }, 200);
+    return () => clearTimeout(timer);
+  }, [keyPressed]);
 
-    const handleKeyDown = (/** @type {KeyboardEvent} */ e) => {
-      // TODO : extract this out such that only one callback function
-      // is registered, feels betterm but requiers setting up radix/context
-      shortcutKeyCodes.map((keyCode) => {
-        if (e.code === keyCode) {
-          e.preventDefault();
-          handlePress(keyPressed);
-        }
-      });
-    };
+  const handleClick = () => {
+    if (keyPressed == false) {
+      setKeyPressed(true);
+      onClick();
+    }
+  };
 
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-    // We don't want the keyPressed to be a dep becasuse we don't want to
-    //  re-register functions on each keypress
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [shortcutKeyCodes, handlePress]);
+  useKeyPress(shortcutKeyCodes, handleClick);
 
   const Icon = icon;
   return (
@@ -159,7 +143,7 @@ function Button({ icon, className, shortcutKeyCodes = [], onClick }) {
       type="button"
       aria-label={shortcutKeyCodes[0] || ""}
       className={`btn move-btn ${className || ""} ${keyPressed ? "pressed" : ""}`}
-      onClick={() => handlePress(keyPressed)}
+      onClick={handleClick}
     >
       <Icon size={35} strokeWidth={2} />
     </button>
