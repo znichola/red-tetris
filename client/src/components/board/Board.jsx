@@ -165,4 +165,4 @@ function Button({ icon, className, shortcutKeyCodes = [], onClick }) {
   );
 }
 
-export { Board };
+export { Board, Keypad };
