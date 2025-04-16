@@ -2,7 +2,27 @@ import { CellType } from "./TetrisConsts.js";
 
 export default class Grid {
   /**
-   * @param {import("./TetrisConsts.js").GridArray} array
+   * @return {import("../DTOs.js").Spectrum}
+   */
+  get spectrum() {
+    const rowCount = this.array.length;
+    const colsCount = this.array[0].length;
+    const spectrum = Array(colsCount).fill(0);
+
+    for (let x = 0; x < colsCount; x++) {
+      for (let y = 0; y < rowCount; y++) {
+        if (this.array[y][x] !== CellType.Empty) {
+          spectrum[x] = rowCount - y;
+          break;
+        }
+      }
+    }
+
+    return spectrum;
+  }
+
+  /**
+   * @param {import("../DTOs.js").Grid} array
    * @param {number} rows
    * @param {number} cols
    */
@@ -21,14 +41,14 @@ export default class Grid {
   }
 
   /**
-   * @param {import("./TetrisConsts.js").GridArray} array
+   * @param {import("../DTOs.js").Grid} array
    */
   static toString(array) {
     return array.map((row) => row.join(" ")).join("\n");
   }
 
   /**
-   * @param {import("./TetrisConsts.js").GridArray[]} arrays
+   * @param {import("../DTOs.js").Grid[]} arrays
    * @param {string[]} headers
    * @param {string} separator
    */

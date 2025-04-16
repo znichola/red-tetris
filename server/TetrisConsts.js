@@ -11,12 +11,13 @@ export const TetrominoType = Object.freeze({
   Z: 7,
 });
 
+/**
+ * @typedef {number} CellType
+ */
 export const CellType = Object.freeze({
   Empty: 0,
   ...TetrominoType,
 });
-
-/** @typedef {CellType[][]} GridArray */
 
 /** @typedef {number} RotationType */
 
@@ -237,11 +238,3 @@ export const GameGridDimensions = Object.freeze({
   x: 10,
   y: 20,
 });
-
-/**
- * @typedef {GameState[]} GameStates
- *
- * @typedef {Object} GameState
- * @property {string} playerName
- * @property {CellType[][]} gridArray
- */
