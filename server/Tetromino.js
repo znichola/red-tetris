@@ -1,45 +1,86 @@
 import Grid from "./Grid.js";
-import { CellTypes } from "./TetrisConsts.js";
+import { RotateClockwise, RotationType, Tetrominoes } from "./TetrisConsts.js";
 
 export default class Tetromino extends Grid {
+  #tetrominoType;
+  /**
+   * @type {RotationType}
+   */
+  #rotation;
   #position = { x: 4, y: 0 };
-  //TODO: Implement all tetromino types, for now we have only the O:
-  // eslint-disable-next-line no-unused-private-class-members
-  #tetrominoType = null;
-  #emptyGrid = Grid.fromRowsCols(20, 10);
 
+  /**
+   * @param {import("./TetrisConsts.js").TetrominoType} tetrominoType
+   */
   constructor(tetrominoType) {
-    const emptyGrid = Grid.fromRowsCols(20, 10);
-    super(emptyGrid.array, null, null);
+    const rotation = RotationType.Rotation0;
+    const array = Tetrominoes[tetrominoType][rotation].shape;
+    super(array, null, null);
     this.#tetrominoType = tetrominoType;
-    this.array = this.#getGridFromPosition(this.#position);
+    this.#rotation = rotation;
   }
 
-  #getGridFromPosition(nextPosition) {
-    const grid = structuredClone(this.#emptyGrid.array);
-    //TODO: Implement all tetromino types, for now we have only the O:
-    grid[nextPosition.y][nextPosition.x] = CellTypes.O;
-    grid[nextPosition.y][nextPosition.x + 1] = CellTypes.O;
-    grid[nextPosition.y + 1][nextPosition.x] = CellTypes.O;
-    grid[nextPosition.y + 1][nextPosition.x + 1] = CellTypes.O;
-    return grid;
+  /**
+   * @param {Grid} gameGrid
+   * @param {import("./TetrisConsts.js").Vector} direction
+   */
+  canMove(gameGrid, direction) {
+    const movedPosition = {
+      x: this.#position.x + direction.x,
+      y: this.#position.y + direction.y,
+    };
+    const overflowsLeft = movedPosition.x < 0;
+    const overflowsRight =
+      movedPosition.x + this.#getTetromino().width > gameGrid.array[0].length;
+    const overflowsBottom =
+      movedPosition.y + this.#getTetromino().height > gameGrid.array.length;
+    const overflows = overflowsLeft || overflowsRight || overflowsBottom;
+
+    return (
+      !overflows && !Grid.overlapsAtPosition(gameGrid, this, movedPosition)
+    );
   }
 
-  drop() {
-    ++this.#position.y;
-    this.array = this.#getGridFromPosition(this.#position);
+  /**
+   * @param {import("./TetrisConsts.js").Vector} direction
+   */
+  move(direction) {
+    this.#position.x += direction.x;
+    this.#position.y += direction.y;
   }
 
-  canDrop(gameGrid) {
-    const nextPosition = { x: this.#position.x, y: this.#position.y + 1 };
+  /**
+   * @param {Grid} gameGrid
+   * @param {import("./TetrisConsts.js").Vector} offsetMove
+   */
+  canRotate(gameGrid, offsetMove = { x: 0, y: 0 }) {
+    const nextRotation = RotateClockwise(this.#rotation);
+    const rotatedTetromino = Tetrominoes[this.#tetrominoType][nextRotation];
+    const movedPosition = {
+      x: this.#position.x + offsetMove.x,
+      y: this.#position.y + offsetMove.y,
+    };
+    const overflowsRight =
+      movedPosition.x + rotatedTetromino.width > gameGrid.array[0].length;
+    const overflowsBottom =
+      movedPosition.y + rotatedTetromino.height > gameGrid.array.length;
+    const overflows = overflowsRight || overflowsBottom;
 
-    //TODO: Implement all tetromino types, for now we have only the O:
-    //TODO: Won't always be `+ 1` for all tetrominoes, but for now we have only the O so it works:
-    if (nextPosition.y + 1 >= gameGrid.array.length) {
-      return false;
-    }
+    return (
+      !overflows && !Grid.overlapsAtPosition(gameGrid, this, movedPosition)
+    );
+  }
 
-    const nextGrid = Grid.fromArray(this.#getGridFromPosition(nextPosition));
-    return !Grid.overlaps(gameGrid, nextGrid);
+  rotate() {
+    this.#rotation = RotateClockwise(this.#rotation);
+    this.array = this.#getTetromino().shape;
+  }
+
+  getPosition() {
+    return this.#position;
+  }
+
+  #getTetromino() {
+    return Tetrominoes[this.#tetrominoType][this.#rotation];
   }
 }

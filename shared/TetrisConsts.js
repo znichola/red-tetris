@@ -1,6 +1,6 @@
-import { TetrominoTypes, CellTypes } from "../server/TetrisConsts.js";
+import { TetrominoType, CellType } from "../server/TetrisConsts.js";
 
-export { TetrominoTypes, CellTypes };
+export { TetrominoType, CellType };
 
 // TODO : once ready to migrage to the shared folder,
 //        copy the types here and remove the original and

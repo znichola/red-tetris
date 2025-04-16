@@ -1,5 +1,5 @@
 import React from "react";
-import { CellTypes } from "../../../../shared/TetrisConsts.js";
+import { CellType } from "../../../../shared/TetrisConsts.js";
 import "./board.css";
 import {
   ArrowBigDown,
@@ -13,7 +13,7 @@ import { useKeyPress } from "../../hooks/useKeyPress.js";
 
 /**
  * @param {Object} props
- * @param {CellTypes[][]} props.grid
+ * @param {CellType[][]} props.grid
  * @param {string} props.room
  * @param {string} props.player
  * @returns {React.JSX.Element}
@@ -33,7 +33,7 @@ function Board({ room, player, grid }) {
 
 /**
  * @param {Object} props
- * @param {CellTypes[][]} props.grid
+ * @param {CellType[][]} props.grid
  * @returns {React.JSX.Element}
  */
 function Grid({ grid }) {
@@ -57,24 +57,24 @@ function Grid({ grid }) {
 
 /**
  * @param {Object} props
- * @param {CellTypes} props.tet_color
+ * @param {CellType} props.tet_color
  * @returns {React.JSX.Element}
  */
 function Cell({ tet_color }) {
   /**
-   * @param {CellTypes} cellType
+   * @param {CellType} cellType
    * @returns {string} - color variable from index.css
    */
   const getColor = (cellType) => {
     var color = "--tet-color-";
-    if (cellType == CellTypes.I) color += "i";
-    else if (cellType == CellTypes.J) color += "j";
-    else if (cellType == CellTypes.L) color += "l";
-    else if (cellType == CellTypes.O) color += "o";
-    else if (cellType == CellTypes.S) color += "s";
-    else if (cellType == CellTypes.T) color += "t";
-    else if (cellType == CellTypes.Z) color += "z";
-    else if (cellType == CellTypes.None) color += "none";
+    if (cellType == CellType.I) color += "i";
+    else if (cellType == CellType.J) color += "j";
+    else if (cellType == CellType.L) color += "l";
+    else if (cellType == CellType.O) color += "o";
+    else if (cellType == CellType.S) color += "s";
+    else if (cellType == CellType.T) color += "t";
+    else if (cellType == CellType.Z) color += "z";
+    else if (cellType == CellType.Empty) color += "empty";
     else color = "--white";
 
     return color;

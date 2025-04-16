@@ -21,7 +21,7 @@
   --tet-color-l: var(--orange);
   --tet-color-s: var(--green);
   --tet-color-z: var(--red);
-  --tet-color-none: #e4e3e3;
+  --tet-color-empty: #e4e3e3;
 }
 
 .red-title {
