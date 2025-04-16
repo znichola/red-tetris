@@ -66,7 +66,7 @@ npm run coverage
 
 ## TYPES
 
-We like types, but docs say no TypeScript, so [JSDocs](https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html#param-and-returns) is the way. In vscode you can generate them with a `/**` before a function.
+We like types, but docs say no TypeScript, so [JSDocs](https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html#param-and-returns) is the way. In vscode you can generate them with a `/**` before a function. Also this [website](https://sethmac.com/typescript-to-jsdoc/) has a nice type converter between `TS` to `JSDocs`.
 
 ## Pre-commit hook
 
