@@ -56,8 +56,7 @@ export default class Rooms {
    * @param {any} actionType
    */
   #OnGameAction(room, playerName, actionType) {
-    //TODO: better way to check if actionType is valid
-    if (typeof actionType !== typeof ActionType.HardDrop) {
+    if (typeof actionType !== "number") {
       return;
     }
 

@@ -28,7 +28,7 @@ describe("server", () => {
     expect(socket.connected).toBe(true);
   });
 
-  it("should not join the same room with same name twice", async () => {
+  it("should not join the same room with the same name twice", async () => {
     await connectSocket(RoomNames[0], PlayerNames[0]);
     const socket = await connectSocket(RoomNames[0], PlayerNames[0]);
     expect(socket.connected).toBe(false);
@@ -48,59 +48,43 @@ describe("server", () => {
     expect(roomData).toMatchObject(expectedRoomData);
   });
 
-  it(
-    "should set a new owner if the previous owner leaves",
-    { timeout: 2000 },
-    async () => {
-      const ownerSocket = await connectSocket(RoomNames[0], PlayerNames[0]);
-      const nonOwnerSocket = await connectSocket(RoomNames[0], PlayerNames[1]);
-      const updateRoomDataPromise = waitFor(
-        nonOwnerSocket,
-        SocketEvents.UpdateRoomData,
-      );
-      ownerSocket.disconnect();
-      const roomData = (await updateRoomDataPromise)[0];
-      /** @type {import("../DTOs.js").RoomData} */
-      const expectedRoomData = {
-        gameState: GameState.Pending,
-        ownerName: PlayerNames[1],
-        playerNames: [PlayerNames[1]],
-      };
-      expect(roomData).toMatchObject(expectedRoomData);
-    },
-  );
+  it("should set a new owner if the previous owner leaves", async () => {
+    const ownerSocket = await connectSocket(RoomNames[0], PlayerNames[0]);
+    const nonOwnerSocket = await connectSocket(RoomNames[0], PlayerNames[1]);
+    const updateRoomDataPromise = waitFor(
+      nonOwnerSocket,
+      SocketEvents.UpdateRoomData,
+    );
+    ownerSocket.disconnect();
+    const roomData = (await updateRoomDataPromise)[0];
+    /** @type {import("../DTOs.js").RoomData} */
+    const expectedRoomData = {
+      gameState: GameState.Pending,
+      ownerName: PlayerNames[1],
+      playerNames: [PlayerNames[1]],
+    };
+    expect(roomData).toMatchObject(expectedRoomData);
+  });
 
   it("should not start a game with less than 2 players", async () => {
     const ownerSocket = await connectSocket(RoomNames[0], PlayerNames[0]);
-    const noUpdatePromise = new Promise((resolve, reject) => {
-      const timeoutId = setTimeout(
-        () => resolve("No update received as expected"),
-        500,
-      );
-      ownerSocket.once(SocketEvents.UpdateRoomData, () => {
-        clearTimeout(timeoutId);
-        reject(new Error("Received update when not expected"));
-      });
-    });
+    const noRoomDataUpdatePromise = waitForUnexpectedSocketEventOrTimeout(
+      ownerSocket,
+      SocketEvents.UpdateRoomData,
+    );
     emitStartGame(ownerSocket);
-    await noUpdatePromise;
+    await noRoomDataUpdatePromise;
   });
 
   it("should not start a game when a non-owner tries to start it", async () => {
     await connectSocket(RoomNames[0], PlayerNames[0]);
     const nonOwnerSocket = await connectSocket(RoomNames[0], PlayerNames[1]);
-    const noUpdatePromise = new Promise((resolve, reject) => {
-      const timeoutId = setTimeout(
-        () => resolve("No update received as expected"),
-        500,
-      );
-      nonOwnerSocket.once(SocketEvents.UpdateRoomData, () => {
-        clearTimeout(timeoutId);
-        reject(new Error("Received update when not expected"));
-      });
-    });
+    const noRoomDataUpdatePromise = waitForUnexpectedSocketEventOrTimeout(
+      nonOwnerSocket,
+      SocketEvents.UpdateRoomData,
+    );
     emitStartGame(nonOwnerSocket);
-    await noUpdatePromise;
+    await noRoomDataUpdatePromise;
   });
 
   it("should not start a game if one game is already in progress", async () => {
@@ -112,18 +96,12 @@ describe("server", () => {
     );
     emitStartGame(ownerSocket);
     await ownerUpdateRoomDataPromise;
-    const noUpdatePromise = new Promise((resolve, reject) => {
-      const timeoutId = setTimeout(
-        () => resolve("No update received as expected"),
-        500,
-      );
-      ownerSocket.once(SocketEvents.UpdateRoomData, () => {
-        clearTimeout(timeoutId);
-        reject(new Error("Received update when not expected"));
-      });
-    });
+    const noRoomDataUpdatePromise = waitForUnexpectedSocketEventOrTimeout(
+      ownerSocket,
+      SocketEvents.UpdateRoomData,
+    );
     emitStartGame(ownerSocket);
-    await noUpdatePromise;
+    await noRoomDataUpdatePromise;
   });
 
   it("should start a game when the owner starts it", async () => {
@@ -222,4 +200,18 @@ function emitStartGame(socket) {
  */
 function emitGameAction(socket, actionType) {
   socket.emit(SocketEvents.GameAction, actionType);
+}
+
+/**
+ * @param {import("socket.io-client").Socket} socket
+ * @param {string} socketEvent
+ */
+function waitForUnexpectedSocketEventOrTimeout(socket, socketEvent) {
+  return new Promise((resolve, reject) => {
+    const timeoutId = setTimeout(() => resolve(), 500);
+    socket.once(socketEvent, () => {
+      clearTimeout(timeoutId);
+      reject(new Error("Received update when not expected"));
+    });
+  });
 }
