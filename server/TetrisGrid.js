@@ -1,8 +1,8 @@
+import { TetrominoType } from "../shared/DTOs.js";
 import Grid from "./Grid.js";
 import { DROP_RATE } from "./TetrisConfig.js";
 import {
   VectorDown,
-  TetrominoType,
   GameGridDimensions,
   VectorLeft,
   VectorRight,
@@ -20,6 +20,22 @@ export default class TetrisGrid {
   #currentTetromino;
   #nextTetromino;
   #dropTimer = 0;
+
+  get gridArray() {
+    return this.#gridWithTetromino.array;
+  }
+
+  get spectrum() {
+    return this.#pileGrid.spectrum;
+  }
+
+  get #gridWithTetromino() {
+    return Grid.superimposeAtPosition(
+      this.#pileGrid,
+      this.#currentTetromino,
+      this.#currentTetromino.position,
+    );
+  }
 
   constructor(prng) {
     this.#prng = prng;
@@ -73,7 +89,7 @@ export default class TetrisGrid {
   }
 
   #pileCurrentTetromino() {
-    this.#pileGrid = this.#getGridWithTetromino();
+    this.#pileGrid = this.#gridWithTetromino;
     this.#spawnNextTetromino();
   }
 
@@ -102,7 +118,7 @@ export default class TetrisGrid {
       Grid.overlapsAtPosition(
         this.#pileGrid,
         this.#currentTetromino,
-        this.#currentTetromino.getPosition(),
+        this.#currentTetromino.position,
       )
     ) {
       this.#gameOver = true;
@@ -118,17 +134,5 @@ export default class TetrisGrid {
 
   isGameOver() {
     return this.#gameOver;
-  }
-
-  getGridArray() {
-    return this.#getGridWithTetromino().array;
-  }
-
-  #getGridWithTetromino() {
-    return Grid.superimposeAtPosition(
-      this.#pileGrid,
-      this.#currentTetromino,
-      this.#currentTetromino.getPosition(),
-    );
   }
 }

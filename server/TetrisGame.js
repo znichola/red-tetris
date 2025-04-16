@@ -2,21 +2,36 @@ import seedrandom from "seedrandom";
 import TetrisGrid from "./TetrisGrid.js";
 import { TICK_RATE } from "./TetrisConfig.js";
 import { VectorDown, VectorLeft, VectorRight } from "./TetrisConsts.js";
-
-/**
- * @typedef {number} ActionType
- */
-export const ActionType = {
-  MoveLeft: 0,
-  MoveRight: 1,
-  Rotate: 2,
-  SoftDrop: 3,
-  HardDrop: 4,
-};
+import { ActionType } from "../shared/DTOs.js";
 
 export default class TetrisGame {
   #lastLoopTime = new Date();
   #playerGameStates;
+  /** @type {function[]} */
+  #gameUpdateListeners = [];
+
+  /**
+   * @param {string} playerName
+   * @returns {import("../shared/DTOs.js").GameData}
+   */
+  getGameData(playerName) {
+    /** @type {Object<string, import("../shared/DTOs.js").Spectrum>} */
+    const playerNameToSpectrum = {};
+
+    this.#playerGameStates
+      .filter((playerGameState) => playerGameState.playerName !== playerName)
+      .forEach((playerGameState) => {
+        playerNameToSpectrum[playerGameState.playerName] =
+          playerGameState.grid.spectrum;
+      });
+
+    return {
+      grid: this.#playerGameStates.find(
+        (playerGameState) => playerGameState.playerName === playerName,
+      ).grid.gridArray,
+      playerNameToSpectrum,
+    };
+  }
 
   /**
    * @param {string[]} playerNames
@@ -32,34 +47,41 @@ export default class TetrisGame {
 
   /**
    * @param {string} playerName
-   * @param {ActionType} actionType
+   * @param {import("../shared/DTOs.js").ActionType} actionType
    */
   doAction(playerName, actionType) {
-    const player = this.#playerGameStates.find(
+    const playerGameState = this.#playerGameStates.find(
       (playerGameState) => playerGameState.playerName === playerName,
     );
 
-    if (!player) {
-      throw new Error(`Player ${playerName} not found`);
+    if (!playerGameState) {
+      return;
     }
 
     switch (actionType) {
       case ActionType.MoveLeft:
-        player.grid.tryMoveTetromino(VectorLeft);
+        playerGameState.grid.tryMoveTetromino(VectorLeft);
         break;
       case ActionType.MoveRight:
-        player.grid.tryMoveTetromino(VectorRight);
+        playerGameState.grid.tryMoveTetromino(VectorRight);
         break;
       case ActionType.Rotate:
-        player.grid.tryRotateTetromino();
+        playerGameState.grid.tryRotateTetromino();
         break;
       case ActionType.SoftDrop:
-        player.grid.tryMoveTetromino(VectorDown);
+        playerGameState.grid.tryMoveTetromino(VectorDown);
         break;
       case ActionType.HardDrop:
-        player.grid.hardDropTetromino();
+        playerGameState.grid.hardDropTetromino();
         break;
     }
+  }
+
+  /**
+   * @param {function} cb
+   */
+  addGameUpdateListener(cb) {
+    this.#gameUpdateListeners.push(cb);
   }
 
   async gameLoop() {
@@ -80,6 +102,7 @@ export default class TetrisGame {
       (playerGameState) => !playerGameState.grid.isGameOver(),
     );
 
+    //TODO: broadcast game over
     if (!winnerGameState) {
       console.log("Game over: Draw!");
     } else {
@@ -107,16 +130,6 @@ export default class TetrisGame {
   }
 
   #broadcastState() {
-    //TODO
-  }
-
-  /**
-   * @returns {import("./TetrisConsts.js").GameStates}
-   */
-  getGameStates() {
-    return this.#playerGameStates.map((playerGameState) => ({
-      playerName: playerGameState.playerName,
-      gridArray: playerGameState.grid.getGridArray(),
-    }));
+    this.#gameUpdateListeners.forEach((cb) => cb());
   }
 }

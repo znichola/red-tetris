@@ -1,6 +1,6 @@
 import { expect, describe, it } from "vitest";
-import { CellType } from "./TetrisConsts.js";
 import Grid from "./Grid.js";
+import { CellType } from "../shared/DTOs.js";
 
 describe("Grid", () => {
   it("should create a grid with the correct dimensions", () => {
@@ -120,6 +120,17 @@ describe("Grid", () => {
       y: 1,
     }).array;
     expect(result2).toEqual(expected2);
+  });
+
+  it("should return the correct spectrum", () => {
+    const grid = Grid.fromArray([
+      [CellType.Empty, CellType.I, CellType.Empty, CellType.Empty],
+      [CellType.Empty, CellType.I, CellType.Z, CellType.Empty],
+      [CellType.Empty, CellType.I, CellType.Z, CellType.Z],
+      [CellType.Empty, CellType.I, CellType.Empty, CellType.Z],
+    ]);
+    const expectedSpectrum = [0, 4, 3, 2];
+    expect(grid.spectrum).toEqual(expectedSpectrum);
   });
 });
 

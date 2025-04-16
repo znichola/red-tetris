@@ -9,8 +9,12 @@ export default class Tetromino extends Grid {
   #rotation;
   #position = { x: 4, y: 0 };
 
+  get position() {
+    return this.#position;
+  }
+
   /**
-   * @param {import("./TetrisConsts.js").TetrominoType} tetrominoType
+   * @param {import("../shared/DTOs.js").TetrominoType} tetrominoType
    */
   constructor(tetrominoType) {
     const rotation = RotationType.Rotation0;
@@ -74,10 +78,6 @@ export default class Tetromino extends Grid {
   rotate() {
     this.#rotation = RotateClockwise(this.#rotation);
     this.array = this.#getTetromino().shape;
-  }
-
-  getPosition() {
-    return this.#position;
   }
 
   #getTetromino() {

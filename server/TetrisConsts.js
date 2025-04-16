@@ -1,30 +1,6 @@
-/**
- * @typedef {number} TetrominoType
- */
-export const TetrominoType = Object.freeze({
-  I: 1,
-  O: 2,
-  T: 3,
-  J: 4,
-  L: 5,
-  S: 6,
-  Z: 7,
-});
+import { CellType, TetrominoType } from "../shared/DTOs.js";
 
 /** @readonly @enum {number} */
-export const CellType = Object.freeze({
-  Empty: 0,
-  ...TetrominoType,
-});
-
-/**
- * @typedef {CellType[][]} GridArray
- */
-
-/**
- * @typedef {number} RotationType
- */
-
 export const RotationType = Object.freeze({
   Rotation0: 0,
   Rotation90: 1,
@@ -242,11 +218,3 @@ export const GameGridDimensions = Object.freeze({
   x: 10,
   y: 20,
 });
-
-/**
- * @typedef {GameState[]} GameStates
- *
- * @typedef {Object} GameState
- * @property {string} playerName
- * @property {CellType[][]} gridArray
- */
