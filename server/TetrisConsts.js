@@ -11,6 +11,7 @@ export const TetrominoType = Object.freeze({
   Z: 7,
 });
 
+/** @readonly @enum {number} */
 export const CellType = Object.freeze({
   Empty: 0,
   ...TetrominoType,

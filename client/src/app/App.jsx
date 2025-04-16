@@ -6,8 +6,10 @@ import { Home } from "../routes/Home.jsx";
 function App() {
   return (
     <>
-      <h1>Red Tetris</h1>
-      <Router routes={[{ "/": Home }, { "/:room/:player": Room }]} />
+      <h1 className="red-title center">Red Tetris</h1>
+      <main className="main">
+        <Router routes={[{ "/": Home }, { "/:room/:player": Room }]} />
+      </main>
     </>
   );
 }

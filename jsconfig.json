@@ -8,5 +8,5 @@
     "jsx": "react-jsx",
     "maxNodeModuleJsDepth": 0
   },
-  "include": ["client/**/*", "server/**/*"]
+  "include": ["client/**/*", "server/**/*", "shared/**/*"]
 }
