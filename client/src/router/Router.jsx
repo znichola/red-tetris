@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useEffect } from "react";
-import { navigate } from "./navigate";
+import { navigate } from "./navigate.js";
 
 /**
  * @param {Object} props
- * @param {Object.<string, React.ComponentType>[]} props.routes
+ * @param {Record<string, React.ComponentType>[]} props.routes
  * @returns {React.JSX.Element}
  */
 function Router({ routes }) {
@@ -29,6 +29,7 @@ function Router({ routes }) {
       const params = matchParams(path, currentPath);
       const isMatch = params !== null;
       if (isMatch) {
+        // @ts-ignore -  TODO : fix this react type issue
         setComponent(<Comp params={params} />);
         return;
       }
@@ -46,10 +47,10 @@ function Router({ routes }) {
  * @param {React.ReactNode} props.children
  * @returns {React.JSX.Element}
  */
-function Link({ to, href, children, ...props }) {
+function Link({ to, children, ...props }) {
   const handleClick = (e) => {
     e.preventDefault();
-    navigate(to || href);
+    navigate(to);
   };
 
   return (
@@ -77,6 +78,7 @@ function matchParams(routePattern, browserPath) {
   const routePathParts = routePattern.split("/").filter((v) => v != "");
   const currentPathParts = browserPath.split("/").filter((v) => v != "");
 
+  /** @type {Record<string, string>} */
   var res = {};
   if (routePattern === browserPath) return res;
   if (routePathParts.length != currentPathParts.length) return null;

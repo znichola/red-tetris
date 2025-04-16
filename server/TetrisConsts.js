@@ -1,6 +1,4 @@
-/**
- * @typedef {number} TetrominoType
- */
+/** @readonly @enum {number} */
 export const TetrominoType = Object.freeze({
   I: 1,
   O: 2,
@@ -11,16 +9,13 @@ export const TetrominoType = Object.freeze({
   Z: 7,
 });
 
-/**
- * @typedef {number} CellType
- */
+/** @readonly @enum {number} */
 export const CellType = Object.freeze({
   Empty: 0,
   ...TetrominoType,
 });
 
-/** @typedef {number} RotationType */
-
+/** @readonly @enum {number} */
 export const RotationType = Object.freeze({
   Rotation0: 0,
   Rotation90: 1,
