@@ -1,8 +1,12 @@
 import { describe, it, expect, afterEach, beforeEach } from "vitest";
 import { io as ioClient } from "socket.io-client";
 import createApp from "./server.js";
-import { ActionType, GameState, SocketEvents } from "../DTOs.js";
-import { CellType } from "./TetrisConsts.js";
+import {
+  ActionType,
+  CellType,
+  GameState,
+  SocketEvents,
+} from "../shared/DTOs.js";
 
 const TestPort = 3001;
 const RoomNames = ["testRoom1", "testRoom2"];
@@ -39,7 +43,7 @@ describe("server", () => {
     const updateRoomDataPromise = waitFor(socket, SocketEvents.UpdateRoomData);
     await connectSocket(RoomNames[0], PlayerNames[1]);
     const roomData = (await updateRoomDataPromise)[0];
-    /** @type {import("../DTOs.js").RoomData} */
+    /** @type {import("../shared/DTOs.js").RoomData} */
     const expectedRoomData = {
       gameState: GameState.Pending,
       ownerName: PlayerNames[0],
@@ -57,7 +61,7 @@ describe("server", () => {
     );
     ownerSocket.disconnect();
     const roomData = (await updateRoomDataPromise)[0];
-    /** @type {import("../DTOs.js").RoomData} */
+    /** @type {import("../shared/DTOs.js").RoomData} */
     const expectedRoomData = {
       gameState: GameState.Pending,
       ownerName: PlayerNames[1],
@@ -118,7 +122,7 @@ describe("server", () => {
     emitStartGame(ownerSocket);
     const ownerRoomData = (await ownerUpdateRoomDataPromise)[0];
     const nonOwnerRoomData = (await nonOwnerUpdateRoomDataPromise)[0];
-    /** @type {import("../DTOs.js").RoomData} */
+    /** @type {import("../shared/DTOs.js").RoomData} */
     const expectedRoomData = {
       gameState: GameState.Playing,
       ownerName: PlayerNames[0],
@@ -134,10 +138,10 @@ describe("server", () => {
     const updateRoomDataPromise = waitFor(socket, SocketEvents.UpdateRoomData);
     const updateGameDataPromise = waitFor(socket, SocketEvents.UpdateGameData);
     emitStartGame(socket);
-    /** @type {import("../DTOs.js").GameData} */
+    /** @type {import("../shared/DTOs.js").GameData} */
     await updateRoomDataPromise;
     const gameData = (await updateGameDataPromise)[0];
-    /** @type {import("../DTOs.js").GameData} */
+    /** @type {import("../shared/DTOs.js").GameData} */
     const expectedGameDataStructure = {
       grid: expect.any(Array),
       playerNameToSpectrum: expect.objectContaining({
@@ -155,7 +159,7 @@ describe("server", () => {
     await updateRoomDataPromise;
     const updateGameDataPromise = waitFor(socket, SocketEvents.UpdateGameData);
     emitGameAction(socket, ActionType.HardDrop);
-    /** @type {import("../DTOs.js").GameData} */
+    /** @type {import("../shared/DTOs.js").GameData} */
     const gameData = (await updateGameDataPromise)[0];
     expect(gameData.grid[0].every((cell) => cell === CellType.Empty)).toBe(
       true,

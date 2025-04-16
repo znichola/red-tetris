@@ -1,5 +1,5 @@
 import React from "react";
-import { CellType } from "../../../../shared/TetrisConsts.js";
+import { CellType } from "../../../../shared/DTOs.js";
 import "./board.css";
 import {
   ArrowBigDown,

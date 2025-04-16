@@ -1,5 +1,3 @@
-import { CellType } from "./server/TetrisConsts.js";
-
 /**
  * @typedef {Object} GameData
  * @property {Grid} grid
@@ -14,20 +12,18 @@ import { CellType } from "./server/TetrisConsts.js";
  * @property {string} ownerName
  * @property {string[]} playerNames
  *
- * @typedef {number} GameState
- *
- * @typedef {number} ActionType
- *
  * @typedef {Object} GameActionData
  * @property {ActionType} actionType
  */
 
+/** @readonly @enum {number} */
 export const GameState = {
   Pending: 0,
   Playing: 1,
   Ended: 2,
 };
 
+/** @readonly @enum {number} */
 export const ActionType = {
   MoveLeft: 0,
   MoveRight: 1,
@@ -36,6 +32,7 @@ export const ActionType = {
   HardDrop: 4,
 };
 
+/** @readonly @enum {string} */
 export const SocketEvents = {
   //NOTE: Client to server events:
   GameAction: "gameAction",
@@ -44,3 +41,20 @@ export const SocketEvents = {
   UpdateRoomData: "updateRoomData",
   UpdateGameData: "updateGameData",
 };
+
+/** @readonly @enum {number} */
+export const TetrominoType = Object.freeze({
+  I: 1,
+  O: 2,
+  T: 3,
+  J: 4,
+  L: 5,
+  S: 6,
+  Z: 7,
+});
+
+/** @readonly @enum {number} */
+export const CellType = Object.freeze({
+  Empty: 0,
+  ...TetrominoType,
+});

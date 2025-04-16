@@ -1,19 +1,4 @@
-/** @readonly @enum {number} */
-export const TetrominoType = Object.freeze({
-  I: 1,
-  O: 2,
-  T: 3,
-  J: 4,
-  L: 5,
-  S: 6,
-  Z: 7,
-});
-
-/** @readonly @enum {number} */
-export const CellType = Object.freeze({
-  Empty: 0,
-  ...TetrominoType,
-});
+import { CellType, TetrominoType } from "../shared/DTOs.js";
 
 /** @readonly @enum {number} */
 export const RotationType = Object.freeze({

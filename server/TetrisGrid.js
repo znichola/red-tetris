@@ -1,8 +1,8 @@
+import { TetrominoType } from "../shared/DTOs.js";
 import Grid from "./Grid.js";
 import { DROP_RATE } from "./TetrisConfig.js";
 import {
   VectorDown,
-  TetrominoType,
   GameGridDimensions,
   VectorLeft,
   VectorRight,

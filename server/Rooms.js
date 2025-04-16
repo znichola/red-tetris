@@ -1,4 +1,4 @@
-import { ActionType, SocketEvents } from "../DTOs.js";
+import { ActionType, SocketEvents } from "../shared/DTOs.js";
 import Room from "./Room.js";
 
 export default class Rooms {

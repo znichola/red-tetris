@@ -1,4 +1,4 @@
-import { GameState, SocketEvents } from "../DTOs.js";
+import { GameState, SocketEvents } from "../shared/DTOs.js";
 import TetrisGame from "./TetrisGame.js";
 
 export default class Room {
@@ -17,7 +17,7 @@ export default class Room {
   }
 
   /**
-   * @returns {import("../DTOs.js").RoomData}
+   * @returns {import("../shared/DTOs.js").RoomData}
    */
   get #roomData() {
     return {
@@ -102,7 +102,7 @@ export default class Room {
 
   /**
    * @param {string} playerName
-   * @param {import("../DTOs.js").ActionType} actionType
+   * @param {import("../shared/DTOs.js").ActionType} actionType
    */
   doAction(playerName, actionType) {
     if (this.#gameState !== GameState.Playing) {

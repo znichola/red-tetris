@@ -14,7 +14,7 @@ export default class Tetromino extends Grid {
   }
 
   /**
-   * @param {import("./TetrisConsts.js").TetrominoType} tetrominoType
+   * @param {import("../shared/DTOs.js").TetrominoType} tetrominoType
    */
   constructor(tetrominoType) {
     const rotation = RotationType.Rotation0;

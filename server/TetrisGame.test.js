@@ -1,14 +1,13 @@
 import { expect, describe, it, vi, beforeEach, afterEach } from "vitest";
 import TetrisGame from "./TetrisGame.js";
 import {
-  CellType,
   GameGridDimensions,
   RotationType,
   Tetrominoes,
 } from "./TetrisConsts.js";
 import { DROP_RATE } from "./TetrisConfig.js";
 import Grid from "./Grid.js";
-import { ActionType } from "../DTOs.js";
+import { ActionType, CellType } from "../shared/DTOs.js";
 
 const TestsRandomSeed = 42;
 //NOTE: With seed 42, the tetrominoes will always appear in this order:
@@ -29,8 +28,8 @@ const DropCountForGameToEndOnItsOwn = 120;
 
 expect.extend({
   /**
-   * @param {import("../DTOs.js").Grid} received
-   * @param {import("../DTOs.js").Grid} expected
+   * @param {import("../shared/DTOs.js").Grid} received
+   * @param {import("../shared/DTOs.js").Grid} expected
    */
   toEqualGrid(received, expected) {
     const pass = this.equals(received, expected);
@@ -255,7 +254,7 @@ function getAndValidateGameData(game, playerName, allPlayerNames) {
 }
 
 /**
- * @param {import("../DTOs.js").GameData} gameData
+ * @param {import("../shared/DTOs.js").GameData} gameData
  * @param {string[]} otherPlayerNames
  */
 function expectValidGameData(gameData, otherPlayerNames) {
@@ -328,8 +327,8 @@ function executeActionForAllPlayers(
 }
 
 /**
- * @param {import("../DTOs.js").GameData} gameData
- * @param {import("../DTOs.js").Grid} expectedGrid
+ * @param {import("../shared/DTOs.js").GameData} gameData
+ * @param {import("../shared/DTOs.js").Grid} expectedGrid
  */
 function expectGameDataGridEqual(gameData, expectedGrid) {
   const grid = gameData.grid;

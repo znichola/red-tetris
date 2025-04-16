@@ -2,7 +2,7 @@ import seedrandom from "seedrandom";
 import TetrisGrid from "./TetrisGrid.js";
 import { TICK_RATE } from "./TetrisConfig.js";
 import { VectorDown, VectorLeft, VectorRight } from "./TetrisConsts.js";
-import { ActionType } from "../DTOs.js";
+import { ActionType } from "../shared/DTOs.js";
 
 export default class TetrisGame {
   #lastLoopTime = new Date();
@@ -12,10 +12,10 @@ export default class TetrisGame {
 
   /**
    * @param {string} playerName
-   * @returns {import("../DTOs.js").GameData}
+   * @returns {import("../shared/DTOs.js").GameData}
    */
   getGameData(playerName) {
-    /** @type {Object<string, import("../DTOs.js").Spectrum>} */
+    /** @type {Object<string, import("../shared/DTOs.js").Spectrum>} */
     const playerNameToSpectrum = {};
 
     this.#playerGameStates
@@ -47,7 +47,7 @@ export default class TetrisGame {
 
   /**
    * @param {string} playerName
-   * @param {import("../DTOs.js").ActionType} actionType
+   * @param {import("../shared/DTOs.js").ActionType} actionType
    */
   doAction(playerName, actionType) {
     const playerGameState = this.#playerGameStates.find(
