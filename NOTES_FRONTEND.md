@@ -15,4 +15,4 @@ The app is a state machine, and any appstate is a combination and ordering of `m
 
 ## Redux
 
-The [redux docs](https://redux.js.org/tutorials/fundamentals/part-1-overview#data-flow) show a good example of how the state machine works via messages.
+The [redux docs](https://redux.js.org/tutorials/essentials/part-1-overview-concepts#redux-application-data-flow) show a good example of how the state machine works via messages.
