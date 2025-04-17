@@ -7,7 +7,7 @@ import { CellType } from "../../../shared/DTOs.js";
  * Define the initial value for the slice state
  */
 const initialState = {
-  /** @type {CellType[][]} */ board: Array.from({ length: 20 }, () =>
+  /** @type {CellType[][]} */ grid: Array.from({ length: 20 }, () =>
     Array.from({ length: 10 }, () => CellType.Empty),
   ),
 };
@@ -23,17 +23,17 @@ export const gameSlice = createSlice({
     /**
      * @param {import("@reduxjs/toolkit").PayloadAction<CellType[][]>} action
      */
-    replaceBoard: (state, action) => {
+    replaceGrid: (state, action) => {
       // "Mutating" state becasue immer is used to propery create a new object each time.
-      state.board = action.payload;
+      state.grid = action.payload;
     },
   },
 });
 
-export const { replaceBoard } = gameSlice.actions;
+export const { replaceGrid } = gameSlice.actions;
 
-export const selectBoard = (
+export const selectGrid = (
   /**@type {import("./store.js").RootState} */ state,
-) => state.game.board;
+) => state.game.grid;
 
 export default gameSlice.reducer;

@@ -10,15 +10,17 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useKeyPress } from "../../hooks/useKeyPress.js";
+import { useSelector } from "react-redux";
+import { selectGrid } from "../../redux/gameSlice.js";
 
 /**
  * @param {Object} props
- * @param {CellType[][]} props.grid
  * @param {string} props.room
  * @param {string} props.player
  * @returns {React.JSX.Element}
  */
-function Board({ room, player, grid }) {
+function Board({ room, player }) {
+  const grid = useSelector(selectGrid);
   return (
     <div className="standard-dialog thing">
       <div className="title-bar">
@@ -165,4 +167,4 @@ function Button({ icon, className, shortcutKeyCodes = [], onClick }) {
   );
 }
 
-export { Board, Keypad };
+export { Board, Keypad, Grid };
