@@ -1,5 +1,5 @@
 import { GameState, SocketEvents } from "../shared/DTOs.js";
-import TetrisGame from "./TetrisGame.js";
+import Game from "./Game.js";
 
 export default class Room {
   #io;
@@ -9,7 +9,7 @@ export default class Room {
   #ownerName;
   /** @type {{ socket: import("socket.io").Socket, name: string }[]} */
   #players = [];
-  /** @type {import("./TetrisGame.js").default} */
+  /** @type {import("./Game.js").default} */
   #tetrisGame = null;
 
   get name() {
@@ -85,9 +85,7 @@ export default class Room {
     }
 
     this.#gameState = GameState.Playing;
-    this.#tetrisGame = new TetrisGame(
-      this.#players.map((player) => player.name),
-    );
+    this.#tetrisGame = new Game(this.#players.map((player) => player.name));
     this.#tetrisGame.addGameUpdateListener(this.#OnGameUpdate);
     this.#tetrisGame.gameLoop();
     this.#broadcastRoomData();
@@ -125,5 +123,9 @@ export default class Room {
    */
   hasPlayer(playerName) {
     return this.#players.some((player) => player.name === playerName);
+  }
+
+  isPlaying() {
+    return this.#gameState === GameState.Playing;
   }
 }

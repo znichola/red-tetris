@@ -1,5 +1,5 @@
 import { expect, describe, it, vi, beforeEach, afterEach } from "vitest";
-import TetrisGame from "./TetrisGame.js";
+import Game from "./Game.js";
 import {
   GameGridDimensions,
   RotationType,
@@ -49,7 +49,7 @@ expect.extend({
   },
 });
 
-describe("TetrisGame", () => {
+describe("Game", () => {
   beforeEach(() => {
     vi.useFakeTimers();
   });
@@ -227,7 +227,7 @@ describe("TetrisGame", () => {
 });
 
 function createTetrisGame(playerNames = ["Player1", "Player2"]) {
-  const game = new TetrisGame(playerNames, TestsRandomSeed);
+  const game = new Game(playerNames, TestsRandomSeed);
   game.gameLoop();
   return { game, playerNames };
 }
@@ -240,7 +240,7 @@ async function progressGameByDropCount(dropCount) {
 }
 
 /**
- * @param {TetrisGame} game
+ * @param {Game} game
  * @param {string} playerName
  * @param {string[]} allPlayerNames
  */
@@ -308,7 +308,7 @@ function getTetrominoFromSpawnOrder(
 }
 
 /**
- * @param {TetrisGame} game
+ * @param {Game} game
  * @param {string[]} playerNames
  * @param {ActionType} action
  * @param {number} actionCount

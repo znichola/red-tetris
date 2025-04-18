@@ -132,13 +132,25 @@ describe("server", () => {
     expect(nonOwnerRoomData).toMatchObject(expectedRoomData);
   });
 
+  it("should not join a same room when a game is in progress", async () => {
+    const ownerSocket = await connectSocket(RoomNames[0], PlayerNames[0]);
+    await connectSocket(RoomNames[0], PlayerNames[1]);
+    const updateRoomDataPromise = waitFor(
+      ownerSocket,
+      SocketEvents.UpdateRoomData,
+    );
+    emitStartGame(ownerSocket);
+    await updateRoomDataPromise;
+    const newSocket = await connectSocket(RoomNames[0], PlayerNames[2]);
+    expect(newSocket.connected).toBe(false);
+  });
+
   it("should receive game state updates", async () => {
     const socket = await connectSocket(RoomNames[0], PlayerNames[0]);
     await connectSocket(RoomNames[0], PlayerNames[1]);
     const updateRoomDataPromise = waitFor(socket, SocketEvents.UpdateRoomData);
     const updateGameDataPromise = waitFor(socket, SocketEvents.UpdateGameData);
     emitStartGame(socket);
-    /** @type {import("../shared/DTOs.js").GameData} */
     await updateRoomDataPromise;
     const gameData = (await updateGameDataPromise)[0];
     /** @type {import("../shared/DTOs.js").GameData} */

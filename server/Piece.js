@@ -1,7 +1,7 @@
 import Grid from "./Grid.js";
 import { RotateClockwise, RotationType, Tetrominoes } from "./TetrisConsts.js";
 
-export default class Tetromino extends Grid {
+export default class Piece extends Grid {
   #tetrominoType;
   /**
    * @type {RotationType}

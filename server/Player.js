@@ -1,5 +1,6 @@
 import { TetrominoType } from "../shared/DTOs.js";
 import Grid from "./Grid.js";
+import Piece from "./Piece.js";
 import { DROP_RATE } from "./TetrisConfig.js";
 import {
   VectorDown,
@@ -8,15 +9,12 @@ import {
   VectorRight,
   VectorUp,
 } from "./TetrisConsts.js";
-import Tetromino from "./Tetromino.js";
 
-export default class TetrisGrid {
+export default class Player {
   #pileGrid = Grid.fromRowsCols(GameGridDimensions.y, GameGridDimensions.x);
   #prng;
   #gameOver = false;
-  /**
-   * @type {import("./Tetromino.js").default}
-   */
+  /** @type {import("./Piece.js").default} */
   #currentTetromino;
   #nextTetromino;
   #dropTimer = 0;
@@ -129,7 +127,7 @@ export default class TetrisGrid {
     const tetrominoTypes = Object.values(TetrominoType);
     const randomType =
       tetrominoTypes[Math.floor(this.#prng() * tetrominoTypes.length)];
-    return new Tetromino(randomType);
+    return new Piece(randomType);
   }
 
   isGameOver() {
