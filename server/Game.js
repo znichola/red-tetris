@@ -1,10 +1,10 @@
 import seedrandom from "seedrandom";
-import TetrisGrid from "./TetrisGrid.js";
+import Player from "./Player.js";
 import { TICK_RATE } from "./TetrisConfig.js";
 import { VectorDown, VectorLeft, VectorRight } from "./TetrisConsts.js";
 import { ActionType } from "../shared/DTOs.js";
 
-export default class TetrisGame {
+export default class Game {
   #lastLoopTime = new Date();
   #playerGameStates;
   /** @type {function[]} */
@@ -22,13 +22,13 @@ export default class TetrisGame {
       .filter((playerGameState) => playerGameState.playerName !== playerName)
       .forEach((playerGameState) => {
         playerNameToSpectrum[playerGameState.playerName] =
-          playerGameState.grid.spectrum;
+          playerGameState.player.spectrum;
       });
 
     return {
       grid: this.#playerGameStates.find(
         (playerGameState) => playerGameState.playerName === playerName,
-      ).grid.gridArray,
+      ).player.gridArray,
       playerNameToSpectrum,
     };
   }
@@ -41,7 +41,7 @@ export default class TetrisGame {
     randomSeed = randomSeed ?? this.#lastLoopTime;
     this.#playerGameStates = playerNames.map((playerName) => ({
       playerName,
-      grid: new TetrisGrid(seedrandom(randomSeed)),
+      player: new Player(seedrandom(randomSeed)),
     }));
   }
 
@@ -60,19 +60,19 @@ export default class TetrisGame {
 
     switch (actionType) {
       case ActionType.MoveLeft:
-        playerGameState.grid.tryMoveTetromino(VectorLeft);
+        playerGameState.player.tryMoveTetromino(VectorLeft);
         break;
       case ActionType.MoveRight:
-        playerGameState.grid.tryMoveTetromino(VectorRight);
+        playerGameState.player.tryMoveTetromino(VectorRight);
         break;
       case ActionType.Rotate:
-        playerGameState.grid.tryRotateTetromino();
+        playerGameState.player.tryRotateTetromino();
         break;
       case ActionType.SoftDrop:
-        playerGameState.grid.tryMoveTetromino(VectorDown);
+        playerGameState.player.tryMoveTetromino(VectorDown);
         break;
       case ActionType.HardDrop:
-        playerGameState.grid.hardDropTetromino();
+        playerGameState.player.hardDropTetromino();
         break;
     }
   }
@@ -99,7 +99,7 @@ export default class TetrisGame {
 
     //NOTE: A draw can occur when all players game over at the same time.
     const winnerGameState = this.#playerGameStates.find(
-      (playerGameState) => !playerGameState.grid.isGameOver(),
+      (playerGameState) => !playerGameState.player.isGameOver(),
     );
 
     //TODO: broadcast game over
@@ -113,7 +113,7 @@ export default class TetrisGame {
   hasMultipleActivePlayers() {
     return (
       this.#playerGameStates.filter(
-        (playerGameState) => !playerGameState.grid.isGameOver(),
+        (playerGameState) => !playerGameState.player.isGameOver(),
       ).length > 1
     );
   }
@@ -123,8 +123,8 @@ export default class TetrisGame {
    */
   #updateGrids(deltaTime) {
     this.#playerGameStates.forEach((playerGameState) => {
-      if (!playerGameState.grid.isGameOver()) {
-        playerGameState.grid.update(deltaTime);
+      if (!playerGameState.player.isGameOver()) {
+        playerGameState.player.update(deltaTime);
       }
     });
   }
