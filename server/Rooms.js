@@ -25,7 +25,7 @@ export default class Rooms {
     if (!room) {
       room = new Room(this.#io, roomName, socket, playerName);
       this.#rooms.set(roomName, room);
-    } else if (room.hasPlayer(playerName)) {
+    } else if (room.hasPlayer(playerName) || room.isPlaying()) {
       return false;
     } else {
       room.addPlayer(socket, playerName);

@@ -126,4 +126,8 @@ export default class Room {
   hasPlayer(playerName) {
     return this.#players.some((player) => player.name === playerName);
   }
+
+  isPlaying() {
+    return this.#gameState === GameState.Playing;
+  }
 }
