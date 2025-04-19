@@ -1,15 +1,13 @@
 import { describe, it, expect } from "vitest";
 import { fireEvent, render } from "@testing-library/react";
-import { Board, Keypad } from "./Board.jsx";
+import { Grid, Keypad } from "./Board.jsx";
 import { mockGrid } from "./mockGrid.js";
 import { vi } from "vitest";
 import { act } from "react";
 
 describe("Board view", () => {
   it("should have a 10 x 20 grid visible", () => {
-    const { container } = render(
-      <Board grid={mockGrid} room="foobar" player="alice" />,
-    );
+    const { container } = render(<Grid grid={mockGrid} />);
 
     const rows = container.getElementsByClassName("line");
     expect(rows.length).toBe(20);
@@ -19,9 +17,7 @@ describe("Board view", () => {
   });
 
   it("should have 8 colors for tetromino blocks", () => {
-    const { container } = render(
-      <Board grid={mockGrid} room="foobar" player="alice" />,
-    );
+    const { container } = render(<Grid grid={mockGrid} />);
 
     const allCells = container.getElementsByClassName("cell");
 
@@ -38,9 +34,7 @@ describe("Board view", () => {
   });
 
   it("should have 5 action buttons visile", () => {
-    const { container } = render(
-      <Board grid={mockGrid} room="foobar" player="alice" />,
-    );
+    const { container } = render(<Grid grid={mockGrid} />);
 
     const rows = container.getElementsByClassName("move-btn");
     expect(rows.length).toBe(5);
