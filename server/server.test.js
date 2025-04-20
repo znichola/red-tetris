@@ -185,7 +185,7 @@ describe("server", () => {
  */
 async function connectSocket(roomName, playerName) {
   const socket = ioClient(`http://localhost:${TestPort}`, {
-    query: { roomName, playerName },
+    auth: { roomName, playerName },
   });
   await waitFor(socket, "connect");
 

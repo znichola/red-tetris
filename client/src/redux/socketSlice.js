@@ -5,14 +5,14 @@ const initialState = {
 };
 
 export const roomSlice = createSlice({
-  name: "room",
+  name: "socket",
   initialState,
   reducers: {
     /**
      * @param {import("@reduxjs/toolkit").PayloadAction<boolean>} action
      */
     setIsSocketConnected: (state, action) => {
-      // "Mutating" state becasue immer is used to propery create a new object each time.
+      // "Mutating" state because immer is used to propery create a new object each time.
       state.isConnected = action.payload;
     },
   },

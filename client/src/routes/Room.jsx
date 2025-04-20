@@ -6,15 +6,11 @@ import { mockAllPlayers } from "../components/spectra/mockAllPlayers.js";
 import { SpectraOverview } from "../components/spectra/Spectra.jsx";
 import "./room.css";
 import { socket } from "../socket.js";
-import { Socket } from "socket.io-client";
-import { GameState, SocketEvents } from "../../../shared/DTOs.js";
+import { SocketEvents } from "../../../shared/DTOs.js";
 import { useDispatch } from "react-redux";
-import { replaceRoom } from "../redux/roomSlice.js";
+import { replaceRoom, setIsRoomAdmin } from "../redux/roomSlice.js";
 import { setIsSocketConnected } from "../redux/socketSlice.js";
-
-/**@typedef {import("socket.io-client").Socket | null} SocketState */
-
-// const /**@type {SocketState} */ initialState = null;
+import { replaceGrid } from "../redux/gameSlice.js";
 
 /**
  * @param {Object} props
@@ -33,9 +29,16 @@ function Room({ params }) {
       /** @type {import("../../../shared/DTOs.js").RoomData} */ data,
     ) => {
       dispatch(replaceRoom(data));
-      console.log("UPDARET ROOM DATA:", data);
+      dispatch(setIsRoomAdmin(params.player));
+      console.log("UPDATE ROOM DATA:", data);
     };
+
+    const onUpdateGameData = (/** @type {{ grid: number[][]; }} */ data) => {
+      dispatch(replaceGrid(data.grid))
+    };
+
     socket.on(SocketEvents.UpdateRoomData, onUpdateRoomData);
+    socket.on(SocketEvents.UpdateGameData, onUpdateGameData);
 
     socket.connect();
     dispatch(setIsSocketConnected(true));

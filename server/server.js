@@ -31,7 +31,6 @@ function createApp() {
 
   io.on("connection", (socket) => {
     const { roomName, playerName } = socket.handshake.auth;
-    console.log("CONNECTING!", socket.handshake.auth);
     if (
       typeof roomName !== "string" ||
       typeof playerName !== "string" ||

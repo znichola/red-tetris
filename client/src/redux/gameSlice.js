@@ -24,7 +24,7 @@ export const gameSlice = createSlice({
      * @param {import("@reduxjs/toolkit").PayloadAction<CellType[][]>} action
      */
     replaceGrid: (state, action) => {
-      // "Mutating" state becasue immer is used to propery create a new object each time.
+      // "Mutating" state because immer is used to propery create a new object each time.
       state.grid = action.payload;
     },
   },
