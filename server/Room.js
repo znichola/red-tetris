@@ -113,7 +113,6 @@ export default class Room {
   }
 
   #broadcastRoomData() {
-    console.log("BOARDCATING ROOM DATA");
     this.#io.to(this.#name).emit(SocketEvents.UpdateRoomData, this.#roomData);
   }
 

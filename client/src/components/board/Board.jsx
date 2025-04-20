@@ -11,7 +11,7 @@ import {
 import { useEffect, useState } from "react";
 import { useKeyPress } from "../../hooks/useKeyPress.js";
 import { useSelector } from "react-redux";
-import { selectGrid } from "../../redux/gameSlice.js";
+import { selectGame } from "../../redux/gameSlice.js";
 import { socket } from "../../socket.js";
 
 /**
@@ -21,7 +21,7 @@ import { socket } from "../../socket.js";
  * @returns {React.JSX.Element}
  */
 function Board({ room, player }) {
-  const grid = useSelector(selectGrid);
+  const grid = useSelector(selectGame).grid;
   return (
     <div className="standard-dialog thing">
       <div className="title-bar">

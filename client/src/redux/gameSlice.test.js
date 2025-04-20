@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import gameReducer, { replaceGrid, selectGrid } from "./gameSlice.js";
+import gameReducer, { replaceGrid, selectGame } from "./gameSlice.js";
 import { CellType } from "../../../shared/DTOs.js";
 
 describe("gameSlice", () => {
@@ -11,6 +11,7 @@ describe("gameSlice", () => {
   it("should handle replaceGrid", () => {
     const initialState = {
       grid: createEmptyGrid(),
+      playerInfo: [],
     };
 
     const newGrid = Array.from({ length: 20 }, () =>
@@ -21,15 +22,16 @@ describe("gameSlice", () => {
     expect(nextState.grid).toEqual(newGrid);
   });
 
-  it("selectGrid should return the grid from state", () => {
+  it("selectGame should return the grid from state", () => {
     const testGrid = [[CellType.I]];
     const state = {
       game: {
         grid: testGrid,
       },
+      playerInfo: [],
     };
 
-    const result = selectGrid(state);
+    const result = selectGame(state);
     expect(result).toBe(testGrid);
   });
 });

@@ -2,15 +2,15 @@ import { useEffect } from "react";
 import { Board } from "../components/board/Board.jsx";
 import { Debug } from "../components/debug/Debug.jsx";
 import { GameManager } from "../components/manager/GameManager.jsx";
-import { mockAllPlayers } from "../components/spectra/mockAllPlayers.js";
 import { SpectraOverview } from "../components/spectra/Spectra.jsx";
-import "./room.css";
 import { socket } from "../socket.js";
 import { SocketEvents } from "../../../shared/DTOs.js";
 import { useDispatch } from "react-redux";
 import { replaceRoom, setIsRoomAdmin } from "../redux/roomSlice.js";
 import { setIsSocketConnected } from "../redux/socketSlice.js";
-import { replaceGrid } from "../redux/gameSlice.js";
+import { replaceGrid, replaceSpectra } from "../redux/gameSlice.js";
+import "./room.css";
+import { Key } from "lucide-react";
 
 /**
  * @param {Object} props
@@ -30,11 +30,28 @@ function Room({ params }) {
     ) => {
       dispatch(replaceRoom(data));
       dispatch(setIsRoomAdmin(params.player));
-      console.log("UPDATE ROOM DATA:", data);
+      dispatch(
+        replaceSpectra(
+          data.playerNames
+            .filter((n) => n != params.player)
+            .map((n) => {
+              return { player: n, spectra: Array(10).fill(0) };
+            }),
+        ),
+      );
     };
 
-    const onUpdateGameData = (/** @type {{ grid: number[][]; }} */ data) => {
-      dispatch(replaceGrid(data.grid))
+    const onUpdateGameData = (
+      /** @type {import("../../../shared/DTOs.js").GameData} */ data,
+    ) => {
+      dispatch(replaceGrid(data.grid));
+      dispatch(
+        replaceSpectra(
+          Object.entries(data.playerNameToSpectrum).map((e) => {
+            return { player: e[0], spectra: e[1] };
+          }),
+        ),
+      );
     };
 
     socket.on(SocketEvents.UpdateRoomData, onUpdateRoomData);
@@ -57,7 +74,7 @@ function Room({ params }) {
     <div className="layout">
       <Board player={params.player} room={params.room} />
       <GameManager />
-      <SpectraOverview allPlayers={mockAllPlayers} />
+      <SpectraOverview />
       <Debug />
     </div>
   );
