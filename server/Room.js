@@ -39,6 +39,8 @@ export default class Room {
     this.#ownerName = ownerName;
     this.#players = [{ socket, name: ownerName }];
     socket.join(name);
+    // Braodcast room data to player who made the room
+    this.#broadcastRoomData();
   }
 
   /**
@@ -111,6 +113,7 @@ export default class Room {
   }
 
   #broadcastRoomData() {
+    console.log("BOARDCATING ROOM DATA");
     this.#io.to(this.#name).emit(SocketEvents.UpdateRoomData, this.#roomData);
   }
 

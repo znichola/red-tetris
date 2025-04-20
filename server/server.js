@@ -19,12 +19,19 @@ function createApp() {
   });
 
   const server = http.createServer(app);
-  const io = new Server(server);
+  const io = new Server(
+    server,
+    process.env.NODE_ENV == "production"
+      ? {}
+      : {
+          cors: { origin: "*" },
+        },
+  );
   const rooms = new Rooms(io);
 
   io.on("connection", (socket) => {
-    const { roomName, playerName } = socket.handshake.query;
-
+    const { roomName, playerName } = socket.handshake.auth;
+    console.log("CONNECTING!", socket.handshake.auth);
     if (
       typeof roomName !== "string" ||
       typeof playerName !== "string" ||

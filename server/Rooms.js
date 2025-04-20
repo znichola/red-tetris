@@ -30,7 +30,10 @@ export default class Rooms {
     } else {
       room.addPlayer(socket, playerName);
     }
-
+    
+    // TODO: This setup should result in a message
+    // informing the client of what the room is
+    
     socket.on(SocketEvents.StartGame, () =>
       this.#OnStartGame(room, playerName),
     );

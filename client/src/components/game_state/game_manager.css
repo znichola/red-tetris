@@ -1,0 +1,17 @@
+.red-circle,
+.green-circle {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-left: 0.5em;
+  vertical-align: middle;
+}
+
+.red-circle {
+  background-color:rgb(230, 47, 26);
+}
+
+.green-circle {
+  background-color: #2ecc71;
+}
