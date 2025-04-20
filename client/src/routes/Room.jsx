@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Board } from "../components/board/Board.jsx";
 import { Debug } from "../components/debug/Debug.jsx";
-import { GameManager } from "../components/game_state/GameManager.jsx";
+import { GameManager } from "../components/manager/GameManager.jsx";
 import { mockAllPlayers } from "../components/spectra/mockAllPlayers.js";
 import { SpectraOverview } from "../components/spectra/Spectra.jsx";
 import "./room.css";
