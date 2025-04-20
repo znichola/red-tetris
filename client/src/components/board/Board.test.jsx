@@ -1,11 +1,22 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { fireEvent, render } from "@testing-library/react";
 import { Grid, Keypad } from "./Board.jsx";
 import { mockGrid } from "./mockGrid.js";
-import { vi } from "vitest";
 import { act } from "react";
+import { ActionType, SocketEvents } from "../../../../shared/DTOs.js";
+
+import { socket } from "../../socket.js";
+vi.mock("../../socket.js", () => ({
+  socket: {
+    emit: vi.fn(),
+  },
+}));
 
 describe("Board view", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   it("should have a 10 x 20 grid visible", () => {
     const { container } = render(<Grid grid={mockGrid} />);
 
@@ -33,73 +44,88 @@ describe("Board view", () => {
     expect(bgColors.size).toBe(8);
   });
 
-  it("should have 5 action buttons visile", () => {
+  it("should have 5 action buttons visible", () => {
     const { container } = render(<Grid grid={mockGrid} />);
 
     const rows = container.getElementsByClassName("move-btn");
     expect(rows.length).toBe(5);
   });
 
-  it("should print action when buttons are clicked", () => {
-    const consoleSpy = vi.spyOn(console, "log").mockImplementation(() => {});
-
+  it("should emit socket action when buttons are clicked", () => {
     const { container } = render(<Keypad />);
 
-    fireEvent.click(container.querySelector(".up"));
-    expect(consoleSpy).toHaveBeenCalledWith("up");
-
-    fireEvent.click(container.querySelector(".down"));
-    expect(consoleSpy).toHaveBeenCalledWith("down");
-
     fireEvent.click(container.querySelector(".left"));
-    expect(consoleSpy).toHaveBeenCalledWith("left");
+    expect(socket.emit).toHaveBeenCalledWith(
+      SocketEvents.GameAction,
+      ActionType.MoveLeft,
+    );
 
     fireEvent.click(container.querySelector(".right"));
-    expect(consoleSpy).toHaveBeenCalledWith("right");
+    expect(socket.emit).toHaveBeenCalledWith(
+      SocketEvents.GameAction,
+      ActionType.MoveRight,
+    );
+
+    fireEvent.click(container.querySelector(".up"));
+    expect(socket.emit).toHaveBeenCalledWith(
+      SocketEvents.GameAction,
+      ActionType.Rotate,
+    );
+
+    fireEvent.click(container.querySelector(".down"));
+    expect(socket.emit).toHaveBeenCalledWith(
+      SocketEvents.GameAction,
+      ActionType.SoftDrop,
+    );
 
     fireEvent.click(container.querySelector(".space"));
-    expect(consoleSpy).toHaveBeenCalledWith("space");
-
-    consoleSpy.mockRestore();
+    expect(socket.emit).toHaveBeenCalledWith(
+      SocketEvents.GameAction,
+      ActionType.HardDrop,
+    );
   });
 
-  it("should print action when shortcuts are used", async () => {
-    const consoleSpy = vi.spyOn(console, "log").mockImplementation(() => {});
-
-    const addEventListenerSpy = vi.spyOn(document, "addEventListener");
-
+  it("should emit socket action when shortcuts are used", () => {
     render(<Keypad />);
 
-    expect(addEventListenerSpy).toHaveBeenCalledWith(
-      "keydown",
-      expect.any(Function),
+    act(() => {
+      fireEvent.keyDown(document, { code: "KeyA" });
+    });
+    expect(socket.emit).toHaveBeenCalledWith(
+      SocketEvents.GameAction,
+      ActionType.MoveLeft,
+    );
+
+    act(() => {
+      fireEvent.keyDown(document, { code: "KeyD" });
+    });
+    expect(socket.emit).toHaveBeenCalledWith(
+      SocketEvents.GameAction,
+      ActionType.MoveRight,
     );
 
     act(() => {
       fireEvent.keyDown(document, { code: "KeyW" });
     });
-    expect(consoleSpy).toHaveBeenCalledWith("up");
+    expect(socket.emit).toHaveBeenCalledWith(
+      SocketEvents.GameAction,
+      ActionType.Rotate,
+    );
 
     act(() => {
       fireEvent.keyDown(document, { code: "ArrowDown" });
     });
-    expect(consoleSpy).toHaveBeenCalledWith("down");
-
-    act(() => {
-      fireEvent.keyDown(document, { code: "KeyA" });
-    });
-    expect(consoleSpy).toHaveBeenCalledWith("left");
-
-    act(() => {
-      fireEvent.keyDown(document, { code: "KeyD" });
-    });
-    expect(consoleSpy).toHaveBeenCalledWith("right");
+    expect(socket.emit).toHaveBeenCalledWith(
+      SocketEvents.GameAction,
+      ActionType.SoftDrop,
+    );
 
     act(() => {
       fireEvent.keyDown(document, { code: "Space" });
     });
-    expect(consoleSpy).toHaveBeenCalledWith("space");
-
-    consoleSpy.mockRestore();
+    expect(socket.emit).toHaveBeenCalledWith(
+      SocketEvents.GameAction,
+      ActionType.HardDrop,
+    );
   });
 });

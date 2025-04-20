@@ -1,9 +1,17 @@
 import { configureStore } from "@reduxjs/toolkit";
-import gameReducer from "./gameSlice.js";
-import roomReducer from "./roomSlice.js";
-import socketReducer from "./socketSlice.js";
+import gameReducer, { initialState as initialGameState } from "./gameSlice.js";
+import roomReducer, { initialState as initialRoomState } from "./roomSlice.js";
+import socketReducer, {
+  initialState as initialSocketState,
+} from "./socketSlice.js";
 
 // https://redux.js.org/tutorials/essentials/part-2-app-structure#creating-the-redux-store
+
+export const initiaStoreState = {
+  game: initialGameState,
+  room: initialRoomState,
+  socket: initialSocketState,
+};
 
 export const store = configureStore({
   reducer: {

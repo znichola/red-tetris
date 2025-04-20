@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 /** @typedef {import("../../../shared/DTOs.js").RoomData} RoomData */
 
-const initialState = {
+export const initialState = {
   /**@type {RoomData | null} */ data: null,
   isRoomAdmin: false,
 };

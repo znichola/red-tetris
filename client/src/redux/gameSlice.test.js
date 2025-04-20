@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import gameReducer, { replaceGrid, selectGame } from "./gameSlice.js";
 import { CellType } from "../../../shared/DTOs.js";
+import { initiaStoreState } from "./store.js";
 
 describe("gameSlice", () => {
   const createEmptyGrid = () =>
@@ -25,13 +26,16 @@ describe("gameSlice", () => {
   it("selectGame should return the grid from state", () => {
     const testGrid = [[CellType.I]];
     const state = {
+      ...initiaStoreState,
       game: {
         grid: testGrid,
+        playerInfo: [{ player: "JARED", spectra: [0, 2, 3, 1, 0] }],
       },
-      playerInfo: [],
     };
 
     const result = selectGame(state);
-    expect(result).toBe(testGrid);
+    expect(result).toBe(state.game);
   });
+
+  it("selectGame");
 });

@@ -15,7 +15,7 @@ import { CellType } from "../../../shared/DTOs.js";
 /**
  * Define the initial value for the slice state
  */
-const initialState = {
+export const initialState = {
   /** @type {CellType[][]} */ grid: Array.from({ length: 20 }, () =>
     Array.from({ length: 10 }, () => CellType.Empty),
   ),
