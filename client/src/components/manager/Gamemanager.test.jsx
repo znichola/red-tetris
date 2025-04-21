@@ -7,13 +7,12 @@ import {
   act,
 } from "@testing-library/react";
 import { Provider } from "react-redux";
-import { store } from "../../redux/store.js"; // Update path as needed
+import { store } from "../../redux/store.js";
 import { GameManager } from "./GameManager.jsx";
 import { setIsRoomAdmin, replaceRoom } from "../../redux/roomSlice.js";
 import { setIsSocketConnected } from "../../redux/socketSlice.js";
 import { GameState, SocketEvents } from "../../../../shared/DTOs.js";
 
-// Mock socket
 vi.mock("../../socket.js", () => {
   return {
     socket: {
@@ -27,7 +26,7 @@ import { socket } from "../../socket.js";
 describe("GameManager component", () => {
   beforeEach(() => {
     cleanup();
-    store.dispatch({ type: "RESET" }); // If you have a reset reducer for tests
+    store.dispatch({ type: "RESET_ALL" });
     store.dispatch(setIsSocketConnected(true));
   });
 

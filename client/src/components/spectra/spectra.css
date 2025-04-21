@@ -14,3 +14,11 @@
 .grid-narrow {
   gap: 1px;
 }
+
+.spectra-filled {
+  background-color: var(--grey);
+}
+
+.spectra-empty {
+  background-color: var(--tet-color-empty);
+}
