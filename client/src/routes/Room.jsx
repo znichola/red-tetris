@@ -10,7 +10,7 @@ import { replaceRoom, setIsRoomAdmin } from "../redux/roomSlice.js";
 import { setIsSocketConnected } from "../redux/socketSlice.js";
 import { replaceGrid, replaceSpectra } from "../redux/gameSlice.js";
 import "./room.css";
-import { Key } from "lucide-react";
+import { resetAll } from "../redux/hooks.js";
 
 /**
  * @param {Object} props
@@ -66,7 +66,7 @@ function Room({ params }) {
       console.log("Disconnecting from room");
       socket.off(SocketEvents.UpdateRoomData, onUpdateRoomData);
       socket.disconnect();
-      dispatch(setIsSocketConnected(false));
+      dispatch(resetAll());
     };
   }, [params, dispatch]);
 

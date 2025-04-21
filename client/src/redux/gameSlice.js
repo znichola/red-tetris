@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { CellType } from "../../../shared/DTOs.js";
+import { resetAll } from "./hooks.js";
 
 // https://redux.js.org/tutorials/essentials/part-2-app-structure#creating-slice-reducers-and-actions
 
@@ -44,6 +45,7 @@ export const gameSlice = createSlice({
       state.playerInfo = action.payload;
     },
   },
+  extraReducers: (builder) => builder.addCase(resetAll, () => initialState),
 });
 
 export const { replaceGrid, replaceSpectra } = gameSlice.actions;

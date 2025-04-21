@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { resetAll } from "./hooks.js";
 
 export const initialState = {
   isConnected: false,
@@ -16,6 +17,7 @@ export const roomSlice = createSlice({
       state.isConnected = action.payload;
     },
   },
+  extraReducers: (builder) => builder.addCase(resetAll, () => initialState),
 });
 
 export const { setIsSocketConnected } = roomSlice.actions;
