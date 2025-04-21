@@ -7,6 +7,7 @@
     "dev": "vite",
     "test": "vitest",
     "coverage": "vitest run --coverage",
+    "coverage:serv": "serve -l tcp://0.0.0.0:5000 coverage",
     "build": "vite build",
     "lint": "eslint .",
     "format": "npx prettier . --check",
@@ -23,10 +24,10 @@
     "lucide-react": "^0.488.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "socket.io": "^4.8.1",
-    "socket.io-client": "^4.8.1",
     "react-redux": "^9.2.0",
-    "seedrandom": "^3.0.5"
+    "seedrandom": "^3.0.5",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
@@ -45,6 +46,7 @@
     "jsdom": "^26.0.0",
     "nodemon": "^3.1.9",
     "prettier": "3.5.3",
+    "serve": "^14.2.4",
     "typescript": "^5.8.3",
     "vite": "^6.2.0",
     "vitest": "^3.1.1"
