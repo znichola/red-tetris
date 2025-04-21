@@ -30,15 +30,6 @@ function Room({ params }) {
     ) => {
       dispatch(replaceRoom(data));
       dispatch(setIsRoomAdmin(params.player));
-      dispatch(
-        replaceSpectra(
-          data.playerNames
-            .filter((n) => n != params.player)
-            .map((n) => {
-              return { player: n, spectra: Array(10).fill(0) };
-            }),
-        ),
-      );
     };
 
     const onUpdateGameData = (
@@ -79,8 +70,8 @@ function Room({ params }) {
     <div className="layout">
       <Board player={params.player} room={params.room} />
       <GameManager />
-      <SpectraOverview />
       <Debug />
+      <SpectraOverview />
     </div>
   );
 }

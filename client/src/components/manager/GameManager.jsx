@@ -25,7 +25,7 @@ function GameManager() {
       </div>
       <div className="dialog-body">
         {roomState == GameState.Ended ? (
-          <div>Game over</div>
+          <GameOver />
         ) : roomState == GameState.Playing ? (
           <div>Game in progress</div>
         ) : roomState == GameState.Pending ? (
@@ -33,6 +33,7 @@ function GameManager() {
         ) : (
           <div>Unknown room state</div>
         )}
+        <PlayersInLobby />
         <div>
           leave? click to return <Link to="/">home</Link>
         </div>
@@ -62,6 +63,43 @@ function Pending() {
         <div>...waiting for game to start</div>
       )}
     </>
+  );
+}
+
+function GameOver() {
+  const isRoomAdmin = useSelector(selectRoom).isRoomAdmin;
+
+  const launchGame = () => {
+    if (socket.connected) {
+      socket.emit(SocketEvents.StartGame);
+    }
+  };
+  return (
+    <>
+      {isRoomAdmin ? (
+        <div>
+          Game over, relaunch when ready{" "}
+          <button className="btn" onClick={launchGame}>
+            start
+          </button>
+        </div>
+      ) : (
+        <div>Game over</div>
+      )}
+    </>
+  );
+}
+
+function PlayersInLobby() {
+  const players = useSelector(selectRoom).data?.playerNames || [];
+  return (
+    <div>
+      <strong>Players in loobby:</strong>{" "}
+      {players.reduce(
+        (prev, player) => `${prev}${prev == "" ? "" : ", "} ${player}`,
+        "",
+      )}
+    </div>
   );
 }
 
