@@ -58,13 +58,12 @@ function Room({ params }) {
     socket.on(SocketEvents.UpdateGameData, onUpdateGameData);
 
     socket.connect();
-    dispatch(setIsSocketConnected(true));
-
-    console.log("RUNNING USEEFFECT TO CONNECT");
-
+    if (socket.active) {
+      dispatch(setIsSocketConnected(true));
+    }
     return () => {
-      console.log("Disconnecting from room");
       socket.off(SocketEvents.UpdateRoomData, onUpdateRoomData);
+      socket.off(SocketEvents.UpdateGameData, onUpdateGameData);
       socket.disconnect();
       dispatch(resetAll());
     };
