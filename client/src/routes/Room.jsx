@@ -58,9 +58,7 @@ function Room({ params }) {
     socket.on(SocketEvents.UpdateGameData, onUpdateGameData);
 
     socket.connect();
-    if (socket.active) {
-      dispatch(setIsSocketConnected(true));
-    }
+    dispatch(setIsSocketConnected(socket.connected));
     return () => {
       socket.off(SocketEvents.UpdateRoomData, onUpdateRoomData);
       socket.off(SocketEvents.UpdateGameData, onUpdateGameData);
