@@ -45,7 +45,7 @@ function Pending() {
   const isRoomAdmin = useSelector(selectRoom).isRoomAdmin;
 
   const launchGame = () => {
-    if (socket.active) {
+    if (socket.connected) {
       socket.emit(SocketEvents.StartGame);
     }
   };

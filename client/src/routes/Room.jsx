@@ -54,14 +54,22 @@ function Room({ params }) {
       );
     };
 
+    const onConnectionChange = () => {
+      dispatch(setIsSocketConnected(socket.connected));
+    };
+
     socket.on(SocketEvents.UpdateRoomData, onUpdateRoomData);
     socket.on(SocketEvents.UpdateGameData, onUpdateGameData);
+    socket.on("connect", onConnectionChange);
+    socket.on("disconnect", onConnectionChange);
 
     socket.connect();
-    dispatch(setIsSocketConnected(socket.connected));
+
     return () => {
       socket.off(SocketEvents.UpdateRoomData, onUpdateRoomData);
       socket.off(SocketEvents.UpdateGameData, onUpdateGameData);
+      socket.off("connect", onConnectionChange);
+      socket.off("disconnect", onConnectionChange);
       socket.disconnect();
       dispatch(resetAll());
     };

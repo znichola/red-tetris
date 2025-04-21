@@ -9,6 +9,7 @@ import { socket } from "../../socket.js";
 vi.mock("../../socket.js", () => ({
   socket: {
     emit: vi.fn(),
+    connected: true,
   },
 }));
 
@@ -127,5 +128,14 @@ describe("Board view", () => {
       SocketEvents.GameAction,
       ActionType.HardDrop,
     );
+  });
+
+  it("should only emit when connected", () => {
+    render(<Keypad />);
+    socket.connected = false;
+    act(() => {
+      fireEvent.keyDown(document, { code: "Space" });
+    });
+    expect(socket.emit).toHaveBeenCalledTimes(0);
   });
 });
