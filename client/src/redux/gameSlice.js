@@ -25,7 +25,7 @@ export const initialState = {
 
 /**
  * Slices contain Redux reducer logic for updating state, and
- * generate actions taht can be dispatched to trigger those updates.
+ * generate actions that can be dispatched to trigger those updates.
  */
 export const gameSlice = createSlice({
   name: "game",
@@ -35,7 +35,7 @@ export const gameSlice = createSlice({
      * @param {import("@reduxjs/toolkit").PayloadAction<CellType[][]>} action
      */
     replaceGrid: (state, action) => {
-      // "Mutating" state because immer is used to propery create a new object each time.
+      // "Mutating" state because immer is used to properly create a new object each time.
       state.grid = action.payload;
     },
     /**

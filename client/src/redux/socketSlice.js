@@ -13,7 +13,7 @@ export const roomSlice = createSlice({
      * @param {import("@reduxjs/toolkit").PayloadAction<boolean>} action
      */
     setIsSocketConnected: (state, action) => {
-      // "Mutating" state because immer is used to propery create a new object each time.
+      // "Mutating" state because immer is used to properly create a new object each time.
       state.isConnected = action.payload;
     },
   },
