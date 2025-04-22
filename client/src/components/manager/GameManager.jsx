@@ -31,7 +31,7 @@ function GameManager() {
         ) : roomState == GameState.Pending ? (
           <Pending />
         ) : (
-          <div>Unknown room state</div>
+          <div>Room not found, please go back home</div>
         )}
         <div>
           leave? click to return <Link to="/">home</Link>
