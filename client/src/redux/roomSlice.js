@@ -15,7 +15,7 @@ export const roomSlice = createSlice({
      * @param {import("@reduxjs/toolkit").PayloadAction<RoomData>} action
      */
     replaceRoom: (state, action) => {
-      // "Mutating" state because immer is used to propery create a new object each time.
+      // "Mutating" state because immer is used to properly create a new object each time.
       state.data = action.payload;
     },
     /**
