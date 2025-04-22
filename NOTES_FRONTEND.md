@@ -12,3 +12,7 @@ The app is a state machine, and any appstate is a combination and ordering of `m
 
 - make homepage `/` where there is a setup screen for creating a room, with button to navigate to created room page.
 - make `/room/player` page to display an open room. Have two states, waiting for server to make room (socket message), and an opened room.
+
+## Redux
+
+The [redux docs](https://redux.js.org/tutorials/essentials/part-1-overview-concepts#redux-application-data-flow) show a good example of how the state machine works via messages.

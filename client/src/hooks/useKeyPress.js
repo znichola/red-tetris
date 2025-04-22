@@ -17,8 +17,9 @@ function useKeyPress(keys, callback, node = null) {
   // handle what happens on key press
   const handleKeyPress = useCallback(
     (/** @type {KeyboardEvent} */ event) => {
-      // check if one of the key is part of the ones we want
+      // check if one of the keys is part of the ones we want
       if (keys.some((key) => event.code === key)) {
+        event.preventDefault();
         callbackRef.current(event);
       }
     },

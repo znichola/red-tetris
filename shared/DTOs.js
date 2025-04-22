@@ -1,12 +1,12 @@
 /**
  * @typedef {Object} GameData
  * @property {Grid} grid
- * @property {Object<string, Spectrum>} playerNameToSpectrum
+ * @property {PlayerNameToSpectrum} playerNameToSpectrum
  *
  * @typedef {CellType[][]} Grid
  *
+ * @typedef {Object<string, Spectrum> } PlayerNameToSpectrum
  * @typedef {number[]} Spectrum
- *
  * @typedef {Object} RoomData
  * @property {GameState} gameState
  * @property {string} ownerName

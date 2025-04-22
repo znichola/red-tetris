@@ -1,0 +1,16 @@
+.spectra-overview {
+  display: flex;
+  gap: 0.5em;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.spectra-view {
+  width: 6.2em;
+  font-family: "Chicago_12";
+}
+
+.grid-narrow {
+  gap: 1px;
+}

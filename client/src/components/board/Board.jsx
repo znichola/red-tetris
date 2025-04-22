@@ -1,5 +1,5 @@
 import React from "react";
-import { CellType } from "../../../../shared/DTOs.js";
+import { ActionType, CellType, SocketEvents } from "../../../../shared/DTOs.js";
 import "./board.css";
 import {
   ArrowBigDown,
@@ -10,15 +10,18 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useKeyPress } from "../../hooks/useKeyPress.js";
+import { useSelector } from "react-redux";
+import { selectGame } from "../../redux/gameSlice.js";
+import { socket } from "../../socket.js";
 
 /**
  * @param {Object} props
- * @param {CellType[][]} props.grid
  * @param {string} props.room
  * @param {string} props.player
  * @returns {React.JSX.Element}
  */
-function Board({ room, player, grid }) {
+function Board({ room, player }) {
+  const grid = useSelector(selectGame).grid;
   return (
     <div className="standard-dialog thing">
       <div className="title-bar">
@@ -88,37 +91,41 @@ function Cell({ tet_color }) {
 }
 
 function Keypad() {
+  const emitAction = (/** @type {ActionType} */ actionType) => {
+    socket.emit(SocketEvents.GameAction, actionType);
+  };
+
   return (
     <div className="keypad-line">
       <Button
         className="space"
         icon={Space}
         shortcutKeyCodes={["Space"]}
-        onClick={() => console.log("space")}
+        onClick={() => emitAction(ActionType.HardDrop)}
       />
       <Button
         className="up"
         icon={ArrowBigUp}
         shortcutKeyCodes={["ArrowUp", "KeyW"]}
-        onClick={() => console.log("up")}
+        onClick={() => emitAction(ActionType.Rotate)}
       />
       <Button
         className="left"
         icon={ArrowBigLeft}
         shortcutKeyCodes={["ArrowLeft", "KeyA"]}
-        onClick={() => console.log("left")}
+        onClick={() => emitAction(ActionType.MoveLeft)}
       />
       <Button
         className="down"
         icon={ArrowBigDown}
         shortcutKeyCodes={["ArrowDown", "KeyS"]}
-        onClick={() => console.log("down")}
+        onClick={() => emitAction(ActionType.SoftDrop)}
       />
       <Button
         className="right"
         icon={ArrowBigRight}
         shortcutKeyCodes={["ArrowRight", "KeyD"]}
-        onClick={() => console.log("right")}
+        onClick={() => emitAction(ActionType.MoveRight)}
       />
     </div>
   );
@@ -165,4 +172,4 @@ function Button({ icon, className, shortcutKeyCodes = [], onClick }) {
   );
 }
 
-export { Board, Keypad };
+export { Board, Keypad, Grid };

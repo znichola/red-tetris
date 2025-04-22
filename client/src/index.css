@@ -42,3 +42,23 @@
   max-width: 20em;
   height: 100%;
 }
+
+.grid {
+  display: flex;
+  width: 100%;
+  max-width: 20em;
+  margin: 0 auto;
+  gap: 0.2em;
+  flex-direction: column;
+}
+
+.line {
+  display: flex;
+  gap: 0.2em;
+}
+
+.cell {
+  width: 100%;
+  max-width: 100%;
+  aspect-ratio: 1 / 1;
+}
