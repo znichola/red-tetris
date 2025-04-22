@@ -70,16 +70,6 @@ describe("server", () => {
     expect(roomData).toMatchObject(expectedRoomData);
   });
 
-  it("should not start a game with less than 2 players", async () => {
-    const ownerSocket = await connectSocket(RoomNames[0], PlayerNames[0]);
-    const noRoomDataUpdatePromise = waitForUnexpectedSocketEventOrTimeout(
-      ownerSocket,
-      SocketEvents.UpdateRoomData,
-    );
-    emitStartGame(ownerSocket);
-    await noRoomDataUpdatePromise;
-  });
-
   it("should not start a game when a non-owner tries to start it", async () => {
     await connectSocket(RoomNames[0], PlayerNames[0]);
     const nonOwnerSocket = await connectSocket(RoomNames[0], PlayerNames[1]);
@@ -106,6 +96,16 @@ describe("server", () => {
     );
     emitStartGame(ownerSocket);
     await noRoomDataUpdatePromise;
+  });
+
+  it("should start a solo game", async () => {
+    const ownerSocket = await connectSocket(RoomNames[0], PlayerNames[0]);
+    const updateRoomDataPromise = waitFor(
+      ownerSocket,
+      SocketEvents.UpdateRoomData,
+    );
+    emitStartGame(ownerSocket);
+    await updateRoomDataPromise;
   });
 
   it("should start a game when the owner starts it", async () => {

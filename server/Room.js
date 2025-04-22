@@ -78,8 +78,7 @@ export default class Room {
   startGame(playerName) {
     if (
       this.#gameState !== GameState.Pending ||
-      this.#ownerName !== playerName ||
-      this.#players.length < 2
+      this.#ownerName !== playerName
     ) {
       return;
     }
