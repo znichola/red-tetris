@@ -43,7 +43,8 @@ export default class Grid {
   clearAndDropFullRows() {
     /** @param {CellType[]} row */
     const isRowFull = (row) => row.every((cell) => cell !== CellType.Empty);
-    const createEmptyRow = () => Array(this.array[0].length).fill(0);
+    const createEmptyRow = () =>
+      Array(this.array[0].length).fill(CellType.Empty);
 
     this.array.forEach((row, index) => {
       if (isRowFull(row)) {
