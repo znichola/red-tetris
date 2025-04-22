@@ -70,6 +70,8 @@ function Room({ params }) {
     <div className="layout">
       <Board player={params.player} room={params.room} />
       <GameManager />
+      <SpectraOverview />
+      {/* TODO : remove */}
       <Debug />
       <SpectraOverview />
     </div>
