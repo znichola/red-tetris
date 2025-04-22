@@ -104,7 +104,8 @@ export default class Game {
       (playerGameState) => !playerGameState.player.isGameOver(),
     );
 
-    //TODO: broadcast game over
+    //TODO: Decide on what to broadcast when a solo game ends, since there's no winner found for now.
+    //TODO: Broadcast game over
     if (!winnerGameState) {
       console.log("Game over: Draw!");
     } else {
