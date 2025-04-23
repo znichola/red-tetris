@@ -89,7 +89,7 @@ function matchParams(routePattern, browserPath) {
     if (match == undefined) {
       return false;
     } else if (id.startsWith(":")) {
-      res[id.slice(1)] = match;
+      res[id.slice(1)] = decodeURIComponent(match);
       return true;
     } else if (id == currentPathParts[i]) {
       return true;

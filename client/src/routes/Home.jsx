@@ -28,7 +28,9 @@ function Home() {
         className="modeless-dialog"
         onSubmit={(e) => {
           e.preventDefault();
-          navigate(`/${roomName}/${playerName}`);
+          navigate(
+            `/${encodeURIComponent(roomName)}/${encodeURIComponent(playerName)}`,
+          );
         }}
       >
         <section className="field-row">
