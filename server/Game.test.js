@@ -158,7 +158,7 @@ describe("Game", () => {
     expectedGrid1.array[2][4] = CellType.I;
     expectedGrid1.array[3][4] = CellType.I;
     expectGridArrayToEqual(gameData1.grid, expectedGrid1.array);
-    executeActionForAllPlayers(game, playerNames, ActionType.Rotate);
+    executeActions(game, playerNames, ActionType.Rotate);
     const gameData2 = getAndValidateGameData(game, playerNames[0], playerNames);
     const expectedGrid2 = getGridWithTetrominoFromSpawnOrder(0, { x: 4, y: 0 });
     expectGridArrayToEqual(gameData2.grid, expectedGrid2.array);
@@ -216,21 +216,21 @@ describe("Game", () => {
   it("should clear lines", async () => {
     const { game, playerNames } = createTetrisGame();
     //NOTE: This is the sequence of actions to get a full line at the bottom:
-    executeActionForAllPlayers(game, playerNames, ActionType.MoveLeft, 99);
-    executeActionForAllPlayers(game, playerNames, ActionType.HardDrop);
+    executeActions(game, playerNames, ActionType.MoveLeft, 99);
+    executeActions(game, playerNames, ActionType.HardDrop);
     await progressGameByDropCount(1);
-    executeActionForAllPlayers(game, playerNames, ActionType.MoveLeft);
-    executeActionForAllPlayers(game, playerNames, ActionType.HardDrop);
+    executeActions(game, playerNames, ActionType.MoveLeft);
+    executeActions(game, playerNames, ActionType.HardDrop);
     await progressGameByDropCount(1);
-    executeActionForAllPlayers(game, playerNames, ActionType.MoveRight, 99);
-    executeActionForAllPlayers(game, playerNames, ActionType.HardDrop);
+    executeActions(game, playerNames, ActionType.MoveRight, 99);
+    executeActions(game, playerNames, ActionType.HardDrop);
     await progressGameByDropCount(1);
-    executeActionForAllPlayers(game, playerNames, ActionType.MoveLeft, 99);
-    executeActionForAllPlayers(game, playerNames, ActionType.HardDrop);
+    executeActions(game, playerNames, ActionType.MoveLeft, 99);
+    executeActions(game, playerNames, ActionType.HardDrop);
     await progressGameByDropCount(1);
-    executeActionForAllPlayers(game, playerNames, ActionType.Rotate);
-    executeActionForAllPlayers(game, playerNames, ActionType.MoveRight);
-    executeActionForAllPlayers(game, playerNames, ActionType.HardDrop);
+    executeActions(game, playerNames, ActionType.Rotate);
+    executeActions(game, playerNames, ActionType.MoveRight);
+    executeActions(game, playerNames, ActionType.HardDrop);
     await progressGameByDropCount(1);
     const gameData = getAndValidateGameData(game, playerNames[0], playerNames);
     const grid = gameData.grid;
