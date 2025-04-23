@@ -81,6 +81,16 @@ describe("Game", () => {
     await game.gameLoop();
   });
 
+  it("should show the spectra that lost reaching the top of the grid", async () => {
+    const { game, playerNames } = createTetrisGame();
+    await progressGameByDropCount(DropCountForGameToEndOnItsOwn);
+    const gameData = getAndValidateGameData(game, playerNames[0], playerNames);
+    const spectra = Object.values(gameData.playerNameToSpectrum);
+    spectra.forEach((spectrum) =>
+      expect(spectrum).toEqual(expect.arrayContaining([GameGridDimensions.y])),
+    );
+  });
+
   it("should spawn the same tetrominoes for all players", async () => {
     const playerNames = Array.from({ length: 42 }, (_, i) => `Player${i + 1}`);
     const { game } = createTetrisGame(playerNames);

@@ -86,11 +86,6 @@ export default class Player {
     }
   }
 
-  #pileCurrentTetromino() {
-    this.#pileGrid = this.#gridWithTetromino;
-    this.#spawnNextTetromino();
-  }
-
   /**
    * @param {number} deltaTime
    */
@@ -104,8 +99,13 @@ export default class Player {
         this.#currentTetromino.move(VectorDown);
       } else {
         this.#pileCurrentTetromino();
+        this.#spawnNextTetromino();
       }
     }
+  }
+
+  #pileCurrentTetromino() {
+    this.#pileGrid = this.#gridWithTetromino;
   }
 
   #spawnNextTetromino() {
@@ -119,6 +119,7 @@ export default class Player {
         this.#currentTetromino.position,
       )
     ) {
+      this.#pileCurrentTetromino();
       this.#gameOver = true;
     }
   }
