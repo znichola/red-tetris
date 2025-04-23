@@ -40,6 +40,27 @@ export default class Grid {
     return Grid.toString(this.array);
   }
 
+  clearAndDropFullRows() {
+    /** @param {CellType[]} row */
+    const isRowFull = (row) => row.every((cell) => cell !== CellType.Empty);
+    const createEmptyRow = () =>
+      Array(this.array[0].length).fill(CellType.Empty);
+
+    this.array.forEach((row, index) => {
+      if (isRowFull(row)) {
+        for (
+          let previousIndex = index - 1;
+          previousIndex >= 0;
+          --previousIndex
+        ) {
+          this.array[previousIndex + 1] = this.array[previousIndex];
+        }
+
+        this.array[0] = createEmptyRow();
+      }
+    });
+  }
+
   /**
    * @param {import("../shared/DTOs.js").Grid} array
    */

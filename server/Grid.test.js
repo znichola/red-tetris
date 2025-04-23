@@ -1,4 +1,5 @@
-import { expect, describe, it } from "vitest";
+import { expect, expectGridArrayToEqual } from "./expect-extensions.js";
+import { describe, it } from "vitest";
 import Grid from "./Grid.js";
 import { CellType } from "../shared/DTOs.js";
 
@@ -19,7 +20,7 @@ describe("Grid", () => {
       [CellType.Empty, CellType.I, CellType.Empty, CellType.Empty],
     ];
     const grid = Grid.fromArray(array);
-    expect(grid.array).toEqual(array);
+    expectGridArrayToEqual(grid.array, array);
   });
 
   it("should not detect an overlap between two grids with no same cells set", () => {
@@ -97,16 +98,16 @@ describe("Grid", () => {
   });
 
   it("should superimpose two grids correctly", () => {
-    const { gridA, gridB, expected } = createSuperimposeGrids();
-    const result = Grid.superimpose(gridA, gridB).array;
-    expect(result).toEqual(expected);
+    const { gridA, gridB, expectedGrid } = createSuperimposeGrids();
+    const grid = Grid.superimpose(gridA, gridB).array;
+    expectGridArrayToEqual(grid, expectedGrid);
   });
 
   it("should not modify the original grids after a superimpose", () => {
     const { gridA, gridB, arrayA, arrayB } = createSuperimposeGrids();
     Grid.superimpose(gridA, gridB);
-    expect(gridA.array).toEqual(arrayA);
-    expect(gridB.array).toEqual(arrayB);
+    expectGridArrayToEqual(gridA.array, arrayA);
+    expectGridArrayToEqual(gridB.array, arrayB);
   });
 
   it("should superimpose at positions correctly", () => {
@@ -122,7 +123,7 @@ describe("Grid", () => {
       x: 1,
       y: 2,
     });
-    expect(result1.array).toEqual(expected1);
+    expectGridArrayToEqual(result1.array, expected1);
 
     const tetrominoGridZ = createTetrominoGridZ();
     const expected2 = [
@@ -134,8 +135,8 @@ describe("Grid", () => {
     const result2 = Grid.superimposeAtPosition(result1, tetrominoGridZ, {
       x: 1,
       y: 1,
-    }).array;
-    expect(result2).toEqual(expected2);
+    });
+    expectGridArrayToEqual(result2.array, expected2);
   });
 
   it("should return the correct spectrum", () => {
@@ -147,6 +148,25 @@ describe("Grid", () => {
     ]);
     const expectedSpectrum = [0, 4, 3, 2];
     expect(grid.spectrum).toEqual(expectedSpectrum);
+  });
+
+  it("should clear full lines and drop the ones above", () => {
+    const grid = Grid.fromArray([
+      [CellType.T, CellType.Empty, CellType.Empty, CellType.Empty],
+      [CellType.T, CellType.T, CellType.Empty, CellType.Empty],
+      [CellType.T, CellType.O, CellType.O, CellType.Z],
+      [CellType.Empty, CellType.O, CellType.O, CellType.Empty],
+      [CellType.I, CellType.I, CellType.I, CellType.I],
+    ]);
+    const expectedGrid = [
+      [CellType.Empty, CellType.Empty, CellType.Empty, CellType.Empty],
+      [CellType.Empty, CellType.Empty, CellType.Empty, CellType.Empty],
+      [CellType.T, CellType.Empty, CellType.Empty, CellType.Empty],
+      [CellType.T, CellType.T, CellType.Empty, CellType.Empty],
+      [CellType.Empty, CellType.O, CellType.O, CellType.Empty],
+    ];
+    grid.clearAndDropFullRows();
+    expectGridArrayToEqual(grid.array, expectedGrid);
   });
 });
 
@@ -163,7 +183,7 @@ function createSuperimposeGrids() {
     [CellType.Empty, CellType.Empty, CellType.O, CellType.O],
     [CellType.Empty, CellType.Empty, CellType.Empty, CellType.Empty],
   ];
-  const expected = [
+  const expectedGrid = [
     [CellType.Empty, CellType.I, CellType.Empty, CellType.Empty],
     [CellType.Empty, CellType.I, CellType.O, CellType.O],
     [CellType.Empty, CellType.I, CellType.O, CellType.O],
@@ -173,7 +193,7 @@ function createSuperimposeGrids() {
   return {
     arrayA,
     arrayB,
-    expected,
+    expectedGrid,
     gridA: Grid.fromArray(arrayA),
     gridB: Grid.fromArray(arrayB),
   };

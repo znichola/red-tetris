@@ -106,6 +106,8 @@ export default class Player {
 
   #pileCurrentTetromino() {
     this.#pileGrid = this.#gridWithTetromino;
+    this.#spawnNextTetromino();
+    this.#pileGrid.clearAndDropFullRows();
   }
 
   #spawnNextTetromino() {

@@ -1,4 +1,5 @@
-import { expect, describe, it, vi, beforeEach, afterEach } from "vitest";
+import { expect, expectGridArrayToEqual } from "./expect-extensions.js";
+import { describe, it, vi, beforeEach, afterEach } from "vitest";
 import Game from "./Game.js";
 import {
   GameGridDimensions,
@@ -26,29 +27,6 @@ const TetrominoSpawnOrder = [
 ];
 const DropCountForGameToEndOnItsOwn = 120;
 
-expect.extend({
-  /**
-   * @param {import("../shared/DTOs.js").Grid} received
-   * @param {import("../shared/DTOs.js").Grid} expected
-   */
-  toEqualGrid(received, expected) {
-    const pass = this.equals(received, expected);
-
-    if (!pass) {
-      return {
-        pass,
-        message: () =>
-          Grid.toStrings([expected, received], ["Expected", "Received"]),
-      };
-    }
-
-    return {
-      pass,
-      message: () => "Grids are equal",
-    };
-  },
-});
-
 describe("Game", () => {
   beforeEach(() => {
     vi.useFakeTimers();
@@ -62,7 +40,7 @@ describe("Game", () => {
     const { game, playerNames } = createTetrisGame();
     const gameData = getAndValidateGameData(game, playerNames[0], playerNames);
     const expectedGrid = getGridWithTetrominoFromSpawnOrder(0, { x: 4, y: 0 });
-    expectGameDataGridEqual(gameData, expectedGrid.array);
+    expectGridArrayToEqual(gameData.grid, expectedGrid.array);
   });
 
   it("should make tetrominoes fall", async () => {
@@ -70,7 +48,7 @@ describe("Game", () => {
     await progressGameByDropCount(1);
     const gameData = getAndValidateGameData(game, playerNames[0], playerNames);
     const expectedGrid = getGridWithTetrominoFromSpawnOrder(0, { x: 4, y: 1 });
-    expectGameDataGridEqual(gameData, expectedGrid.array);
+    expectGridArrayToEqual(gameData.grid, expectedGrid.array);
   });
 
   it("should end the game after some time", { timeout: 1000 }, async () => {
@@ -105,7 +83,7 @@ describe("Game", () => {
       playerNames[1],
       playerNames,
     );
-    expectGameDataGridEqual(gameDataPlayer1, gameDataPlayer2.grid);
+    expectGridArrayToEqual(gameDataPlayer1.grid, gameDataPlayer2.grid);
   });
 
   it("should execute move left actions", async () => {
@@ -118,7 +96,7 @@ describe("Game", () => {
     );
     const gameData = getAndValidateGameData(game, playerNames[0], playerNames);
     const expectedGrid = getGridWithTetrominoFromSpawnOrder(0, { x: 0, y: 0 });
-    expectGameDataGridEqual(gameData, expectedGrid.array);
+    expectGridArrayToEqual(gameData.grid, expectedGrid.array);
   });
 
   it("should execute move right actions", async () => {
@@ -135,7 +113,7 @@ describe("Game", () => {
       x: GameGridDimensions.x - firstTetromino.width,
       y: 0,
     });
-    expectGameDataGridEqual(gameData, expectedGrid.array);
+    expectGridArrayToEqual(gameData.grid, expectedGrid.array);
   });
 
   it("should execute soft drop actions", async () => {
@@ -152,7 +130,7 @@ describe("Game", () => {
       x: 4,
       y: GameGridDimensions.y - firstTetromino.height,
     });
-    expectGameDataGridEqual(gameData, expectedGrid.array);
+    expectGridArrayToEqual(gameData.grid, expectedGrid.array);
   });
 
   it("should execute hard drop action", async () => {
@@ -164,7 +142,7 @@ describe("Game", () => {
       x: 4,
       y: GameGridDimensions.y - firstTetromino.height,
     });
-    expectGameDataGridEqual(gameData, expectedGrid.array);
+    expectGridArrayToEqual(gameData.grid, expectedGrid.array);
   });
 
   it("should execute rotate actions", async () => {
@@ -179,11 +157,11 @@ describe("Game", () => {
     expectedGrid1.array[1][4] = CellType.I;
     expectedGrid1.array[2][4] = CellType.I;
     expectedGrid1.array[3][4] = CellType.I;
-    expectGameDataGridEqual(gameData1, expectedGrid1.array);
-    executeActions(game, playerNames, ActionType.Rotate);
+    expectGridArrayToEqual(gameData1.grid, expectedGrid1.array);
+    executeActionForAllPlayers(game, playerNames, ActionType.Rotate);
     const gameData2 = getAndValidateGameData(game, playerNames[0], playerNames);
     const expectedGrid2 = getGridWithTetrominoFromSpawnOrder(0, { x: 4, y: 0 });
-    expectGameDataGridEqual(gameData2, expectedGrid2.array);
+    expectGridArrayToEqual(gameData2.grid, expectedGrid2.array);
   });
 
   it("should do a wall kick when possible", async () => {
@@ -212,7 +190,7 @@ describe("Game", () => {
       gridWithFirstTetromino,
       gridWithSecondTetromino,
     );
-    expectGameDataGridEqual(gameData, expectedGrid.array);
+    expectGridArrayToEqual(gameData.grid, expectedGrid.array);
   });
 
   it("should do a floor kick when possible", async () => {
@@ -232,7 +210,32 @@ describe("Game", () => {
       },
       RotationType.Rotation90,
     );
-    expectGameDataGridEqual(gameData, expectedGrid.array);
+    expectGridArrayToEqual(gameData.grid, expectedGrid.array);
+  });
+
+  it("should clear lines", async () => {
+    const { game, playerNames } = createTetrisGame();
+    //NOTE: This is the sequence of actions to get a full line at the bottom:
+    executeActionForAllPlayers(game, playerNames, ActionType.MoveLeft, 99);
+    executeActionForAllPlayers(game, playerNames, ActionType.HardDrop);
+    await progressGameByDropCount(1);
+    executeActionForAllPlayers(game, playerNames, ActionType.MoveLeft);
+    executeActionForAllPlayers(game, playerNames, ActionType.HardDrop);
+    await progressGameByDropCount(1);
+    executeActionForAllPlayers(game, playerNames, ActionType.MoveRight, 99);
+    executeActionForAllPlayers(game, playerNames, ActionType.HardDrop);
+    await progressGameByDropCount(1);
+    executeActionForAllPlayers(game, playerNames, ActionType.MoveLeft, 99);
+    executeActionForAllPlayers(game, playerNames, ActionType.HardDrop);
+    await progressGameByDropCount(1);
+    executeActionForAllPlayers(game, playerNames, ActionType.Rotate);
+    executeActionForAllPlayers(game, playerNames, ActionType.MoveRight);
+    executeActionForAllPlayers(game, playerNames, ActionType.HardDrop);
+    await progressGameByDropCount(1);
+    const gameData = getAndValidateGameData(game, playerNames[0], playerNames);
+    const grid = gameData.grid;
+    const lastRow = grid[grid.length - 1];
+    expect(lastRow.some((cell) => cell === CellType.Empty)).toBe(true);
   });
 });
 
@@ -329,17 +332,4 @@ function executeActions(game, playerNames, action, actionCount = 1) {
       game.doAction(playerName, action);
     }
   });
-}
-
-/**
- * @param {import("../shared/DTOs.js").GameData} gameData
- * @param {import("../shared/DTOs.js").Grid} expectedGrid
- */
-function expectGameDataGridEqual(gameData, expectedGrid) {
-  const grid = gameData.grid;
-  //NOTE: This @ts-ignore is needed because `toEqualGrid` function is not recognized.
-  //NOTE: This could be fixed with type declarations in a .d.ts file,
-  //NOTE: but we cannot write typescript because of the subject.
-  //@ts-ignore
-  expect(grid).toEqualGrid(expectedGrid);
 }
