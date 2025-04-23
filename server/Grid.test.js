@@ -60,24 +60,40 @@ describe("Grid", () => {
   });
 
   it("should detect overlaps between two grids that have the same cells set and at a different position", () => {
-    const gridA = Grid.fromRowsCols(20, 10);
-    const gridB = Grid.fromRowsCols(19, 9);
-    gridA.array[1][0] = CellType.O;
-    gridB.array[0][0] = CellType.I;
-    const result1 = Grid.overlapsAtPosition(gridA, gridB, { x: 0, y: 1 });
-    expect(result1).toBe(true);
+    {
+      const gridA = Grid.fromRowsCols(20, 10);
+      const gridB = Grid.fromRowsCols(19, 9);
+      gridA.array[1][0] = CellType.O;
+      gridB.array[0][0] = CellType.I;
+      const overlaps = Grid.overlapsAtPosition(gridA, gridB, { x: 0, y: 1 });
+      expect(overlaps).toBe(true);
+    }
 
-    const grid = Grid.fromRowsCols(20, 10);
-    const tetrominoGridO = createTetrominoGridO();
-    grid.array[19][2] = CellType.I;
-    grid.array[19][3] = CellType.I;
-    grid.array[19][4] = CellType.I;
-    grid.array[19][5] = CellType.I;
-    const result2 = Grid.overlapsAtPosition(grid, tetrominoGridO, {
-      x: 2,
-      y: 18,
-    });
-    expect(result2).toBe(true);
+    {
+      const grid = Grid.fromRowsCols(20, 10);
+      const tetrominoGridO = createTetrominoGridO();
+      grid.array[19][2] = CellType.I;
+      grid.array[19][3] = CellType.I;
+      grid.array[19][4] = CellType.I;
+      grid.array[19][5] = CellType.I;
+      const overlaps = Grid.overlapsAtPosition(grid, tetrominoGridO, {
+        x: 2,
+        y: 18,
+      });
+      expect(overlaps).toBe(true);
+    }
+
+    {
+      const grid = Grid.fromRowsCols(20, 10);
+      grid.array[16][4] = CellType.I;
+      grid.array[17][4] = CellType.I;
+      grid.array[18][4] = CellType.I;
+      grid.array[19][4] = CellType.I;
+      const tetrominoGridZ = createTetrominoGridZ();
+      const position = { x: 2, y: 16 };
+      const overlaps = Grid.overlapsAtPosition(grid, tetrominoGridZ, position);
+      expect(overlaps).toBe(true);
+    }
   });
 
   it("should superimpose two grids correctly", () => {

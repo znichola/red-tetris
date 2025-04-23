@@ -69,10 +69,13 @@ export default class Piece extends Grid {
     const overflowsBottom =
       movedPosition.y + rotatedTetromino.height > gameGrid.array.length;
     const overflows = overflowsRight || overflowsBottom;
-
-    return (
-      !overflows && !Grid.overlapsAtPosition(gameGrid, this, movedPosition)
+    const overlaps = Grid.overlapsAtPosition(
+      gameGrid,
+      Grid.fromArray(rotatedTetromino.shape),
+      movedPosition,
     );
+
+    return !overflows && !overlaps;
   }
 
   rotate() {

@@ -81,6 +81,16 @@ describe("Game", () => {
     await game.gameLoop();
   });
 
+  it("should show the spectra that lost reaching the top of the grid", async () => {
+    const { game, playerNames } = createTetrisGame();
+    await progressGameByDropCount(DropCountForGameToEndOnItsOwn);
+    const gameData = getAndValidateGameData(game, playerNames[0], playerNames);
+    const spectra = Object.values(gameData.playerNameToSpectrum);
+    spectra.forEach((spectrum) =>
+      expect(spectrum).toEqual(expect.arrayContaining([GameGridDimensions.y])),
+    );
+  });
+
   it("should spawn the same tetrominoes for all players", async () => {
     const playerNames = Array.from({ length: 42 }, (_, i) => `Player${i + 1}`);
     const { game } = createTetrisGame(playerNames);
@@ -100,7 +110,7 @@ describe("Game", () => {
 
   it("should execute move left actions", async () => {
     const { game, playerNames } = createTetrisGame();
-    executeActionForAllPlayers(
+    executeActions(
       game,
       playerNames,
       ActionType.MoveLeft,
@@ -113,7 +123,7 @@ describe("Game", () => {
 
   it("should execute move right actions", async () => {
     const { game, playerNames } = createTetrisGame();
-    executeActionForAllPlayers(
+    executeActions(
       game,
       playerNames,
       ActionType.MoveRight,
@@ -130,7 +140,7 @@ describe("Game", () => {
 
   it("should execute soft drop actions", async () => {
     const { game, playerNames } = createTetrisGame();
-    executeActionForAllPlayers(
+    executeActions(
       game,
       playerNames,
       ActionType.SoftDrop,
@@ -147,7 +157,7 @@ describe("Game", () => {
 
   it("should execute hard drop action", async () => {
     const { game, playerNames } = createTetrisGame();
-    executeActionForAllPlayers(game, playerNames, ActionType.HardDrop);
+    executeActions(game, playerNames, ActionType.HardDrop);
     const gameData = getAndValidateGameData(game, playerNames[0], playerNames);
     const firstTetromino = getTetrominoFromSpawnOrder(0);
     const expectedGrid = getGridWithTetrominoFromSpawnOrder(0, {
@@ -159,7 +169,7 @@ describe("Game", () => {
 
   it("should execute rotate actions", async () => {
     const { game, playerNames } = createTetrisGame();
-    executeActionForAllPlayers(game, playerNames, ActionType.Rotate);
+    executeActions(game, playerNames, ActionType.Rotate);
     const gameData1 = getAndValidateGameData(game, playerNames[0], playerNames);
     const expectedGrid1 = Grid.fromRowsCols(
       GameGridDimensions.y,
@@ -170,7 +180,7 @@ describe("Game", () => {
     expectedGrid1.array[2][4] = CellType.I;
     expectedGrid1.array[3][4] = CellType.I;
     expectGameDataGridEqual(gameData1, expectedGrid1.array);
-    executeActionForAllPlayers(game, playerNames, ActionType.Rotate);
+    executeActions(game, playerNames, ActionType.Rotate);
     const gameData2 = getAndValidateGameData(game, playerNames[0], playerNames);
     const expectedGrid2 = getGridWithTetrominoFromSpawnOrder(0, { x: 4, y: 0 });
     expectGameDataGridEqual(gameData2, expectedGrid2.array);
@@ -179,14 +189,14 @@ describe("Game", () => {
   it("should do a wall kick when possible", async () => {
     const { game, playerNames } = createTetrisGame();
     await progressGameByDropCount(20);
-    executeActionForAllPlayers(game, playerNames, ActionType.Rotate);
-    executeActionForAllPlayers(
+    executeActions(game, playerNames, ActionType.Rotate);
+    executeActions(
       game,
       playerNames,
       ActionType.MoveRight,
       GameGridDimensions.x,
     );
-    executeActionForAllPlayers(game, playerNames, ActionType.Rotate);
+    executeActions(game, playerNames, ActionType.Rotate);
     const gameData = getAndValidateGameData(game, playerNames[0], playerNames);
     const firstTetromino = getTetrominoFromSpawnOrder(0);
     const gridWithFirstTetromino = getGridWithTetrominoFromSpawnOrder(0, {
@@ -208,7 +218,7 @@ describe("Game", () => {
   it("should do a floor kick when possible", async () => {
     const { game, playerNames } = createTetrisGame();
     await progressGameByDropCount(19);
-    executeActionForAllPlayers(game, playerNames, ActionType.Rotate);
+    executeActions(game, playerNames, ActionType.Rotate);
     const gameData = getAndValidateGameData(game, playerNames[0], playerNames);
     const firstTetromino = getTetrominoFromSpawnOrder(
       0,
@@ -313,12 +323,7 @@ function getTetrominoFromSpawnOrder(
  * @param {ActionType} action
  * @param {number} actionCount
  */
-function executeActionForAllPlayers(
-  game,
-  playerNames,
-  action,
-  actionCount = 1,
-) {
+function executeActions(game, playerNames, action, actionCount = 1) {
   playerNames.forEach((playerName) => {
     for (let i = 0; i < actionCount; i++) {
       game.doAction(playerName, action);
