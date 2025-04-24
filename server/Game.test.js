@@ -176,14 +176,12 @@ describe("Game", () => {
     );
     executeActions(game, playerNames, ActionType.Rotate);
     const gameData = getAndValidateGameData(game, playerNames[0], playerNames);
-    const firstTetromino = getTetrominoFromSpawnOrder(0);
     const gridWithFirstTetromino = getGridWithTetrominoFromSpawnOrder(0, {
       x: 4,
-      y: GameGridDimensions.y - firstTetromino.height,
+      y: GameGridDimensions.y - getTetrominoFromSpawnOrder(0).height,
     });
-    const secondTetromino = getTetrominoFromSpawnOrder(1);
     const gridWithSecondTetromino = getGridWithTetrominoFromSpawnOrder(1, {
-      x: GameGridDimensions.x - secondTetromino.width,
+      x: GameGridDimensions.x - getTetrominoFromSpawnOrder(1).width,
       y: 0,
     });
     const expectedGrid = Grid.superimpose(

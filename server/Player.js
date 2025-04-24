@@ -106,7 +106,6 @@ export default class Player {
 
   #pileCurrentTetromino() {
     this.#pileGrid = this.#gridWithTetromino;
-    this.#spawnNextTetromino();
     this.#pileGrid.clearAndDropFullRows();
   }
 
@@ -128,8 +127,10 @@ export default class Player {
 
   #getRandomTetromino() {
     const tetrominoTypes = Object.values(TetrominoType);
+    const randomNumber = this.#prng();
     const randomType =
-      tetrominoTypes[Math.floor(this.#prng() * tetrominoTypes.length)];
+      tetrominoTypes[Math.floor(randomNumber * tetrominoTypes.length)];
+
     return new Piece(randomType);
   }
 
