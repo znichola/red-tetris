@@ -216,7 +216,9 @@ export default class Grid {
  * @param {CellType[]} row
  */
 function isRowFull(row) {
-  return row.every((cell) => cell !== CellType.Empty);
+  return row.every(
+    (cell) => cell !== CellType.Empty && cell !== CellType.Indestructible,
+  );
 }
 
 /**
