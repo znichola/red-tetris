@@ -10,6 +10,7 @@ import { replaceRoom, setIsRoomAdmin } from "../redux/roomSlice.js";
 import { setIsSocketConnected } from "../redux/socketSlice.js";
 import { replaceGrid, replaceSpectra } from "../redux/gameSlice.js";
 import "./room.css";
+import { resetAll } from "../redux/hooks.js";
 
 /**
  * @param {Object} props
@@ -53,19 +54,24 @@ function Room({ params }) {
       );
     };
 
+    const onConnectionChange = () => {
+      dispatch(setIsSocketConnected(socket.connected));
+    };
+
     socket.on(SocketEvents.UpdateRoomData, onUpdateRoomData);
     socket.on(SocketEvents.UpdateGameData, onUpdateGameData);
+    socket.on("connect", onConnectionChange);
+    socket.on("disconnect", onConnectionChange);
 
     socket.connect();
-    dispatch(setIsSocketConnected(true));
-
-    console.log("RUNNING USEEFFECT TO CONNECT");
 
     return () => {
-      console.log("Disconnecting from room");
       socket.off(SocketEvents.UpdateRoomData, onUpdateRoomData);
+      socket.off(SocketEvents.UpdateGameData, onUpdateGameData);
+      socket.off("connect", onConnectionChange);
+      socket.off("disconnect", onConnectionChange);
       socket.disconnect();
-      dispatch(setIsSocketConnected(false));
+      dispatch(resetAll());
     };
   }, [params, dispatch]);
 

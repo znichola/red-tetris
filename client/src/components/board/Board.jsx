@@ -92,7 +92,9 @@ function Cell({ tet_color }) {
 
 function Keypad() {
   const emitAction = (/** @type {ActionType} */ actionType) => {
-    socket.emit(SocketEvents.GameAction, actionType);
+    if (socket.connected) {
+      socket.emit(SocketEvents.GameAction, actionType);
+    }
   };
 
   return (

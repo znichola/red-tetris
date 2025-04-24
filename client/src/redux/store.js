@@ -7,6 +7,9 @@ import socketReducer, {
 
 // https://redux.js.org/tutorials/essentials/part-2-app-structure#creating-the-redux-store
 
+// reset all reducers
+// https://stackoverflow.com/questions/59424523/reset-state-to-initial-with-redux-toolkit
+
 export const initiaStoreState = {
   game: initialGameState,
   room: initialRoomState,

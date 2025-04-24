@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { resetAll } from "./hooks.js";
 
 /** @typedef {import("../../../shared/DTOs.js").RoomData} RoomData */
 
@@ -25,6 +26,7 @@ export const roomSlice = createSlice({
       state.isRoomAdmin = state.data?.ownerName == action.payload;
     },
   },
+  extraReducers: (builder) => builder.addCase(resetAll, () => initialState),
 });
 
 export const { replaceRoom, setIsRoomAdmin } = roomSlice.actions;

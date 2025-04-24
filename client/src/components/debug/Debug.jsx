@@ -2,6 +2,7 @@ import { useDispatch } from "react-redux";
 import { replaceGrid } from "../../redux/gameSlice.js";
 import { mockGrid } from "../board/mockGrid.js";
 import { CellType } from "../../../../shared/DTOs.js";
+import { resetAll } from "../../redux/hooks.js";
 
 export function Debug() {
   const dispatch = useDispatch();
@@ -25,6 +26,9 @@ export function Debug() {
         }
       >
         replaceGrid with empty
+      </button>
+      <button className="btn" onClick={() => dispatch(resetAll())}>
+        reset all redux state
       </button>
     </div>
   );

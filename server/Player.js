@@ -99,13 +99,13 @@ export default class Player {
         this.#currentTetromino.move(VectorDown);
       } else {
         this.#pileCurrentTetromino();
+        this.#spawnNextTetromino();
       }
     }
   }
 
   #pileCurrentTetromino() {
     this.#pileGrid = this.#gridWithTetromino;
-    this.#spawnNextTetromino();
     this.#pileGrid.clearAndDropFullRows();
   }
 
@@ -120,14 +120,17 @@ export default class Player {
         this.#currentTetromino.position,
       )
     ) {
+      this.#pileCurrentTetromino();
       this.#gameOver = true;
     }
   }
 
   #getRandomTetromino() {
     const tetrominoTypes = Object.values(TetrominoType);
+    const randomNumber = this.#prng();
     const randomType =
-      tetrominoTypes[Math.floor(this.#prng() * tetrominoTypes.length)];
+      tetrominoTypes[Math.floor(randomNumber * tetrominoTypes.length)];
+
     return new Piece(randomType);
   }
 
