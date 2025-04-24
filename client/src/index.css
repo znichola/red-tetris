@@ -22,6 +22,7 @@
   --tet-color-s: var(--green);
   --tet-color-z: var(--red);
   --tet-color-empty: #e4e3e3;
+  --tet-color-indestructible: var(--grey);
 }
 
 .red-title {

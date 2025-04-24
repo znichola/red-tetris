@@ -78,6 +78,7 @@ function Cell({ tet_color }) {
     else if (cellType == CellType.T) color += "t";
     else if (cellType == CellType.Z) color += "z";
     else if (cellType == CellType.Empty) color += "empty";
+    else if (cellType == CellType.Indestructible) color += "indestructible";
     else color = "--white";
 
     return color;
