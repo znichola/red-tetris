@@ -211,29 +211,45 @@ describe("Game", () => {
     expectGridArrayToEqual(gameData.grid, expectedGrid.array);
   });
 
-  it("should clear lines", async () => {
+  it("should clear lines and attack the opponents", async () => {
     const { game, playerNames } = createTetrisGame();
-    //NOTE: This is the sequence of actions to get a full line at the bottom:
-    executeActions(game, playerNames, ActionType.MoveLeft, 99);
-    executeActions(game, playerNames, ActionType.HardDrop);
-    await progressGameByDropCount(1);
-    executeActions(game, playerNames, ActionType.MoveLeft);
-    executeActions(game, playerNames, ActionType.HardDrop);
-    await progressGameByDropCount(1);
-    executeActions(game, playerNames, ActionType.MoveRight, 99);
-    executeActions(game, playerNames, ActionType.HardDrop);
-    await progressGameByDropCount(1);
-    executeActions(game, playerNames, ActionType.MoveLeft, 99);
-    executeActions(game, playerNames, ActionType.HardDrop);
-    await progressGameByDropCount(1);
-    executeActions(game, playerNames, ActionType.Rotate);
-    executeActions(game, playerNames, ActionType.MoveRight);
-    executeActions(game, playerNames, ActionType.HardDrop);
-    await progressGameByDropCount(1);
+    await makePlayerClearLine(game, playerNames[0]);
     const gameData = getAndValidateGameData(game, playerNames[0], playerNames);
     const grid = gameData.grid;
     const lastRow = grid[grid.length - 1];
     expect(lastRow.some((cell) => cell === CellType.Empty)).toBe(true);
+  });
+
+  it("should not attack the opponents when clearing one line", async () => {
+    const playerNames = ["Player1", "Player2", "Player3"];
+    const { game } = createTetrisGame(playerNames);
+    await makePlayerClearLine(game, playerNames[0]);
+    playerNames
+      .filter((playerName) => playerName !== playerNames[0])
+      .forEach((playerName) => {
+        const gameData = getAndValidateGameData(game, playerName, playerNames);
+        const grid = gameData.grid;
+        const lastRow = grid[grid.length - 1];
+        expect(lastRow.some((cell) => cell === CellType.Indestructible)).toBe(
+          false,
+        );
+      });
+  });
+
+  it("should attack the opponents when clearing more than one line", async () => {
+    const playerNames = ["Player1", "Player2", "Player3"];
+    const { game } = createTetrisGame(playerNames);
+    await makePlayerClearTwoLines(game, playerNames[0]);
+    playerNames
+      .filter((playerName) => playerName !== playerNames[0])
+      .forEach((playerName) => {
+        const gameData = getAndValidateGameData(game, playerName, playerNames);
+        const grid = gameData.grid;
+        const lastRow = grid[grid.length - 1];
+        expect(lastRow.every((cell) => cell === CellType.Indestructible)).toBe(
+          true,
+        );
+      });
   });
 });
 
@@ -316,6 +332,73 @@ function getTetrominoFromSpawnOrder(
   tetrominoRotation = RotationType.Rotation0,
 ) {
   return Tetrominoes[TetrominoSpawnOrder[spawnOrderIndex]][tetrominoRotation];
+}
+
+/**
+ * This function depends on the `42` seed and only works at the start of a game.
+ * @param {Game} game
+ * @param {string} playerName
+ */
+async function makePlayerClearLine(game, playerName) {
+  executeActions(game, [playerName], ActionType.MoveLeft, 99);
+  executeActions(game, [playerName], ActionType.HardDrop);
+  await progressGameByDropCount(1);
+  executeActions(game, [playerName], ActionType.MoveLeft);
+  executeActions(game, [playerName], ActionType.HardDrop);
+  await progressGameByDropCount(1);
+  executeActions(game, [playerName], ActionType.MoveRight, 99);
+  executeActions(game, [playerName], ActionType.HardDrop);
+  await progressGameByDropCount(1);
+  executeActions(game, [playerName], ActionType.MoveLeft, 99);
+  executeActions(game, [playerName], ActionType.HardDrop);
+  await progressGameByDropCount(1);
+  executeActions(game, [playerName], ActionType.Rotate);
+  executeActions(game, [playerName], ActionType.MoveRight);
+  executeActions(game, [playerName], ActionType.HardDrop);
+  await progressGameByDropCount(1);
+}
+
+/**
+ * This function depends on the `42` seed and only works at the start of a game.
+ * @param {Game} game
+ * @param {string} playerName
+ */
+async function makePlayerClearTwoLines(game, playerName) {
+  executeActions(game, [playerName], ActionType.MoveLeft, 99);
+  executeActions(game, [playerName], ActionType.HardDrop);
+  await progressGameByDropCount(1);
+  executeActions(game, [playerName], ActionType.MoveLeft);
+  executeActions(game, [playerName], ActionType.HardDrop);
+  await progressGameByDropCount(1);
+  executeActions(game, [playerName], ActionType.MoveRight, 99);
+  executeActions(game, [playerName], ActionType.HardDrop);
+  await progressGameByDropCount(1);
+  executeActions(game, [playerName], ActionType.MoveLeft, 99);
+  executeActions(game, [playerName], ActionType.HardDrop);
+  await progressGameByDropCount(1);
+  executeActions(game, [playerName], ActionType.MoveRight, 99);
+  executeActions(game, [playerName], ActionType.HardDrop);
+  await progressGameByDropCount(1);
+  executeActions(game, [playerName], ActionType.Rotate);
+  executeActions(game, [playerName], ActionType.Rotate);
+  executeActions(game, [playerName], ActionType.MoveLeft, 2);
+  executeActions(game, [playerName], ActionType.HardDrop);
+  await progressGameByDropCount(1);
+  executeActions(game, [playerName], ActionType.Rotate);
+  executeActions(game, [playerName], ActionType.MoveRight, 3);
+  executeActions(game, [playerName], ActionType.HardDrop);
+  await progressGameByDropCount(1);
+
+  for (let i = 0; i < 5; i++) {
+    executeActions(game, [playerName], ActionType.MoveLeft, 99);
+    executeActions(game, [playerName], ActionType.HardDrop);
+    await progressGameByDropCount(1);
+  }
+
+  executeActions(game, [playerName], ActionType.Rotate);
+  executeActions(game, [playerName], ActionType.MoveRight);
+  executeActions(game, [playerName], ActionType.HardDrop);
+  await progressGameByDropCount(1);
 }
 
 /**

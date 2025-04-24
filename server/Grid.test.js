@@ -150,7 +150,7 @@ describe("Grid", () => {
     expect(grid.spectrum).toEqual(expectedSpectrum);
   });
 
-  it("should clear full lines and drop the ones above", () => {
+  it("should clear full lines, drop the ones above, and return the number of cleared lines", () => {
     const grid = Grid.fromArray([
       [CellType.T, CellType.Empty, CellType.Empty, CellType.Empty],
       [CellType.T, CellType.T, CellType.Empty, CellType.Empty],
@@ -165,8 +165,58 @@ describe("Grid", () => {
       [CellType.T, CellType.T, CellType.Empty, CellType.Empty],
       [CellType.Empty, CellType.O, CellType.O, CellType.Empty],
     ];
-    grid.clearAndDropFullRows();
+    const clearedRows = grid.clearAndDropFullRows();
     expectGridArrayToEqual(grid.array, expectedGrid);
+    expect(clearedRows).toEqual(2);
+  });
+
+  it("should push rows from the bottom and return if non-empty rows pushed out", () => {
+    const indestructibleRow = [
+      CellType.Indestructible,
+      CellType.Indestructible,
+      CellType.Indestructible,
+      CellType.Indestructible,
+    ];
+
+    {
+      const grid = Grid.fromArray([
+        [CellType.Empty, CellType.Empty, CellType.Empty, CellType.Empty],
+        [CellType.Empty, CellType.Empty, CellType.Empty, CellType.Empty],
+        [CellType.T, CellType.Empty, CellType.Empty, CellType.T],
+        [CellType.T, CellType.T, CellType.T, CellType.T],
+        [CellType.I, CellType.I, CellType.I, CellType.I],
+      ]);
+      const expectedGrid = [
+        [CellType.T, CellType.Empty, CellType.Empty, CellType.T],
+        [CellType.T, CellType.T, CellType.T, CellType.T],
+        [CellType.I, CellType.I, CellType.I, CellType.I],
+        indestructibleRow,
+        indestructibleRow,
+      ];
+      const overflowed = grid.pushRowsFromBottom(2, CellType.Indestructible);
+      expectGridArrayToEqual(grid.array, expectedGrid);
+      expect(overflowed).toEqual(false);
+    }
+
+    {
+      const grid = Grid.fromArray([
+        [CellType.T, CellType.T, CellType.T, CellType.T],
+        [CellType.T, CellType.Empty, CellType.Empty, CellType.T],
+        [CellType.Empty, CellType.I, CellType.I, CellType.Empty],
+        indestructibleRow,
+        indestructibleRow,
+      ]);
+      const expectedGrid = [
+        [CellType.T, CellType.Empty, CellType.Empty, CellType.T],
+        [CellType.Empty, CellType.I, CellType.I, CellType.Empty],
+        indestructibleRow,
+        indestructibleRow,
+        indestructibleRow,
+      ];
+      const overflowed = grid.pushRowsFromBottom(1, CellType.Indestructible);
+      expectGridArrayToEqual(grid.array, expectedGrid);
+      expect(overflowed).toEqual(true);
+    }
   });
 });
 

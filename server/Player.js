@@ -1,4 +1,4 @@
-import { TetrominoType } from "../shared/DTOs.js";
+import { CellType, TetrominoType } from "../shared/DTOs.js";
 import Grid from "./Grid.js";
 import Piece from "./Piece.js";
 import { DROP_RATE } from "./TetrisConfig.js";
@@ -11,13 +11,18 @@ import {
 } from "./TetrisConsts.js";
 
 export default class Player {
-  #pileGrid = Grid.fromRowsCols(GameGridDimensions.y, GameGridDimensions.x);
+  #name;
   #prng;
+  #pileGrid = Grid.fromRowsCols(GameGridDimensions.y, GameGridDimensions.x);
   #gameOver = false;
   /** @type {import("./Piece.js").default} */
   #currentTetromino;
   #nextTetromino;
   #dropTimer = 0;
+
+  get name() {
+    return this.#name;
+  }
 
   get gridArray() {
     return this.#gridWithTetromino.array;
@@ -35,7 +40,12 @@ export default class Player {
     );
   }
 
-  constructor(prng) {
+  /**
+   * @param {string} name
+   * @param {function} prng
+   */
+  constructor(name, prng) {
+    this.#name = name;
     this.#prng = prng;
     this.#nextTetromino = this.#getRandomTetromino();
     this.#spawnNextTetromino();
@@ -88,8 +98,9 @@ export default class Player {
 
   /**
    * @param {number} deltaTime
+   * @param {Player[]} opponents
    */
-  update(deltaTime) {
+  update(deltaTime, opponents) {
     this.#dropTimer += deltaTime;
 
     if (this.#dropTimer >= 1000 / DROP_RATE) {
@@ -99,6 +110,13 @@ export default class Player {
         this.#currentTetromino.move(VectorDown);
       } else {
         this.#pileCurrentTetromino();
+        const clearedRows = this.#pileGrid.clearAndDropFullRows();
+        const attackRowsCount = clearedRows - 1;
+
+        if (attackRowsCount > 0) {
+          this.#attackOpponents(opponents, attackRowsCount);
+        }
+
         this.#spawnNextTetromino();
       }
     }
@@ -106,7 +124,6 @@ export default class Player {
 
   #pileCurrentTetromino() {
     this.#pileGrid = this.#gridWithTetromino;
-    this.#pileGrid.clearAndDropFullRows();
   }
 
   #spawnNextTetromino() {
@@ -121,6 +138,30 @@ export default class Player {
       )
     ) {
       this.#pileCurrentTetromino();
+      this.#gameOver = true;
+    }
+  }
+
+  /**
+   * @param {Player[]} opponents
+   * @param {number} attackRowsCount
+   */
+  #attackOpponents(opponents, attackRowsCount) {
+    opponents.forEach((opponent) => {
+      opponent.receiveAttack(attackRowsCount);
+    });
+  }
+
+  /**
+   * @param {number} attackRowsCount
+   */
+  receiveAttack(attackRowsCount) {
+    const overflowed = this.#pileGrid.pushRowsFromBottom(
+      attackRowsCount,
+      CellType.Indestructible,
+    );
+
+    if (overflowed) {
       this.#gameOver = true;
     }
   }
