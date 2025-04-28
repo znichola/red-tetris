@@ -170,7 +170,7 @@ describe("server", () => {
     emitStartGame(socket);
     await updateRoomDataPromise;
     const updateGameDataPromise = waitFor(socket, SocketEvents.UpdateGameData);
-    emitGameAction(socket, ActionType.HardDrop);
+    emitGameAction(socket, ActionType.SoftDrop);
     /** @type {import("../shared/DTOs.js").GameData} */
     const gameData = (await updateGameDataPromise)[0];
     expect(gameData.grid[0].every((cell) => cell === CellType.Empty)).toBe(

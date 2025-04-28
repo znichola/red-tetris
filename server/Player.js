@@ -54,6 +54,8 @@ export default class Player {
     while (this.#currentTetromino.canMove(this.#pileGrid, VectorDown)) {
       this.#currentTetromino.move(VectorDown);
     }
+
+    this.#dropTimer = 1000 / DROP_RATE;
   }
 
   tryRotateTetromino() {
