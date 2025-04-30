@@ -59,10 +59,10 @@ function SpectraView({ spectrum, numRows }) {
     <div className="grid grid-narrow">
       {[...Array(numRows).keys()].reverse().map((lineNum) => (
         <div key={lineNum} className="line grid-narrow">
-          {spectrum.map((hightVal, i) => (
+          {spectrum.map((heightVal, i) => (
             <div
               key={i}
-              className={`cell ${lineNum >= hightVal ? "spectra-empty" : "spectra-filled"}`}
+              className={`cell ${lineNum >= heightVal ? "spectra-empty" : "spectra-filled"}`}
             />
           ))}
         </div>

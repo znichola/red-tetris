@@ -38,7 +38,7 @@ function Room({ params }) {
         replacePlayerNameToSpectrum(
           Object.fromEntries(
             data.playerNames
-              .filter((n) => n != params.player)
+              .filter((n) => n !== params.player)
               .map((n) => [
                 n,
                 Array(GameGridDimensions.x).fill(CellType.Empty),
