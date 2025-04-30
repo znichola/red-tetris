@@ -2,21 +2,22 @@ import { describe, it, expect } from "vitest";
 import gameReducer, { replaceGrid, selectGame } from "./gameSlice.js";
 import { CellType } from "../../../shared/DTOs.js";
 import { initiaStoreState } from "./store.js";
+import { GameGridDimensions } from "../../../server/TetrisConsts.js";
 
 describe("gameSlice", () => {
   const createEmptyGrid = () =>
-    Array.from({ length: 20 }, () =>
-      Array.from({ length: 10 }, () => CellType.Empty),
+    Array.from({ length: GameGridDimensions.y }, () =>
+      Array.from({ length: GameGridDimensions.x }, () => CellType.Empty),
     );
 
   it("should handle replaceGrid", () => {
     const initialState = {
       grid: createEmptyGrid(),
-      playerInfo: [],
+      playerNameToSpectrum: {},
     };
 
-    const newGrid = Array.from({ length: 20 }, () =>
-      Array.from({ length: 10 }, () => CellType.I),
+    const newGrid = Array.from({ length: GameGridDimensions.y }, () =>
+      Array.from({ length: GameGridDimensions.x }, () => CellType.I),
     );
 
     const nextState = gameReducer(initialState, replaceGrid(newGrid));
@@ -29,7 +30,7 @@ describe("gameSlice", () => {
       ...initiaStoreState,
       game: {
         grid: testGrid,
-        playerInfo: [{ player: "JARED", spectra: [0, 2, 3, 1, 0] }],
+        playerNameToSpectrum: { JARED: [0, 2, 3, 1, 0] },
       },
     };
 

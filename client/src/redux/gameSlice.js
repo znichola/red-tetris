@@ -5,12 +5,7 @@ import { resetAll } from "./hooks.js";
 // https://redux.js.org/tutorials/essentials/part-2-app-structure#creating-slice-reducers-and-actions
 
 /**
- * @typedef {number[]} Spectra
- *
- * @typedef {{
- *     player: string;
- *     spectra: Spectra;
- * }} PlayerInfo
+ * @typedef {import("../../../shared/DTOs.js").PlayerNameToSpectrum} PlayerNameToSpectrum
  */
 
 /**
@@ -20,7 +15,7 @@ export const initialState = {
   /** @type {CellType[][]} */ grid: Array.from({ length: 20 }, () =>
     Array.from({ length: 10 }, () => CellType.Empty),
   ),
-  /**@type {PlayerInfo[]} */ playerInfo: [],
+  /**@type {PlayerNameToSpectrum} */ playerNameToSpectrum: {},
 };
 
 /**
@@ -39,16 +34,16 @@ export const gameSlice = createSlice({
       state.grid = action.payload;
     },
     /**
-     * @param {import("@reduxjs/toolkit").PayloadAction<PlayerInfo[]>} action
+     * @param {import("@reduxjs/toolkit").PayloadAction<PlayerNameToSpectrum>} action
      */
-    replaceSpectra: (state, action) => {
-      state.playerInfo = action.payload;
+    replacePlayerNameToSpectrum: (state, action) => {
+      state.playerNameToSpectrum = action.payload;
     },
   },
   extraReducers: (builder) => builder.addCase(resetAll, () => initialState),
 });
 
-export const { replaceGrid, replaceSpectra } = gameSlice.actions;
+export const { replaceGrid, replacePlayerNameToSpectrum } = gameSlice.actions;
 
 export const selectGame = (
   /**@type {import("./store.js").RootState} */ state,

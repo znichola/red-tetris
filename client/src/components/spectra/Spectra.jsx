@@ -2,14 +2,16 @@ import "./spectra.css";
 import { useSelector } from "react-redux";
 import { selectGame } from "../../redux/gameSlice.js";
 
-/**@typedef {import("../../redux/gameSlice.js").Spectra} Spectra*/
-/**@typedef {import("../../redux/gameSlice.js").PlayerInfo} PlayerInfo */
+/**
+ * @typedef {import("../../../../shared/DTOs.js").Spectrum} Spectrum
+ */
 
 /**
  * @returns {React.JSX.Element}
  */
 function SpectraOverview() {
-  const allPlayers = useSelector(selectGame).playerInfo;
+  const playerNameToSpectrum = useSelector(selectGame).playerNameToSpectrum;
+  const playerNames = Object.keys(playerNameToSpectrum);
   const numRows = useSelector(selectGame).grid.length;
   return (
     <div className="standard-dialog thing">
@@ -17,8 +19,13 @@ function SpectraOverview() {
         <h1 className="title">spectra</h1>
       </div>
       <div className="spectra-overview">
-        {allPlayers.map((p) => (
-          <PlayerView key={p.player} playerInfo={p} numRows={numRows} />
+        {playerNames.map((playerName) => (
+          <PlayerView
+            key={playerName}
+            playerName={playerName}
+            spectrum={playerNameToSpectrum[playerName]}
+            numRows={numRows}
+          />
         ))}
       </div>
     </div>
@@ -27,31 +34,32 @@ function SpectraOverview() {
 
 /**
  * @param {Object} props
- * @param {PlayerInfo} props.playerInfo
+ * @param {string} props.playerName
+ * @param {Spectrum} props.spectrum
  * @param {number} props.numRows
  * @returns {React.JSX.Element}
  */
-function PlayerView({ playerInfo, numRows }) {
+function PlayerView({ playerName, spectrum, numRows }) {
   return (
     <div className="spectra-view">
-      <SpectraView spectra={playerInfo.spectra} numRows={numRows} />
-      <div>{playerInfo.player}</div>
+      <SpectraView spectrum={spectrum} numRows={numRows} />
+      <div>{playerName}</div>
     </div>
   );
 }
 
 /**
  * @param {Object} props
- * @param {Spectra} props.spectra
+ * @param {Spectrum} props.spectrum
  * @param {number} props.numRows
  * @returns {React.JSX.Element}
  */
-function SpectraView({ spectra, numRows }) {
+function SpectraView({ spectrum, numRows }) {
   return (
     <div className="grid grid-narrow">
       {[...Array(numRows).keys()].reverse().map((lineNum) => (
         <div key={lineNum} className="line grid-narrow">
-          {spectra.map((hightVal, i) => (
+          {spectrum.map((hightVal, i) => (
             <div
               key={i}
               className={`cell ${lineNum >= hightVal ? "spectra-empty" : "spectra-filled"}`}

@@ -3,6 +3,7 @@ import { replaceGrid } from "../../redux/gameSlice.js";
 import { mockGrid } from "../board/mockGrid.js";
 import { CellType } from "../../../../shared/DTOs.js";
 import { resetAll } from "../../redux/hooks.js";
+import { GameGridDimensions } from "../../../../server/TetrisConsts.js";
 
 export function Debug() {
   const dispatch = useDispatch();
@@ -18,8 +19,11 @@ export function Debug() {
         onClick={() =>
           dispatch(
             replaceGrid(
-              Array.from({ length: 20 }, () =>
-                Array.from({ length: 10 }, () => CellType.Empty),
+              Array.from({ length: GameGridDimensions.y }, () =>
+                Array.from(
+                  { length: GameGridDimensions.x },
+                  () => CellType.Empty,
+                ),
               ),
             ),
           )

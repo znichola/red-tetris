@@ -5,8 +5,9 @@
  *
  * @typedef {CellType[][]} Grid
  *
- * @typedef {Object<string, Spectrum> } PlayerNameToSpectrum
+ * @typedef {Object<string, Spectrum>} PlayerNameToSpectrum
  * @typedef {number[]} Spectrum
+ *
  * @typedef {Object} RoomData
  * @property {GameState} gameState
  * @property {string} ownerName
