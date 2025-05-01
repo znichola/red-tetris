@@ -20,7 +20,6 @@ function createApp() {
   app.use(express.static(react_app));
 
   app.get("/{*matchAll}", (req, res) => {
-    console.log("YYAYA");
     res.sendFile(path.join(react_app, "index.html"));
   });
 

@@ -29,7 +29,6 @@ export const gameSlice = createSlice({
      */
     replaceGameData: (state, action) => {
       // "Mutating" state because immer is used to properly create a new object each time.
-      console.log("ATTEMPTING TO SET STATE", action.payload);
       state.grid = action.payload.grid;
       state.playerNameToSpectrum = action.payload.playerNameToSpectrum;
       state.score = action.payload.score;
