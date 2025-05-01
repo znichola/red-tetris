@@ -5,7 +5,6 @@ const mockGrid = [
     [CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty],
     [CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty],
     [CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty],
-    [CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty],
     [CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.I,     CT.I,     CT.I,     CT.I,     CT.Empty, CT.Empty],
     [CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty],
     [CT.Empty, CT.Empty, CT.O,     CT.O,     CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty],
@@ -22,6 +21,7 @@ const mockGrid = [
     [CT.I,     CT.T    , CT.Empty, CT.Empty, CT.Empty, CT.S    , CT.S    , CT.Empty, CT.Empty, CT.I],
     [CT.I,     CT.T    , CT.T    , CT.Empty, CT.S    , CT.S    , CT.Empty, CT.Empty, CT.Empty, CT.I],
     [CT.I,     CT.T    , CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.I],
+    [CT.Indestructible, CT.Indestructible, CT.Indestructible, CT.Indestructible, CT.Indestructible, CT.Indestructible, CT.Indestructible, CT.Indestructible, CT.Indestructible, CT.Indestructible],
   ];
 
 export { mockGrid };

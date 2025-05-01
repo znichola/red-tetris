@@ -41,24 +41,52 @@ export default class Grid {
   }
 
   clearAndDropFullRows() {
-    /** @param {CellType[]} row */
-    const isRowFull = (row) => row.every((cell) => cell !== CellType.Empty);
-    const createEmptyRow = () =>
-      Array(this.array[0].length).fill(CellType.Empty);
+    let clearedRows = 0;
+    const cols = this.array[0].length;
+    const createEmptyRow = () => Array(cols).fill(CellType.Empty);
 
     this.array.forEach((row, index) => {
-      if (isRowFull(row)) {
-        for (
-          let previousIndex = index - 1;
-          previousIndex >= 0;
-          --previousIndex
-        ) {
-          this.array[previousIndex + 1] = this.array[previousIndex];
-        }
-
-        this.array[0] = createEmptyRow();
+      if (!isRowFull(row)) {
+        return;
       }
+
+      for (let previousIndex = index - 1; previousIndex >= 0; --previousIndex) {
+        this.array[previousIndex + 1] = this.array[previousIndex];
+      }
+
+      this.array[0] = createEmptyRow();
+      ++clearedRows;
     });
+
+    return clearedRows;
+  }
+
+  /**
+   * Returns `true` if any non-empty rows were pushed out of the grid.
+   * @param {number} rowsToPushCount
+   * @param {CellType} rowsValue
+   * @returns {boolean}
+   */
+  pushRowsFromBottom(rowsToPushCount, rowsValue) {
+    const rows = this.array.length;
+    const cols = this.array[0].length;
+    let overflowed = false;
+
+    for (let i = 0; i < rows - rowsToPushCount; i++) {
+      if (i < rowsToPushCount) {
+        if (rowHasNonEmptyCells(this.array[i])) {
+          overflowed = true;
+        }
+      }
+
+      this.array[i] = this.array[i + rowsToPushCount];
+    }
+
+    for (let i = rows - rowsToPushCount; i < rows; i++) {
+      this.array[i] = Array(cols).fill(rowsValue);
+    }
+
+    return overflowed;
   }
 
   /**
@@ -182,4 +210,20 @@ export default class Grid {
       ),
     );
   }
+}
+
+/**
+ * @param {CellType[]} row
+ */
+function isRowFull(row) {
+  return row.every(
+    (cell) => cell !== CellType.Empty && cell !== CellType.Indestructible,
+  );
+}
+
+/**
+ * @param {CellType[]} row
+ */
+function rowHasNonEmptyCells(row) {
+  return row.some((cell) => cell !== CellType.Empty);
 }

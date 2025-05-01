@@ -3,7 +3,7 @@ import { fireEvent, render } from "@testing-library/react";
 import { Grid, Keypad } from "./Board.jsx";
 import { mockGrid } from "./mockGrid.js";
 import { act } from "react";
-import { ActionType, SocketEvents } from "../../../../shared/DTOs.js";
+import { ActionType, CellType, SocketEvents } from "../../../../shared/DTOs.js";
 
 import { socket } from "../../socket.js";
 vi.mock("../../socket.js", () => ({
@@ -28,7 +28,7 @@ describe("Board view", () => {
     expect(firstRowCells.length).toBe(10);
   });
 
-  it("should have 8 colors for tetromino blocks", () => {
+  it("should display all cell types with different colors", () => {
     const { container } = render(<Grid grid={mockGrid} />);
 
     const allCells = container.getElementsByClassName("cell");
@@ -36,13 +36,13 @@ describe("Board view", () => {
     const bgColors = new Set();
     for (let cell of allCells) {
       const style = window.getComputedStyle(cell);
-      const bg = style.backgroundColor;
-      if (bg) {
-        bgColors.add(bg);
+      const bgColor = style.backgroundColor;
+      if (bgColor) {
+        bgColors.add(bgColor);
       }
     }
 
-    expect(bgColors.size).toBe(8);
+    expect(bgColors.size).toBe(Object.values(CellType).length);
   });
 
   it("should have 5 action buttons visible", () => {

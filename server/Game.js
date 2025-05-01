@@ -7,7 +7,7 @@ import { ActionType } from "../shared/DTOs.js";
 export default class Game {
   #isSoloGame;
   #lastLoopTime = new Date();
-  #playerGameStates;
+  #players;
   /** @type {function[]} */
   #gameUpdateListeners = [];
 
@@ -19,17 +19,15 @@ export default class Game {
     /** @type {Object<string, import("../shared/DTOs.js").Spectrum>} */
     const playerNameToSpectrum = {};
 
-    this.#playerGameStates
-      .filter((playerGameState) => playerGameState.playerName !== playerName)
-      .forEach((playerGameState) => {
-        playerNameToSpectrum[playerGameState.playerName] =
-          playerGameState.player.spectrum;
+    this.#players
+      .filter((player) => player.name !== playerName)
+      .forEach((player) => {
+        playerNameToSpectrum[player.name] = player.spectrum;
       });
 
     return {
-      grid: this.#playerGameStates.find(
-        (playerGameState) => playerGameState.playerName === playerName,
-      ).player.gridArray,
+      grid: this.#players.find((player) => player.name === playerName)
+        .gridArray,
       playerNameToSpectrum,
     };
   }
@@ -41,10 +39,9 @@ export default class Game {
   constructor(playerNames, randomSeed = null) {
     this.#isSoloGame = playerNames.length === 1;
     randomSeed = randomSeed ?? this.#lastLoopTime;
-    this.#playerGameStates = playerNames.map((playerName) => ({
-      playerName,
-      player: new Player(seedrandom(randomSeed)),
-    }));
+    this.#players = playerNames.map(
+      (playerName) => new Player(playerName, seedrandom(randomSeed)),
+    );
   }
 
   /**
@@ -52,29 +49,27 @@ export default class Game {
    * @param {import("../shared/DTOs.js").ActionType} actionType
    */
   doAction(playerName, actionType) {
-    const playerGameState = this.#playerGameStates.find(
-      (playerGameState) => playerGameState.playerName === playerName,
-    );
+    const player = this.#players.find((player) => player.name === playerName);
 
-    if (!playerGameState) {
+    if (!player) {
       return;
     }
 
     switch (actionType) {
       case ActionType.MoveLeft:
-        playerGameState.player.tryMoveTetromino(VectorLeft);
+        player.tryMoveTetromino(VectorLeft);
         break;
       case ActionType.MoveRight:
-        playerGameState.player.tryMoveTetromino(VectorRight);
+        player.tryMoveTetromino(VectorRight);
         break;
       case ActionType.Rotate:
-        playerGameState.player.tryRotateTetromino();
+        player.tryRotateTetromino();
         break;
       case ActionType.SoftDrop:
-        playerGameState.player.tryMoveTetromino(VectorDown);
+        player.tryMoveTetromino(VectorDown);
         break;
       case ActionType.HardDrop:
-        playerGameState.player.hardDropTetromino();
+        player.hardDropTetromino();
         break;
     }
   }
@@ -100,8 +95,8 @@ export default class Game {
     }
 
     //NOTE: A draw can occur when all players game over at the same time.
-    const winnerGameState = this.#playerGameStates.find(
-      (playerGameState) => !playerGameState.player.isGameOver(),
+    const winnerGameState = this.#players.find(
+      (player) => !player.isGameOver(),
     );
 
     //TODO: Decide on what to broadcast when a solo game ends, since there's no winner found for now.
@@ -109,34 +104,35 @@ export default class Game {
     if (!winnerGameState) {
       console.log("Game over: Draw!");
     } else {
-      console.log(`Game over: ${winnerGameState.playerName} wins!`);
+      console.log(`Game over: ${winnerGameState.name} wins!`);
     }
   }
 
   #isGameOver() {
     if (this.#isSoloGame) {
-      return this.#playerGameStates[0].player.isGameOver();
+      return this.#players[0].isGameOver();
     }
 
     return !this.#hasMultipleActivePlayers();
   }
 
   #hasMultipleActivePlayers() {
-    return (
-      this.#playerGameStates.filter(
-        (playerGameState) => !playerGameState.player.isGameOver(),
-      ).length > 1
-    );
+    return this.#players.filter((player) => !player.isGameOver()).length > 1;
   }
 
   /**
    * @param {number} deltaTime
    */
   #updateGrids(deltaTime) {
-    this.#playerGameStates.forEach((playerGameState) => {
-      if (!playerGameState.player.isGameOver()) {
-        playerGameState.player.update(deltaTime);
+    this.#players.forEach((player) => {
+      if (player.isGameOver()) {
+        return;
       }
+
+      const opponents = this.#players.filter(
+        (opponent) => opponent.name !== player.name,
+      );
+      player.update(deltaTime, opponents);
     });
   }
 
