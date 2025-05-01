@@ -159,6 +159,7 @@ describe("server", () => {
       playerNameToSpectrum: expect.objectContaining({
         [PlayerNames[1]]: expect.any(Array),
       }),
+      score: expect.any(Number),
     };
     expect(gameData).toMatchObject(expectedGameDataStructure);
   });

@@ -1,6 +1,7 @@
 /**
  * @typedef {Object} GameData
  * @property {Grid} grid
+ * @property {number} score
  * @property {PlayerNameToSpectrum} playerNameToSpectrum
  *
  * @typedef {CellType[][]} Grid

@@ -29,6 +29,7 @@ export default class Game {
       grid: this.#players.find((player) => player.name === playerName)
         .gridArray,
       playerNameToSpectrum,
+      score: this.#players.find((player) => player.name === playerName).score,
     };
   }
 

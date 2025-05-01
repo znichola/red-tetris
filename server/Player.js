@@ -12,6 +12,7 @@ import {
 
 export default class Player {
   #name;
+  #score = 0;
   #prng;
   #pileGrid = Grid.fromRowsCols(GameGridDimensions.y, GameGridDimensions.x);
   #gameOver = false;
@@ -22,6 +23,10 @@ export default class Player {
 
   get name() {
     return this.#name;
+  }
+
+  get score() {
+    return this.#score;
   }
 
   get gridArray() {
@@ -114,6 +119,8 @@ export default class Player {
         this.#pileCurrentTetromino();
         const clearedRows = this.#pileGrid.clearAndDropFullRows();
         const attackRowsCount = clearedRows - 1;
+        this.#score +=
+          Math.max(1, clearedRows + 1) * this.#currentTetromino.getScoreValue();
 
         if (attackRowsCount > 0) {
           this.#attackOpponents(opponents, attackRowsCount);

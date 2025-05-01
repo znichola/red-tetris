@@ -5,9 +5,11 @@ import { selectSocket } from "../../redux/socketSlice.js";
 import { selectRoom } from "../../redux/roomSlice.js";
 import { socket } from "../../socket.js";
 import { GameState, SocketEvents } from "../../../../shared/DTOs.js";
+import { selectGame } from "../../redux/gameSlice.js";
 
 function GameManager() {
   const socketState = useSelector(selectSocket);
+  const score = useSelector(selectGame).score;
 
   /**@type {GameState} */
   const roomState = useSelector(selectRoom).data?.gameState;
@@ -27,7 +29,12 @@ function GameManager() {
         {roomState == GameState.Ended ? (
           <GameOver />
         ) : roomState == GameState.Playing ? (
-          <div>Game in progress</div>
+          <>
+            <div> Game in progress </div>
+            <div>
+              Score : <strong>{score}</strong>
+            </div>
+          </>
         ) : roomState == GameState.Pending ? (
           <Pending />
         ) : (

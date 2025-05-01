@@ -8,7 +8,11 @@ import { SocketEvents } from "../../../shared/DTOs.js";
 import { useDispatch } from "react-redux";
 import { replaceRoom, setIsRoomAdmin } from "../redux/roomSlice.js";
 import { setIsSocketConnected } from "../redux/socketSlice.js";
-import { replaceGrid, replaceSpectra } from "../redux/gameSlice.js";
+import {
+  replaceGrid,
+  replaceScore,
+  replaceSpectra,
+} from "../redux/gameSlice.js";
 import "./room.css";
 import { resetAll } from "../redux/hooks.js";
 
@@ -36,6 +40,7 @@ function Room({ params }) {
       /** @type {import("../../../shared/DTOs.js").GameData} */ data,
     ) => {
       dispatch(replaceGrid(data.grid));
+      dispatch(replaceScore(data.score));
       dispatch(
         replaceSpectra(
           Object.entries(data.playerNameToSpectrum).map((e) => {

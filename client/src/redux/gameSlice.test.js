@@ -13,6 +13,7 @@ describe("gameSlice", () => {
     const initialState = {
       grid: createEmptyGrid(),
       playerInfo: [],
+      score: 0,
     };
 
     const newGrid = Array.from({ length: 20 }, () =>
@@ -30,6 +31,7 @@ describe("gameSlice", () => {
       game: {
         grid: testGrid,
         playerInfo: [{ player: "JARED", spectra: [0, 2, 3, 1, 0] }],
+        score: 0,
       },
     };
 

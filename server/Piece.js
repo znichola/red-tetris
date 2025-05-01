@@ -1,3 +1,4 @@
+import { CellType } from "../shared/DTOs.js";
 import Grid from "./Grid.js";
 import { RotateClockwise, RotationType, Tetrominoes } from "./TetrisConsts.js";
 
@@ -85,5 +86,11 @@ export default class Piece extends Grid {
 
   #getTetromino() {
     return Tetrominoes[this.#tetrominoType][this.#rotation];
+  }
+
+  getScoreValue() {
+    return this.array
+      .flat(1)
+      .reduce((prev, curr) => (curr === CellType.Empty ? prev : prev + 1), 0);
   }
 }

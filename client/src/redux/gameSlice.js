@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { CellType } from "../../../shared/DTOs.js";
+import { CellType, GameState } from "../../../shared/DTOs.js";
 import { resetAll } from "./hooks.js";
 
 // https://redux.js.org/tutorials/essentials/part-2-app-structure#creating-slice-reducers-and-actions
@@ -20,6 +20,7 @@ export const initialState = {
   /** @type {CellType[][]} */ grid: Array.from({ length: 20 }, () =>
     Array.from({ length: 10 }, () => CellType.Empty),
   ),
+  score: 0,
   /**@type {PlayerInfo[]} */ playerInfo: [],
 };
 
@@ -39,6 +40,13 @@ export const gameSlice = createSlice({
       state.grid = action.payload;
     },
     /**
+     * @param {import("@reduxjs/toolkit").PayloadAction<number>} action
+     */
+    replaceScore: (state, action) => {
+      // "Mutating" state because immer is used to properly create a new object each time.
+      state.score = action.payload;
+    },
+    /**
      * @param {import("@reduxjs/toolkit").PayloadAction<PlayerInfo[]>} action
      */
     replaceSpectra: (state, action) => {
@@ -48,7 +56,7 @@ export const gameSlice = createSlice({
   extraReducers: (builder) => builder.addCase(resetAll, () => initialState),
 });
 
-export const { replaceGrid, replaceSpectra } = gameSlice.actions;
+export const { replaceGrid, replaceScore, replaceSpectra } = gameSlice.actions;
 
 export const selectGame = (
   /**@type {import("./store.js").RootState} */ state,
