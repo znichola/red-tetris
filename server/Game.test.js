@@ -10,6 +10,18 @@ import { DROP_RATE } from "./TetrisConfig.js";
 import Grid from "./Grid.js";
 import { ActionType, CellType } from "../shared/DTOs.js";
 
+// NOTE ensure the score store does nothing
+vi.mock("./ScoreStore.js", () => {
+  return {
+    default: class {
+      constructor() {}
+      pushPlayerScores() {}
+      getAllScores() {}
+    },
+    convertToPlayerScores: () => {},
+  };
+});
+
 const TestsRandomSeed = 42;
 //NOTE: With seed 42, the tetrominoes will always appear in this order:
 const TetrominoSpawnOrder = [

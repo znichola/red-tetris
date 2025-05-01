@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach, beforeEach } from "vitest";
+import { describe, it, expect, afterEach, beforeEach, vi } from "vitest";
 import { io as ioClient } from "socket.io-client";
 import createApp from "./server.js";
 import {
@@ -11,6 +11,18 @@ import {
 const TestPort = 3001;
 const RoomNames = ["testRoom1", "testRoom2"];
 const PlayerNames = Array.from({ length: 100 }, (_, i) => `Player${i + 1}`);
+
+// NOTE ensure the score store does nothing
+vi.mock("./ScoreStore.js", () => {
+  return {
+    default: class {
+      constructor() {}
+      pushPlayerScores() {}
+      getAllScores() {}
+    },
+    convertToPlayerScores: () => {},
+  };
+});
 
 describe("server", () => {
   /** @type { import("http").Server} */

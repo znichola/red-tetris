@@ -5,6 +5,7 @@ const params = {
     get url() {
       return "http://" + this.host + ":" + this.port;
     },
+    scoreStoreFile: "game_scores.json",
   },
 };
 

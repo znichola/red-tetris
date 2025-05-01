@@ -9,7 +9,7 @@ import Rooms from "./Rooms.js";
 import ScoreStore from "./ScoreStore.js";
 
 // Initialize the scoreStore, must be outside a funciton so it can be imported elsewhere for easy access
-export const scoreStore = new ScoreStore("game_scores.json");
+export const scoreStore = new ScoreStore(params.server.scoreStoreFile);
 
 const __dirname = import.meta.dirname;
 const react_app = path.join(__dirname, "../dist");

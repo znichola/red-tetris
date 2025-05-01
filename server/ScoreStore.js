@@ -1,7 +1,11 @@
 import fs from "fs";
 import path from "path";
+import Player from "./Player.js";
 
-/** @typedef {{player: string, score: number, time: string, wasWinner: boolean}} ScoreRecord*/
+/**
+ * @typedef {import("../shared/DTOs.js").GameMode} GameMode
+ * @typedef {import("../shared/DTOs.js").ScoreRecord} ScoreRecord
+ */
 
 export default class ScoreStore {
   #filePath;
@@ -15,20 +19,40 @@ export default class ScoreStore {
     this.#loadScores();
   }
 
+  // NOTE I'm converting the players to a simpler list becasue testing the ScoreStore
+  // with player class does so much that mocking it is non trivial
+
   /**
-   * @param {import("./Player.js").default[]} players
+   * @param {{name: string, score: number}[]} players
+   * @param {GameMode} gameMode
    * @param {string | null} winnerName
    */
-  pushPlayerScores(players, winnerName = null) {
-    const now = new Date();
-    const newScores = players.map((player) => ({
-      player: player.name,
-      score: player.score,
-      time: now.toISOString(),
-      wasWinner: player.name === winnerName,
-    }));
+  pushPlayerScores(players, gameMode, winnerName = null) {
+    const now = new Date().toISOString();
 
-    this.#scores.push(...newScores);
+    players.forEach((player) => {
+      const existingIndex = this.#scores.findIndex(
+        (record) =>
+          record.gameMode === gameMode && record.player === player.name,
+      );
+
+      const updatedRecord = {
+        player: player.name,
+        score: player.score,
+        time: now,
+        gameMode: gameMode,
+        winner: winnerName == player.name,
+      };
+
+      if (existingIndex !== -1) {
+        this.#scores[existingIndex] = updatedRecord;
+      } else {
+        this.#scores.push(updatedRecord);
+      }
+    });
+
+    this.#scores.sort((a, b) => b.score - a.score);
+
     this.#saveScores();
   }
 
@@ -66,3 +90,9 @@ export default class ScoreStore {
     }
   }
 }
+
+/**
+ * @param {import ("./Player.js").default[]} players
+ */
+export const convertToPlayerScores = (players) =>
+  players.map((p) => ({ name: p.name, score: p.score }));

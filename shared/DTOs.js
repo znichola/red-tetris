@@ -60,3 +60,9 @@ export const CellType = Object.freeze({
   ...TetrominoType,
   Indestructible: 8,
 });
+
+/**
+ * Use for the scoring table
+ * @typedef {"solo" | "multiplayer"} GameMode
+ * @typedef {{player: string, score: number, time: string, gameMode: GameMode, winner: boolean}} ScoreRecord
+ */
