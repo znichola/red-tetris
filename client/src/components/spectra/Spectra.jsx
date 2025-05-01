@@ -11,10 +11,42 @@ import { selectGame } from "../../redux/gameSlice.js";
 function SpectraOverview() {
   const allPlayers = useSelector(selectGame).playerInfo;
   const numRows = useSelector(selectGame).grid.length;
+
+  const chunks = [];
+  let max = 6;
+  for (let i = 0; i < allPlayers.length; i += max) {
+    if (i >= 6) {
+      max = 9;
+    }
+    chunks.push(allPlayers.slice(i, i + max));
+  }
+
+  return (
+    <>
+      {chunks.map((players, i) => (
+        <SingleSpectraOverview
+          key={i}
+          index={i}
+          allPlayers={players}
+          numRows={numRows}
+        />
+      ))}
+    </>
+  );
+}
+
+/**
+ * @param {Object} props
+ * @param {PlayerInfo[]} props.allPlayers
+ * @param {number} props.numRows
+ * @param {number} props.index
+ * @returns {React.JSX.Element}
+ */
+function SingleSpectraOverview({ allPlayers, numRows, index }) {
   return (
     <div className="standard-dialog thing">
       <div className="title-bar">
-        <h1 className="title">spectra</h1>
+        <h1 className="title">{`spectra ${index > 0 ? index : ""}`}</h1>
       </div>
       <div className="spectra-overview">
         {allPlayers.map((p) => (

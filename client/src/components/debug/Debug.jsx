@@ -1,8 +1,9 @@
 import { useDispatch } from "react-redux";
-import { replaceGrid } from "../../redux/gameSlice.js";
+import { replaceGrid, replaceSpectra } from "../../redux/gameSlice.js";
 import { mockGrid } from "../board/mockGrid.js";
 import { CellType } from "../../../../shared/DTOs.js";
 import { resetAll } from "../../redux/hooks.js";
+import { mockEvenMorePlayers } from "../spectra/mockAllPlayers.js";
 
 export function Debug() {
   const dispatch = useDispatch();
@@ -29,6 +30,12 @@ export function Debug() {
       </button>
       <button className="btn" onClick={() => dispatch(resetAll())}>
         reset all redux state
+      </button>
+      <button
+        className="btn"
+        onClick={() => dispatch(replaceSpectra(mockEvenMorePlayers))}
+      >
+        set spectra to full
       </button>
     </div>
   );
