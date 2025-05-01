@@ -29,7 +29,7 @@ function Router({ routes }) {
       const params = matchParams(path, currentPath);
       const isMatch = params !== null;
       if (isMatch) {
-        // @ts-ignore -  TODO : fix this react type issue
+        // @ts-ignore -  It's an annoying react type issue
         setComponent(<Comp params={params} />);
         return;
       }
@@ -75,31 +75,36 @@ function NotFound() {
  * @returns {Object<string, string> | null} - a key value map or the seach params.
  */
 function matchParams(routePattern, browserPath) {
-  const routePathParts = routePattern.split("/").filter((v) => v != "");
-  const currentPathParts = browserPath.split("/").filter((v) => v != "");
+  try {
+    const routePathParts = routePattern.split("/").filter((v) => v != "");
+    const currentPathParts = browserPath.split("/").filter((v) => v != "");
 
-  /** @type {Record<string, string>} */
-  var res = {};
-  if (routePattern === browserPath) return res;
-  if (routePathParts.length != currentPathParts.length) return null;
+    /** @type {Record<string, string>} */
+    var res = {};
+    if (routePattern === browserPath) return res;
+    if (routePathParts.length != currentPathParts.length) return null;
 
-  const goodMatches = routePathParts.map((id, i) => {
-    const match = currentPathParts.at(i);
+    const goodMatches = routePathParts.map((id, i) => {
+      const match = currentPathParts.at(i);
 
-    if (match == undefined) {
+      if (match == undefined) {
+        return false;
+      } else if (id.startsWith(":")) {
+        res[id.slice(1)] = decodeURIComponent(match);
+        return true;
+      } else if (id == currentPathParts[i]) {
+        return true;
+      }
       return false;
-    } else if (id.startsWith(":")) {
-      res[id.slice(1)] = decodeURIComponent(match);
-      return true;
-    } else if (id == currentPathParts[i]) {
-      return true;
-    }
-    return false;
-  });
+    });
 
-  if (goodMatches.filter((v) => v == false).length != 0) return null;
+    if (goodMatches.filter((v) => v == false).length != 0) return null;
 
-  return res;
+    return res;
+    // eslint-disable-next-line no-unused-vars
+  } catch (e) {
+    return null;
+  }
 }
 
 export { Router, Link, NotFound };

@@ -15,6 +15,14 @@ function createApp() {
   app.use(express.static(react_app));
 
   app.get("/{*matchAll}", (req, res) => {
+    console.log("YYAYA");
+    res.sendFile(path.join(react_app, "index.html"));
+  });
+
+  // https://expressjs.com/en/guide/error-handling#writing-error-handlers
+  // eslint-disable-next-line no-unused-vars
+  app.use((err, _req, res, _next) => {
+    console.error(err.stack);
     res.sendFile(path.join(react_app, "index.html"));
   });
 
