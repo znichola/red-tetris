@@ -1,6 +1,5 @@
 import { describe, it, expect } from "vitest";
 import ScoreStore from "./ScoreStore.js";
-import Player from "./Player.js";
 
 /**
  * @typedef {import("../shared/DTOs.js").GameMode} GameMode

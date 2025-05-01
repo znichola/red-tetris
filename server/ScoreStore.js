@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import Player from "./Player.js";
+import { SocketEvents } from "../shared/DTOs.js";
 
 /**
  * @typedef {import("../shared/DTOs.js").GameMode} GameMode
@@ -10,6 +11,7 @@ import Player from "./Player.js";
 export default class ScoreStore {
   #filePath;
   #permanentStoreActive = false;
+  #socket;
 
   /**@type {ScoreRecord[]} */
   #scores = [];
@@ -88,6 +90,16 @@ export default class ScoreStore {
     if (this.#permanentStoreActive) {
       fs.writeFileSync(this.#filePath, JSON.stringify(this.#scores, null, 2));
     }
+
+    this.broadcastScores();
+  }
+
+  setSocket(socket) {
+    this.#socket = socket;
+  }
+
+  broadcastScores() {
+    this.#socket?.emit(SocketEvents.UpdateScores, this.#scores);
   }
 }
 

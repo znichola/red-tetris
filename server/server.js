@@ -40,14 +40,18 @@ function createApp() {
         },
   );
   const rooms = new Rooms(io);
+  scoreStore.setSocket(io);
 
   io.on("connection", (socket) => {
-    const { roomName, playerName } = socket.handshake.auth;
-    if (
-      typeof roomName !== "string" ||
-      typeof playerName !== "string" ||
-      !rooms.tryAddPlayer(socket, roomName, playerName)
-    ) {
+    const { roomName, playerName, scoreBoard } = socket.handshake.auth;
+
+    if (typeof roomName === "string" && typeof playerName === "string") {
+      if (!rooms.tryAddPlayer(socket, roomName, playerName)) {
+        socket.disconnect();
+      }
+    } else if (typeof scoreBoard === "string") {
+      scoreStore.broadcastScores();
+    } else {
       socket.disconnect();
     }
   });

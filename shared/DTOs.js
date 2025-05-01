@@ -41,6 +41,7 @@ export const SocketEvents = {
   //NOTE: Server to clients events:
   UpdateRoomData: "updateRoomData",
   UpdateGameData: "updateGameData",
+  UpdateScores: "updateScores",
 };
 
 /** @readonly @enum {number} */

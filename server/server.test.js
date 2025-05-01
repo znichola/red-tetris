@@ -19,6 +19,8 @@ vi.mock("./ScoreStore.js", () => {
       constructor() {}
       pushPlayerScores() {}
       getAllScores() {}
+      setSocket() {}
+      broadcastScores() {}
     },
     convertToPlayerScores: () => {},
   };
