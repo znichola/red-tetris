@@ -3,6 +3,7 @@ import Player from "./Player.js";
 import { TICK_RATE } from "./TetrisConfig.js";
 import { VectorDown, VectorLeft, VectorRight } from "./TetrisConsts.js";
 import { ActionType } from "../shared/DTOs.js";
+import { scoreStore } from "./server.js";
 
 export default class Game {
   #isSoloGame;
@@ -107,6 +108,8 @@ export default class Game {
     } else {
       console.log(`Game over: ${winnerGameState.name} wins!`);
     }
+
+    scoreStore.pushPlayerScores(this.#players, winnerGameState?.name);
   }
 
   #isGameOver() {
