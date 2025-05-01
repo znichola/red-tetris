@@ -5,6 +5,7 @@ import { VectorDown, VectorLeft, VectorRight } from "./TetrisConsts.js";
 import { ActionType } from "../shared/DTOs.js";
 
 export default class Game {
+  #isSoloGame;
   #lastLoopTime = new Date();
   #playerGameStates;
   /** @type {function[]} */
@@ -38,6 +39,7 @@ export default class Game {
    * @param {any} randomSeed
    */
   constructor(playerNames, randomSeed = null) {
+    this.#isSoloGame = playerNames.length === 1;
     randomSeed = randomSeed ?? this.#lastLoopTime;
     this.#playerGameStates = playerNames.map((playerName) => ({
       playerName,
@@ -85,7 +87,7 @@ export default class Game {
   }
 
   async gameLoop() {
-    while (this.hasMultipleActivePlayers()) {
+    while (!this.#isGameOver()) {
       const currentTime = new Date();
       const deltaTime = currentTime.getTime() - this.#lastLoopTime.getTime();
       this.#lastLoopTime = currentTime;
@@ -102,7 +104,8 @@ export default class Game {
       (playerGameState) => !playerGameState.player.isGameOver(),
     );
 
-    //TODO: broadcast game over
+    //TODO: Decide on what to broadcast when a solo game ends, since there's no winner found for now.
+    //TODO: Broadcast game over
     if (!winnerGameState) {
       console.log("Game over: Draw!");
     } else {
@@ -110,7 +113,15 @@ export default class Game {
     }
   }
 
-  hasMultipleActivePlayers() {
+  #isGameOver() {
+    if (this.#isSoloGame) {
+      return this.#playerGameStates[0].player.isGameOver();
+    }
+
+    return !this.#hasMultipleActivePlayers();
+  }
+
+  #hasMultipleActivePlayers() {
     return (
       this.#playerGameStates.filter(
         (playerGameState) => !playerGameState.player.isGameOver(),

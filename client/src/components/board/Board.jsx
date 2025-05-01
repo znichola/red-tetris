@@ -146,9 +146,7 @@ function Button({ icon, className, shortcutKeyCodes = [], onClick }) {
 
   useEffect(() => {
     if (keyPressed == false) return;
-    const timer = setTimeout(() => {
-      setKeyPressed(false);
-    }, 200);
+    const timer = setTimeout(() => setKeyPressed(false), 20);
     return () => clearTimeout(timer);
   }, [keyPressed]);
 

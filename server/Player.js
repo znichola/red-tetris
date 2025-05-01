@@ -54,6 +54,8 @@ export default class Player {
     while (this.#currentTetromino.canMove(this.#pileGrid, VectorDown)) {
       this.#currentTetromino.move(VectorDown);
     }
+
+    this.#dropTimer = 1000 / DROP_RATE;
   }
 
   tryRotateTetromino() {
@@ -86,11 +88,6 @@ export default class Player {
     }
   }
 
-  #pileCurrentTetromino() {
-    this.#pileGrid = this.#gridWithTetromino;
-    this.#spawnNextTetromino();
-  }
-
   /**
    * @param {number} deltaTime
    */
@@ -104,8 +101,14 @@ export default class Player {
         this.#currentTetromino.move(VectorDown);
       } else {
         this.#pileCurrentTetromino();
+        this.#spawnNextTetromino();
       }
     }
+  }
+
+  #pileCurrentTetromino() {
+    this.#pileGrid = this.#gridWithTetromino;
+    this.#pileGrid.clearAndDropFullRows();
   }
 
   #spawnNextTetromino() {
@@ -119,14 +122,17 @@ export default class Player {
         this.#currentTetromino.position,
       )
     ) {
+      this.#pileCurrentTetromino();
       this.#gameOver = true;
     }
   }
 
   #getRandomTetromino() {
     const tetrominoTypes = Object.values(TetrominoType);
+    const randomNumber = this.#prng();
     const randomType =
-      tetrominoTypes[Math.floor(this.#prng() * tetrominoTypes.length)];
+      tetrominoTypes[Math.floor(randomNumber * tetrominoTypes.length)];
+
     return new Piece(randomType);
   }
 
