@@ -1,15 +1,19 @@
 import "./spectra.css";
 import { useSelector } from "react-redux";
-import { selectGame } from "../../redux/gameSlice.js";
+import { convertSpectaToArray, selectGame } from "../../redux/gameSlice.js";
 
-/**@typedef {import("../../redux/gameSlice.js").Spectra} Spectra*/
-/**@typedef {import("../../redux/gameSlice.js").PlayerInfo} PlayerInfo */
-
+/**
+ * @typedef {import("../../../../shared/DTOs.js").Spectrum} Spectrum
+ *
+ * @typedef {ReturnType<convertSpectaToArray>[0]} PlayerInfo
+ */
 /**
  * @returns {React.JSX.Element}
  */
 function SpectraOverview() {
-  const allPlayers = useSelector(selectGame).playerInfo;
+  const allPlayers = convertSpectaToArray(
+    useSelector(selectGame).playerNameToSpectrum,
+  );
   const numRows = useSelector(selectGame).grid.length;
 
   const chunks = [];
@@ -74,7 +78,7 @@ function PlayerView({ playerInfo, numRows }) {
 
 /**
  * @param {Object} props
- * @param {Spectra} props.spectra
+ * @param {Spectrum} props.spectra
  * @param {number} props.numRows
  * @returns {React.JSX.Element}
  */
