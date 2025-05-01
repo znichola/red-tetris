@@ -73,7 +73,6 @@ function Room({ params }) {
       <SpectraOverview />
       {/* TODO : remove */}
       <Debug />
-      <SpectraOverview />
     </div>
   );
 }
