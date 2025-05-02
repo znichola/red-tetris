@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { socket } from "../../socket.js";
 import { SocketEvents } from "../../../../shared/DTOs.js";
 import "./scoreboard.css";
-import { Trophy, TrophyIcon, XIcon } from "lucide-react";
+import { Trophy } from "lucide-react";
 
 /**@typedef {import("../../../../shared/DTOs.js").ScoreRecord} ScoreRecord */
 
@@ -33,35 +33,35 @@ function Scoreboard() {
       <div className="title-bar">
         <h1 className="title">Hall of Fame</h1>
       </div>
-      <table className="scoreboard-table">
-        <thead>
-          <tr>
-            <th>Player</th>
-            <th>Score</th>
-            <th>Time</th>
-            <th style={{ textAlign: "center" }}>Game Mode</th>
-          </tr>
-        </thead>
-        <tbody>
-          {scores.map(({ player, score, time, gameMode, winner }, i) => (
-            <tr key={i}>
-              <td>{player}</td>
-              <td className="score">{score}</td>
-              <td>{new Date(time).toLocaleString()}</td>
-              <td>
-                <div className="winner">
-                  {winner ? (
-                    <Trophy size={16} color="var(--red)" strokeWidth={3} />
-                  ) : (
-                    <></>
-                  )}{" "}
-                  {gameMode}
-                </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div className="scoreboard-table">
+        <div className="table-header table-row" id="header">
+          <div>Player</div>
+          <div>Score</div>
+          <div>Date</div>
+          <div>Game Mode</div>
+        </div>
+        {scores.map(({ player, score, time, gameMode, winner }, i) => (
+          <div className="table-row" key={i}>
+            <div>{player}</div>
+            <div className="score">{score}</div>
+            <div>
+              {new Intl.DateTimeFormat("en-gb", {
+                day: "numeric",
+                month: "short",
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: false,
+              }).format(new Date(time))}
+            </div>
+            <div className="winner">
+              {winner && (
+                <Trophy size={16} color="var(--red)" strokeWidth={3} />
+              )}
+              {gameMode}
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
