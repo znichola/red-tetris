@@ -1,12 +1,9 @@
-import { CellType } from "../shared/DTOs.js";
+import { CellType, PowerUpCellType } from "../shared/DTOs.js";
 import Grid from "./Grid.js";
-import { RotateClockwise, RotationType, Tetrominoes } from "./TetrisConsts.js";
+import { PowerUpSpawnChance, Tetrominoes } from "./TetrisConsts.js";
 
 export default class Piece extends Grid {
-  #tetrominoType;
   #position;
-  /** @type {RotationType} */
-  #rotation;
 
   get position() {
     return this.#position;
@@ -15,14 +12,32 @@ export default class Piece extends Grid {
   /**
    * @param {import("../shared/DTOs.js").TetrominoType} tetrominoType
    * @param {import("./TetrisConsts.js").Vector} position
+   * @param {PowerUpCellType[]} enabledPowerUps
+   * @param {function} prng
    */
-  constructor(tetrominoType, position) {
-    const rotation = RotationType.Rotation0;
-    const array = Tetrominoes[tetrominoType][rotation].shape;
+  constructor(tetrominoType, position, enabledPowerUps, prng) {
+    const array = structuredClone(Tetrominoes[tetrominoType]);
     super(array, null, null);
-    this.#tetrominoType = tetrominoType;
+
+    const hasPowerUp = prng() < PowerUpSpawnChance;
+
+    if (hasPowerUp && enabledPowerUps.length > 0) {
+      const randomPowerUpIndex = Math.floor(prng() * enabledPowerUps.length);
+      const powerUp = enabledPowerUps[randomPowerUpIndex];
+      const possiblePowerUpLocations = this.array.flatMap((row, y) =>
+        row
+          .map((cell, x) => (cell === CellType.Empty ? null : { x, y }))
+          .filter((spot) => spot !== null),
+      );
+      const randomPowerUpLocationIndex = Math.floor(
+        Math.random() * possiblePowerUpLocations.length,
+      );
+      const randomPowerUpLocation =
+        possiblePowerUpLocations[randomPowerUpLocationIndex];
+      this.array[randomPowerUpLocation.y][randomPowerUpLocation.x] = powerUp;
+    }
+
     this.#position = position;
-    this.#rotation = rotation;
   }
 
   /**
@@ -36,9 +51,8 @@ export default class Piece extends Grid {
     };
     const overflowsLeft = movedPosition.x < 0;
     const overflowsRight =
-      movedPosition.x + this.#getTetromino().width > gameGrid.array[0].length;
-    const overflowsBottom =
-      movedPosition.y + this.#getTetromino().height > gameGrid.array.length;
+      movedPosition.x + this.cols > gameGrid.array[0].length;
+    const overflowsBottom = movedPosition.y + this.rows > gameGrid.array.length;
     const overflows = overflowsLeft || overflowsRight || overflowsBottom;
 
     return (
@@ -59,20 +73,19 @@ export default class Piece extends Grid {
    * @param {import("./TetrisConsts.js").Vector} offsetMove
    */
   canRotate(gameGrid, offsetMove = { x: 0, y: 0 }) {
-    const nextRotation = RotateClockwise(this.#rotation);
-    const rotatedTetromino = Tetrominoes[this.#tetrominoType][nextRotation];
+    const rotatedTetromino = Grid.fromArray(this.rotateClockwise());
     const movedPosition = {
       x: this.#position.x + offsetMove.x,
       y: this.#position.y + offsetMove.y,
     };
     const overflowsRight =
-      movedPosition.x + rotatedTetromino.width > gameGrid.array[0].length;
+      movedPosition.x + rotatedTetromino.cols > gameGrid.array[0].length;
     const overflowsBottom =
-      movedPosition.y + rotatedTetromino.height > gameGrid.array.length;
+      movedPosition.y + rotatedTetromino.rows > gameGrid.array.length;
     const overflows = overflowsRight || overflowsBottom;
     const overlaps = Grid.overlapsAtPosition(
       gameGrid,
-      Grid.fromArray(rotatedTetromino.shape),
+      rotatedTetromino,
       movedPosition,
     );
 
@@ -80,12 +93,7 @@ export default class Piece extends Grid {
   }
 
   rotate() {
-    this.#rotation = RotateClockwise(this.#rotation);
-    this.array = this.#getTetromino().shape;
-  }
-
-  #getTetromino() {
-    return Tetrominoes[this.#tetrominoType][this.#rotation];
+    this.array = this.rotateClockwise();
   }
 
   getScoreValue() {

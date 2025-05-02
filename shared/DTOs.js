@@ -3,8 +3,9 @@
  * @property {number} x
  * @property {number} y
  *
- * @typedef {Object} StartGameData
+ * @typedef {Object} GameSettings
  * @property {Vector} gridDimensions
+ * @property {PowerUpCellType[]} enabledPowerUps
  *
  * @typedef {Object} GameData
  * @property {Grid} grid
@@ -64,10 +65,18 @@ export const TetrominoType = Object.freeze({
 });
 
 /** @readonly @enum {number} */
+export const PowerUpCellType = Object.freeze({
+  Attack: 9,
+  Duplication: 10,
+  Bomb: 11,
+});
+
+/** @readonly @enum {number} */
 export const CellType = Object.freeze({
   Empty: 0,
   ...TetrominoType,
   Indestructible: 8,
+  ...PowerUpCellType,
 });
 
 /**

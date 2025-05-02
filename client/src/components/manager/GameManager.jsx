@@ -4,7 +4,11 @@ import "./game_manager.css";
 import { selectSocket } from "../../redux/socketSlice.js";
 import { selectRoom } from "../../redux/roomSlice.js";
 import { socket } from "../../socket.js";
-import { GameState, SocketEvents } from "../../../../shared/DTOs.js";
+import {
+  GameState,
+  PowerUpCellType,
+  SocketEvents,
+} from "../../../../shared/DTOs.js";
 import { selectGame } from "../../redux/gameSlice.js";
 import { useState } from "react";
 import {
@@ -72,11 +76,13 @@ function Pending() {
 
   const launchGame = () => {
     if (socket.connected) {
-      /** @type {import("../../../../shared/DTOs.js").StartGameData} */
-      const startGameData = {
+      /** @type {import("../../../../shared/DTOs.js").GameSettings} */
+      const gameSettings = {
         gridDimensions,
+        //TODO: add powerup selection to the UI
+        enabledPowerUps: Object.values(PowerUpCellType),
       };
-      socket.emit(SocketEvents.StartGame, startGameData);
+      socket.emit(SocketEvents.StartGame, gameSettings);
     }
   };
 

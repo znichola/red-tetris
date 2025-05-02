@@ -1,7 +1,7 @@
 import { expect, expectGridArrayToEqual } from "./expect-extensions.js";
 import { describe, it } from "vitest";
 import Grid from "./Grid.js";
-import { CellType } from "../shared/DTOs.js";
+import { CellType, PowerUpCellType } from "../shared/DTOs.js";
 
 describe("Grid", () => {
   it("should create a grid with the correct dimensions", () => {
@@ -150,25 +150,35 @@ describe("Grid", () => {
     expect(grid.spectrum).toEqual(expectedSpectrum);
   });
 
-  it("should clear full lines, drop the ones above, and return the number of cleared lines", () => {
-    const grid = Grid.fromArray([
-      [CellType.T, CellType.Empty, CellType.Empty, CellType.Empty],
-      [CellType.T, CellType.T, CellType.Empty, CellType.Empty],
-      [CellType.T, CellType.O, CellType.O, CellType.Z],
-      [CellType.Empty, CellType.O, CellType.O, CellType.Empty],
-      [CellType.I, CellType.I, CellType.I, CellType.I],
-    ]);
-    const expectedGrid = [
-      [CellType.Empty, CellType.Empty, CellType.Empty, CellType.Empty],
-      [CellType.Empty, CellType.Empty, CellType.Empty, CellType.Empty],
-      [CellType.T, CellType.Empty, CellType.Empty, CellType.Empty],
-      [CellType.T, CellType.T, CellType.Empty, CellType.Empty],
-      [CellType.Empty, CellType.O, CellType.O, CellType.Empty],
-    ];
-    const clearedRows = grid.clearAndDropFullRows();
-    expectGridArrayToEqual(grid.array, expectedGrid);
-    expect(clearedRows).toEqual(2);
-  });
+  it(
+    "should clear full lines, drop the ones above, return the number of cleared lines" +
+      ", and return the list of special cells cleared",
+    () => {
+      const grid = Grid.fromArray([
+        [CellType.T, CellType.Empty, CellType.Empty, CellType.Empty],
+        [CellType.T, CellType.T, CellType.Empty, CellType.Empty],
+        [CellType.T, CellType.O, CellType.Bomb, CellType.Z],
+        [CellType.Empty, CellType.O, CellType.O, CellType.Empty],
+        [CellType.I, CellType.I, CellType.I, CellType.Duplication],
+      ]);
+      const expectedGrid = [
+        [CellType.Empty, CellType.Empty, CellType.Empty, CellType.Empty],
+        [CellType.Empty, CellType.Empty, CellType.Empty, CellType.Empty],
+        [CellType.T, CellType.Empty, CellType.Empty, CellType.Empty],
+        [CellType.T, CellType.T, CellType.Empty, CellType.Empty],
+        [CellType.Empty, CellType.O, CellType.O, CellType.Empty],
+      ];
+      const { clearedRows, clearedSpecialCells } = grid.clearAndDropFullRows(
+        Object.values(PowerUpCellType),
+      );
+      expectGridArrayToEqual(grid.array, expectedGrid);
+      expect(clearedRows).toEqual(2);
+      expect(clearedSpecialCells).toEqual([
+        PowerUpCellType.Bomb,
+        PowerUpCellType.Duplication,
+      ]);
+    },
+  );
 
   it("should push rows from the bottom and return if non-empty rows pushed out", () => {
     const indestructibleRow = [
@@ -217,6 +227,23 @@ describe("Grid", () => {
       expectGridArrayToEqual(grid.array, expectedGrid);
       expect(overflowed).toEqual(true);
     }
+  });
+
+  it("should rotate clockwise", () => {
+    const grid = Grid.fromArray([
+      [CellType.Empty, CellType.Z, CellType.Empty],
+      [CellType.Empty, CellType.I, CellType.Empty],
+      [CellType.Empty, CellType.J, CellType.Empty],
+    ]);
+    const gridBeforeRotation = grid;
+    const expectedGrid = Grid.fromArray([
+      [CellType.Empty, CellType.Empty, CellType.Empty],
+      [CellType.J, CellType.I, CellType.Z],
+      [CellType.Empty, CellType.Empty, CellType.Empty],
+    ]);
+    const rotated = grid.rotateClockwise();
+    expect(grid).toEqual(gridBeforeRotation);
+    expectGridArrayToEqual(rotated, expectedGrid.array);
   });
 });
 

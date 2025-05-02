@@ -1,4 +1,3 @@
-import seedrandom from "seedrandom";
 import Player from "./Player.js";
 import { TICK_RATE } from "./TetrisConfig.js";
 import { VectorDown, VectorLeft, VectorRight } from "./TetrisConsts.js";
@@ -37,15 +36,14 @@ export default class Game {
 
   /**
    * @param {string[]} playerNames
-   * @param {import("../shared/DTOs.js").StartGameData} startGameData
+   * @param {import("../shared/DTOs.js").GameSettings} gameSettings
    * @param {any} randomSeed
    */
-  constructor(playerNames, startGameData, randomSeed = null) {
+  constructor(playerNames, gameSettings, randomSeed = null) {
     this.#isSoloGame = playerNames.length === 1;
     randomSeed = randomSeed ?? this.#lastLoopTime;
     this.#players = playerNames.map(
-      (playerName) =>
-        new Player(playerName, startGameData, seedrandom(randomSeed)),
+      (playerName) => new Player(playerName, gameSettings, randomSeed),
     );
   }
 

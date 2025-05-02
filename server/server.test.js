@@ -223,9 +223,12 @@ function waitFor(socket, event) {
  * @param {import("socket.io-client").Socket} socket
  */
 function emitStartGame(socket) {
-  socket.emit(SocketEvents.StartGame, {
+  /** @type {import("../shared/DTOs.js").GameSettings} */
+  const gameSettings = {
     gridDimensions: DefaultGameGridDimensions,
-  });
+    enabledPowerUps: [],
+  };
+  socket.emit(SocketEvents.StartGame, gameSettings);
 }
 
 /**

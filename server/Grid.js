@@ -48,15 +48,23 @@ export default class Grid {
     return Grid.toString(this.array);
   }
 
-  clearAndDropFullRows() {
+  /**
+   * @param {CellType[]} specialCells
+   */
+  clearAndDropFullRows(specialCells) {
     let clearedRows = 0;
     const cols = this.array[0].length;
     const createEmptyRow = () => Array(cols).fill(CellType.Empty);
+    const clearedSpecialCells = [];
 
     this.array.forEach((row, index) => {
       if (!isRowFull(row)) {
         return;
       }
+
+      clearedSpecialCells.push(
+        ...row.filter((cell) => specialCells.includes(cell)),
+      );
 
       for (let previousIndex = index - 1; previousIndex >= 0; --previousIndex) {
         this.array[previousIndex + 1] = this.array[previousIndex];
@@ -66,7 +74,7 @@ export default class Grid {
       ++clearedRows;
     });
 
-    return clearedRows;
+    return { clearedRows, clearedSpecialCells };
   }
 
   /**
@@ -95,6 +103,12 @@ export default class Grid {
     }
 
     return overflowed;
+  }
+
+  rotateClockwise() {
+    return this.array[0].map((_, index) =>
+      this.array.map((row) => row[index]).reverse(),
+    );
   }
 
   /**

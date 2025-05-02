@@ -79,6 +79,10 @@ function Cell({ tet_color }) {
     else if (cellType == CellType.Z) color += "z";
     else if (cellType == CellType.Empty) color += "empty";
     else if (cellType == CellType.Indestructible) color += "indestructible";
+    //TODO: add icons on the powerup cells
+    else if (cellType == CellType.Attack) color += "attack";
+    else if (cellType == CellType.Duplication) color += "duplication";
+    else if (cellType == CellType.Bomb) color += "bomb";
     else color = "--white";
 
     return color;

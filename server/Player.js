@@ -1,4 +1,4 @@
-import { CellType, TetrominoType } from "../shared/DTOs.js";
+import { CellType, PowerUpCellType, TetrominoType } from "../shared/DTOs.js";
 import Grid from "./Grid.js";
 import Piece from "./Piece.js";
 import { DROP_RATE } from "./TetrisConfig.js";
@@ -8,11 +8,14 @@ import {
   VectorRight,
   VectorUp,
 } from "./TetrisConsts.js";
+import seedrandom from "seedrandom";
 
 export default class Player {
   #name;
+  #gameSettings;
+  #powerUpsPrng;
+  #piecesPrng;
   #score = 0;
-  #prng;
   #pileGrid;
   #gameOver = false;
   /** @type {import("./Piece.js").default} */
@@ -46,15 +49,17 @@ export default class Player {
 
   /**
    * @param {string} name
-   * @param {import("../shared/DTOs.js").StartGameData} startGameData
-   * @param {function} prng
+   * @param {import("../shared/DTOs.js").GameSettings} gameSettings
+   * @param {any} randomSeed
    */
-  constructor(name, startGameData, prng) {
+  constructor(name, gameSettings, randomSeed) {
     this.#name = name;
-    this.#prng = prng;
+    this.#gameSettings = gameSettings;
+    this.#powerUpsPrng = seedrandom(randomSeed);
+    this.#piecesPrng = seedrandom(randomSeed);
     this.#pileGrid = Grid.fromRowsCols(
-      startGameData.gridDimensions.y,
-      startGameData.gridDimensions.x,
+      gameSettings.gridDimensions.y,
+      gameSettings.gridDimensions.x,
     );
     this.#nextTetromino = this.#getRandomTetromino();
     this.#spawnNextTetromino();
@@ -66,6 +71,10 @@ export default class Player {
   tryMoveTetromino(direction) {
     if (this.#currentTetromino.canMove(this.#pileGrid, direction)) {
       this.#currentTetromino.move(direction);
+
+      if (direction === VectorDown) {
+        this.#dropTimer = 0;
+      }
     }
   }
 
@@ -121,14 +130,31 @@ export default class Player {
         this.#currentTetromino.move(VectorDown);
       } else {
         this.#pileCurrentTetromino();
-        const clearedRows = this.#pileGrid.clearAndDropFullRows();
-        const attackRowsCount = clearedRows - 1;
-        this.#score +=
-          Math.max(1, clearedRows + 1) * this.#currentTetromino.getScoreValue();
+
+        const { clearedRows, clearedSpecialCells } =
+          this.#pileGrid.clearAndDropFullRows(Object.values(PowerUpCellType));
+
+        const clearedAttackPowerUpsCount = clearedSpecialCells.filter(
+          (cell) => cell === PowerUpCellType.Attack,
+        ).length;
+        //TODO: implement the rest of the power-ups
+        // eslint-disable-next-line no-unused-vars
+        const clearedDuplicationPowerUpsCount = clearedSpecialCells.filter(
+          (cell) => cell === PowerUpCellType.Duplication,
+        ).length;
+        // eslint-disable-next-line no-unused-vars
+        const clearedBombPowerUpsCount = clearedSpecialCells.filter(
+          (cell) => cell === PowerUpCellType.Bomb,
+        ).length;
+
+        const attackRowsCount = clearedRows - 1 + clearedAttackPowerUpsCount;
 
         if (attackRowsCount > 0) {
           this.#attackOpponents(opponents, attackRowsCount);
         }
+
+        this.#score +=
+          Math.max(1, clearedRows + 1) * this.#currentTetromino.getScoreValue();
 
         this.#spawnNextTetromino();
       }
@@ -181,7 +207,7 @@ export default class Player {
 
   #getRandomTetromino() {
     const tetrominoTypes = Object.values(TetrominoType);
-    const randomNumber = this.#prng();
+    const randomNumber = this.#piecesPrng();
     const randomType =
       tetrominoTypes[Math.floor(randomNumber * tetrominoTypes.length)];
     const position = {
@@ -189,7 +215,12 @@ export default class Player {
       y: 0,
     };
 
-    return new Piece(randomType, position);
+    return new Piece(
+      randomType,
+      position,
+      this.#gameSettings.enabledPowerUps,
+      this.#powerUpsPrng,
+    );
   }
 
   isGameOver() {
