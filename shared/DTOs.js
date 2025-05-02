@@ -1,4 +1,11 @@
 /**
+ * @typedef {Object} Vector
+ * @property {number} x
+ * @property {number} y
+ *
+ * @typedef {Object} StartGameData
+ * @property {Vector} gridDimensions
+ *
  * @typedef {Object} GameData
  * @property {Grid} grid
  * @property {number} score
@@ -8,6 +15,7 @@
  *
  * @typedef {Object<string, Spectrum> } PlayerNameToSpectrum
  * @typedef {number[]} Spectrum
+ *
  * @typedef {Object} RoomData
  * @property {GameState} gameState
  * @property {string} ownerName

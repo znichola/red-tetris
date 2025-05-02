@@ -5,7 +5,7 @@ import { store } from "../../redux/store.js";
 import { SpectraOverview } from "./Spectra.jsx";
 import { replaceGameData } from "../../redux/gameSlice.js";
 import { mockAllPlayers } from "./mockAllPlayers.js";
-import { GameGridDimensions } from "../../../../server/TetrisConsts.js";
+import { DefaultGameGridDimensions } from "../../../../shared/Consts.js";
 
 describe("SpectraOverview component", () => {
   beforeEach(() => {
@@ -13,8 +13,8 @@ describe("SpectraOverview component", () => {
     store.dispatch({ type: "RESET_ALL" });
   });
 
-  const mockGrid = Array(GameGridDimensions.y).fill(
-    Array(GameGridDimensions.x).fill(0),
+  const mockGrid = Array(DefaultGameGridDimensions.y).fill(
+    Array(DefaultGameGridDimensions.x).fill(0),
   );
 
   const setupSpectra = () => {
@@ -53,7 +53,7 @@ describe("SpectraOverview component", () => {
       const rows = view.closest(".spectra-view").getElementsByClassName("line");
       expect(rows.length).toBe(mockGrid.length);
       expect(rows.item(0).getElementsByClassName("cell").length).toBe(
-        GameGridDimensions.x,
+        DefaultGameGridDimensions.x,
       );
     });
   });
@@ -64,7 +64,7 @@ describe("SpectraOverview component", () => {
 
     const alice = screen.getByText("Alice");
 
-    let reconstructedSpectra = Array(GameGridDimensions.x).fill(0);
+    let reconstructedSpectra = Array(DefaultGameGridDimensions.x).fill(0);
 
     const lines = alice.closest(".spectra-view").getElementsByClassName("line");
 

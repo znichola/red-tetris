@@ -2,12 +2,12 @@ import { describe, it, expect } from "vitest";
 import gameReducer, { replaceGameData, selectGame } from "./gameSlice.js";
 import { CellType } from "../../../shared/DTOs.js";
 import { initiaStoreState } from "./store.js";
-import { GameGridDimensions } from "../../../server/TetrisConsts.js";
+import { DefaultGameGridDimensions } from "../../../shared/Consts.js";
 
 describe("gameSlice", () => {
   const createEmptyGrid = () =>
-    Array.from({ length: GameGridDimensions.y }, () =>
-      Array.from({ length: GameGridDimensions.x }, () => CellType.Empty),
+    Array.from({ length: DefaultGameGridDimensions.y }, () =>
+      Array.from({ length: DefaultGameGridDimensions.x }, () => CellType.Empty),
     );
 
   it("should handle replaceGrid", () => {
@@ -19,8 +19,8 @@ describe("gameSlice", () => {
 
     const withNewGrid = {
       ...initialState,
-      grid: Array.from({ length: GameGridDimensions.y }, () =>
-        Array.from({ length: GameGridDimensions.x }, () => CellType.I),
+      grid: Array.from({ length: DefaultGameGridDimensions.y }, () =>
+        Array.from({ length: DefaultGameGridDimensions.x }, () => CellType.I),
       ),
     };
 

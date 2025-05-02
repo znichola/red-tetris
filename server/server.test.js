@@ -7,6 +7,7 @@ import {
   GameState,
   SocketEvents,
 } from "../shared/DTOs.js";
+import { DefaultGameGridDimensions } from "../shared/Consts.js";
 
 const TestPort = 3001;
 const RoomNames = ["testRoom1", "testRoom2"];
@@ -222,7 +223,9 @@ function waitFor(socket, event) {
  * @param {import("socket.io-client").Socket} socket
  */
 function emitStartGame(socket) {
-  socket.emit(SocketEvents.StartGame);
+  socket.emit(SocketEvents.StartGame, {
+    gridDimensions: DefaultGameGridDimensions,
+  });
 }
 
 /**
