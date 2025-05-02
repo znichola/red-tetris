@@ -73,10 +73,10 @@ function Pending() {
   const launchGame = () => {
     if (socket.connected) {
       /** @type {import("../../../../shared/DTOs.js").StartGameData} */
-      const StartGameData = {
+      const startGameData = {
         gridDimensions,
       };
-      socket.emit(SocketEvents.StartGame, StartGameData);
+      socket.emit(SocketEvents.StartGame, startGameData);
     }
   };
 
