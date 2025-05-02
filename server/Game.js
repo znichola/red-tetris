@@ -26,12 +26,11 @@ export default class Game {
       .forEach((player) => {
         playerNameToSpectrum[player.name] = player.spectrum;
       });
-
+    const player = this.#players.find((player) => player.name === playerName);
     return {
-      grid: this.#players.find((player) => player.name === playerName)
-        .gridArray,
+      grid: player.gridArray,
       playerNameToSpectrum,
-      score: this.#players.find((player) => player.name === playerName).score,
+      score: player.score,
     };
   }
 

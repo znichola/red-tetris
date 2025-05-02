@@ -1,6 +1,5 @@
 import fs from "fs";
 import path from "path";
-import Player from "./Player.js";
 import { SocketEvents } from "../shared/DTOs.js";
 
 /**
@@ -11,7 +10,7 @@ import { SocketEvents } from "../shared/DTOs.js";
 export default class ScoreStore {
   #filePath;
   #permanentStoreActive = false;
-  #socket;
+  #io;
 
   /**@type {ScoreRecord[]} */
   #scores = [];
@@ -94,12 +93,12 @@ export default class ScoreStore {
     this.broadcastScores();
   }
 
-  setSocket(socket) {
-    this.#socket = socket;
+  setSocket(io) {
+    this.#io = io;
   }
 
   broadcastScores() {
-    this.#socket?.emit(SocketEvents.UpdateScores, this.#scores);
+    this.#io?.emit(SocketEvents.UpdateScores, this.#scores);
   }
 }
 
