@@ -191,30 +191,13 @@ export function deepFreeze(object) {
   return Object.freeze(object);
 }
 
-/**
- * @typedef {Object} Vector
- * @property {number} x
- * @property {number} y
- */
+/** @typedef {import("../shared/DTOs.js").Vector} Vector */
 
-/**
- * @type {Vector}
- */
+/** @type {Vector} */
 export const VectorLeft = Object.freeze({ x: -1, y: 0 });
-/**
- * @type {Vector}
- */
+/** @type {Vector} */
 export const VectorRight = Object.freeze({ x: 1, y: 0 });
-/**
- * @type {Vector}
- */
+/** @type {Vector} */
 export const VectorUp = Object.freeze({ x: 0, y: -1 });
-/**
- * @type {Vector}
- */
+/** @type {Vector} */
 export const VectorDown = Object.freeze({ x: 0, y: 1 });
-
-export const GameGridDimensions = Object.freeze({
-  x: 10,
-  y: 20,
-});

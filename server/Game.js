@@ -36,13 +36,15 @@ export default class Game {
 
   /**
    * @param {string[]} playerNames
+   * @param {import("../shared/DTOs.js").StartGameData} startGameData
    * @param {any} randomSeed
    */
-  constructor(playerNames, randomSeed = null) {
+  constructor(playerNames, startGameData, randomSeed = null) {
     this.#isSoloGame = playerNames.length === 1;
     randomSeed = randomSeed ?? this.#lastLoopTime;
     this.#players = playerNames.map(
-      (playerName) => new Player(playerName, seedrandom(randomSeed)),
+      (playerName) =>
+        new Player(playerName, startGameData, seedrandom(randomSeed)),
     );
   }
 

@@ -4,11 +4,9 @@ import { RotateClockwise, RotationType, Tetrominoes } from "./TetrisConsts.js";
 
 export default class Piece extends Grid {
   #tetrominoType;
-  /**
-   * @type {RotationType}
-   */
+  #position;
+  /** @type {RotationType} */
   #rotation;
-  #position = { x: 4, y: 0 };
 
   get position() {
     return this.#position;
@@ -16,12 +14,14 @@ export default class Piece extends Grid {
 
   /**
    * @param {import("../shared/DTOs.js").TetrominoType} tetrominoType
+   * @param {import("./TetrisConsts.js").Vector} position
    */
-  constructor(tetrominoType) {
+  constructor(tetrominoType, position) {
     const rotation = RotationType.Rotation0;
     const array = Tetrominoes[tetrominoType][rotation].shape;
     super(array, null, null);
     this.#tetrominoType = tetrominoType;
+    this.#position = position;
     this.#rotation = rotation;
   }
 

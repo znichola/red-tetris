@@ -1,6 +1,14 @@
 import { CellType } from "../shared/DTOs.js";
 
 export default class Grid {
+  get rows() {
+    return this.array.length;
+  }
+
+  get cols() {
+    return this.array[0].length;
+  }
+
   /**
    * @return {import("../shared/DTOs.js").Spectrum}
    */
