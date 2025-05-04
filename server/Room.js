@@ -1,3 +1,7 @@
+import {
+  MaxGameGridDimensions,
+  MinGameGridDimensions,
+} from "../shared/Consts.js";
 import { GameState, SocketEvents } from "../shared/DTOs.js";
 import Game from "./Game.js";
 
@@ -75,17 +79,30 @@ export default class Room {
 
   /**
    * @param {string} playerName
+   * @param {import("../shared/DTOs.js").StartGameData} startGameData
    */
-  startGame(playerName) {
+  startGame(playerName, startGameData) {
+    const isValidGridHeight =
+      startGameData.gridDimensions.y >= MinGameGridDimensions.y &&
+      startGameData.gridDimensions.y <= MaxGameGridDimensions.y;
+    const isValidGridWidth =
+      startGameData.gridDimensions.x >= MinGameGridDimensions.x &&
+      startGameData.gridDimensions.x <= MaxGameGridDimensions.x;
+    const isValidGridDimensions = isValidGridHeight && isValidGridWidth;
+
     if (
       this.#gameState !== GameState.Pending ||
-      this.#ownerName !== playerName
+      this.#ownerName !== playerName ||
+      !isValidGridDimensions
     ) {
       return;
     }
 
     this.#gameState = GameState.Playing;
-    this.#tetrisGame = new Game(this.#players.map((player) => player.name));
+    this.#tetrisGame = new Game(
+      this.#players.map((player) => player.name),
+      startGameData,
+    );
     this.#tetrisGame.addGameUpdateListener(this.#OnGameUpdate);
     this.#tetrisGame.gameLoop();
     this.#broadcastRoomData();

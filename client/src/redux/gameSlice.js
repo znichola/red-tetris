@@ -1,27 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { CellType } from "../../../shared/DTOs.js";
+import { CellType, GameState } from "../../../shared/DTOs.js";
 import { resetAll } from "./hooks.js";
 
 // https://redux.js.org/tutorials/essentials/part-2-app-structure#creating-slice-reducers-and-actions
 
 /**
- * @typedef {number[]} Spectra
- *
- * @typedef {{
- *     player: string;
- *     spectra: Spectra;
- * }} PlayerInfo
- */
-
-/**
  * Define the initial value for the slice state
  */
-export const initialState = {
-  /** @type {CellType[][]} */ grid: Array.from({ length: 20 }, () =>
-    Array.from({ length: 10 }, () => CellType.Empty),
-  ),
-  /**@type {PlayerInfo[]} */ playerInfo: [],
-};
+export const /**@type {import("../../../shared/DTOs.js").GameData} */ initialState =
+    {
+      grid: Array.from({ length: 20 }, () =>
+        Array.from({ length: 10 }, () => CellType.Empty),
+      ),
+      score: 0,
+      playerNameToSpectrum: {},
+    };
 
 /**
  * Slices contain Redux reducer logic for updating state, and
@@ -32,26 +25,30 @@ export const gameSlice = createSlice({
   initialState,
   reducers: {
     /**
-     * @param {import("@reduxjs/toolkit").PayloadAction<CellType[][]>} action
+     * @param {import("@reduxjs/toolkit").PayloadAction<import("../../../shared/DTOs.js").GameData>} action
      */
-    replaceGrid: (state, action) => {
+    replaceGameData: (state, action) => {
       // "Mutating" state because immer is used to properly create a new object each time.
-      state.grid = action.payload;
-    },
-    /**
-     * @param {import("@reduxjs/toolkit").PayloadAction<PlayerInfo[]>} action
-     */
-    replaceSpectra: (state, action) => {
-      state.playerInfo = action.payload;
+      state.grid = action.payload.grid;
+      state.playerNameToSpectrum = action.payload.playerNameToSpectrum;
+      state.score = action.payload.score;
     },
   },
   extraReducers: (builder) => builder.addCase(resetAll, () => initialState),
 });
 
-export const { replaceGrid, replaceSpectra } = gameSlice.actions;
+export const { replaceGameData } = gameSlice.actions;
 
 export const selectGame = (
   /**@type {import("./store.js").RootState} */ state,
 ) => state.game;
+
+// This cannont be done in select, it's a funciton that should not return ref to a new object
+export const convertSpectaToArray = (
+  /**@type {import("../../../shared/DTOs.js").PlayerNameToSpectrum} */ playerNameToSpectrum,
+) =>
+  Object.entries(playerNameToSpectrum).map((e) => {
+    return { player: e[0], spectra: e[1] };
+  });
 
 export default gameSlice.reducer;

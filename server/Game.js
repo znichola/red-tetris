@@ -3,6 +3,8 @@ import Player from "./Player.js";
 import { TICK_RATE } from "./TetrisConfig.js";
 import { VectorDown, VectorLeft, VectorRight } from "./TetrisConsts.js";
 import { ActionType } from "../shared/DTOs.js";
+import { scoreStore } from "./server.js";
+import { convertToPlayerScores } from "./ScoreStore.js";
 
 export default class Game {
   #isSoloGame;
@@ -24,23 +26,25 @@ export default class Game {
       .forEach((player) => {
         playerNameToSpectrum[player.name] = player.spectrum;
       });
-
+    const player = this.#players.find((player) => player.name === playerName);
     return {
-      grid: this.#players.find((player) => player.name === playerName)
-        .gridArray,
+      grid: player.gridArray,
       playerNameToSpectrum,
+      score: player.score,
     };
   }
 
   /**
    * @param {string[]} playerNames
+   * @param {import("../shared/DTOs.js").StartGameData} startGameData
    * @param {any} randomSeed
    */
-  constructor(playerNames, randomSeed = null) {
+  constructor(playerNames, startGameData, randomSeed = null) {
     this.#isSoloGame = playerNames.length === 1;
     randomSeed = randomSeed ?? this.#lastLoopTime;
     this.#players = playerNames.map(
-      (playerName) => new Player(playerName, seedrandom(randomSeed)),
+      (playerName) =>
+        new Player(playerName, startGameData, seedrandom(randomSeed)),
     );
   }
 
@@ -106,6 +110,15 @@ export default class Game {
     } else {
       console.log(`Game over: ${winnerGameState.name} wins!`);
     }
+
+    /**@type {import("../shared/DTOs.js").GameMode} */
+    const gameMode = this.#isSoloGame ? "solo" : "multiplayer";
+
+    scoreStore.pushPlayerScores(
+      convertToPlayerScores(this.#players),
+      gameMode,
+      winnerGameState?.name,
+    );
   }
 
   #isGameOver() {

@@ -1,39 +1,47 @@
-import { useDispatch } from "react-redux";
-import { replaceGrid, replaceSpectra } from "../../redux/gameSlice.js";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  initialState,
+  replaceGameData,
+  selectGame,
+} from "../../redux/gameSlice.js";
 import { mockGrid } from "../board/mockGrid.js";
-import { CellType } from "../../../../shared/DTOs.js";
 import { resetAll } from "../../redux/hooks.js";
 import { mockEvenMorePlayers } from "../spectra/mockAllPlayers.js";
 
 export function Debug() {
   const dispatch = useDispatch();
+  const startState = useSelector(selectGame);
   return (
     <div className="standard-dialog thing">
       DEBUG:
       <br />
-      <button className="btn" onClick={() => dispatch(replaceGrid(mockGrid))}>
+      <button
+        className="btn"
+        onClick={() =>
+          dispatch(replaceGameData({ ...startState, grid: mockGrid }))
+        }
+      >
         replaceGrid with mock
       </button>
       <button
         className="btn"
-        onClick={() =>
-          dispatch(
-            replaceGrid(
-              Array.from({ length: 20 }, () =>
-                Array.from({ length: 10 }, () => CellType.Empty),
-              ),
-            ),
-          )
-        }
+        onClick={() => dispatch(replaceGameData(initialState))}
       >
-        replaceGrid with empty
+        reset GameState
       </button>
       <button className="btn" onClick={() => dispatch(resetAll())}>
         reset all redux state
       </button>
       <button
         className="btn"
-        onClick={() => dispatch(replaceSpectra(mockEvenMorePlayers))}
+        onClick={() =>
+          dispatch(
+            replaceGameData({
+              ...startState,
+              playerNameToSpectrum: mockEvenMorePlayers,
+            }),
+          )
+        }
       >
         set spectra to full
       </button>

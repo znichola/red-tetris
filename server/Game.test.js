@@ -1,14 +1,25 @@
 import { expect, expectGridArrayToEqual } from "./expect-extensions.js";
 import { describe, it, vi, beforeEach, afterEach } from "vitest";
 import Game from "./Game.js";
-import {
-  GameGridDimensions,
-  RotationType,
-  Tetrominoes,
-} from "./TetrisConsts.js";
+import { RotationType, Tetrominoes } from "./TetrisConsts.js";
 import { DROP_RATE } from "./TetrisConfig.js";
 import Grid from "./Grid.js";
 import { ActionType, CellType } from "../shared/DTOs.js";
+import { DefaultGameGridDimensions } from "../shared/Consts.js";
+
+// NOTE ensure the score store does nothing
+vi.mock("./ScoreStore.js", () => {
+  return {
+    default: class {
+      constructor() {}
+      pushPlayerScores() {}
+      getAllScores() {}
+      setSocket() {}
+      broadcastScores() {}
+    },
+    convertToPlayerScores: () => {},
+  };
+});
 
 const TestsRandomSeed = 42;
 //NOTE: With seed 42, the tetrominoes will always appear in this order:
@@ -65,7 +76,9 @@ describe("Game", () => {
     const gameData = getAndValidateGameData(game, playerNames[0], playerNames);
     const spectra = Object.values(gameData.playerNameToSpectrum);
     spectra.forEach((spectrum) =>
-      expect(spectrum).toEqual(expect.arrayContaining([GameGridDimensions.y])),
+      expect(spectrum).toEqual(
+        expect.arrayContaining([DefaultGameGridDimensions.y]),
+      ),
     );
   });
 
@@ -92,7 +105,7 @@ describe("Game", () => {
       game,
       playerNames,
       ActionType.MoveLeft,
-      GameGridDimensions.x,
+      DefaultGameGridDimensions.x,
     );
     const gameData = getAndValidateGameData(game, playerNames[0], playerNames);
     const expectedGrid = getGridWithTetrominoFromSpawnOrder(0, { x: 0, y: 0 });
@@ -105,12 +118,12 @@ describe("Game", () => {
       game,
       playerNames,
       ActionType.MoveRight,
-      GameGridDimensions.x,
+      DefaultGameGridDimensions.x,
     );
     const gameData = getAndValidateGameData(game, playerNames[0], playerNames);
     const firstTetromino = getTetrominoFromSpawnOrder(0);
     const expectedGrid = getGridWithTetrominoFromSpawnOrder(0, {
-      x: GameGridDimensions.x - firstTetromino.width,
+      x: DefaultGameGridDimensions.x - firstTetromino.width,
       y: 0,
     });
     expectGridArrayToEqual(gameData.grid, expectedGrid.array);
@@ -122,13 +135,13 @@ describe("Game", () => {
       game,
       playerNames,
       ActionType.SoftDrop,
-      GameGridDimensions.y,
+      DefaultGameGridDimensions.y,
     );
     const gameData = getAndValidateGameData(game, playerNames[0], playerNames);
     const firstTetromino = getTetrominoFromSpawnOrder(0);
     const expectedGrid = getGridWithTetrominoFromSpawnOrder(0, {
       x: 4,
-      y: GameGridDimensions.y - firstTetromino.height,
+      y: DefaultGameGridDimensions.y - firstTetromino.height,
     });
     expectGridArrayToEqual(gameData.grid, expectedGrid.array);
   });
@@ -140,7 +153,7 @@ describe("Game", () => {
     const firstTetromino = getTetrominoFromSpawnOrder(0);
     const expectedGrid = getGridWithTetrominoFromSpawnOrder(0, {
       x: 4,
-      y: GameGridDimensions.y - firstTetromino.height,
+      y: DefaultGameGridDimensions.y - firstTetromino.height,
     });
     expectGridArrayToEqual(gameData.grid, expectedGrid.array);
   });
@@ -150,8 +163,8 @@ describe("Game", () => {
     executeActions(game, playerNames, ActionType.Rotate);
     const gameData1 = getAndValidateGameData(game, playerNames[0], playerNames);
     const expectedGrid1 = Grid.fromRowsCols(
-      GameGridDimensions.y,
-      GameGridDimensions.x,
+      DefaultGameGridDimensions.y,
+      DefaultGameGridDimensions.x,
     );
     expectedGrid1.array[0][4] = CellType.I;
     expectedGrid1.array[1][4] = CellType.I;
@@ -172,16 +185,16 @@ describe("Game", () => {
       game,
       playerNames,
       ActionType.MoveRight,
-      GameGridDimensions.x,
+      DefaultGameGridDimensions.x,
     );
     executeActions(game, playerNames, ActionType.Rotate);
     const gameData = getAndValidateGameData(game, playerNames[0], playerNames);
     const gridWithFirstTetromino = getGridWithTetrominoFromSpawnOrder(0, {
       x: 4,
-      y: GameGridDimensions.y - getTetrominoFromSpawnOrder(0).height,
+      y: DefaultGameGridDimensions.y - getTetrominoFromSpawnOrder(0).height,
     });
     const gridWithSecondTetromino = getGridWithTetrominoFromSpawnOrder(1, {
-      x: GameGridDimensions.x - getTetrominoFromSpawnOrder(1).width,
+      x: DefaultGameGridDimensions.x - getTetrominoFromSpawnOrder(1).width,
       y: 0,
     });
     const expectedGrid = Grid.superimpose(
@@ -204,7 +217,7 @@ describe("Game", () => {
       0,
       {
         x: 4,
-        y: GameGridDimensions.y - firstTetromino.height,
+        y: DefaultGameGridDimensions.y - firstTetromino.height,
       },
       RotationType.Rotation90,
     );
@@ -254,7 +267,13 @@ describe("Game", () => {
 });
 
 function createTetrisGame(playerNames = ["Player1", "Player2"]) {
-  const game = new Game(playerNames, TestsRandomSeed);
+  const game = new Game(
+    playerNames,
+    {
+      gridDimensions: DefaultGameGridDimensions,
+    },
+    TestsRandomSeed,
+  );
   game.gameLoop();
   return { game, playerNames };
 }
@@ -286,13 +305,15 @@ function getAndValidateGameData(game, playerName, allPlayerNames) {
  */
 function expectValidGameData(gameData, otherPlayerNames) {
   const grid = gameData.grid;
-  expect(grid.length).toEqual(GameGridDimensions.y);
-  grid.forEach((row) => expect(row.length).toEqual(GameGridDimensions.x));
+  expect(grid.length).toEqual(DefaultGameGridDimensions.y);
+  grid.forEach((row) =>
+    expect(row.length).toEqual(DefaultGameGridDimensions.x),
+  );
 
   expect(Object.keys(gameData.playerNameToSpectrum)).toEqual(otherPlayerNames);
   Object.keys(gameData.playerNameToSpectrum).forEach((playerName) => {
     const spectrum = gameData.playerNameToSpectrum[playerName];
-    expect(spectrum.length).toEqual(GameGridDimensions.x);
+    expect(spectrum.length).toEqual(DefaultGameGridDimensions.x);
   });
 }
 
@@ -311,8 +332,8 @@ function getGridWithTetrominoFromSpawnOrder(
     tetrominoRotation,
   );
   const emptyGameGrid = Grid.fromRowsCols(
-    GameGridDimensions.y,
-    GameGridDimensions.x,
+    DefaultGameGridDimensions.y,
+    DefaultGameGridDimensions.x,
   );
   const expectedGrid = Grid.superimposeAtPosition(
     emptyGameGrid,

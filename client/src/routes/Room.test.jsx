@@ -147,9 +147,9 @@ describe("Room component with real Redux store", () => {
     const state = store.getState();
 
     expect(state.game.grid).toEqual(mockGameData.grid);
-    expect(state.game.playerInfo).toEqual([
-      { player: "Carol", spectra: [0, 1, 0] },
-      { player: "Alice", spectra: [2, 2, 2] },
-    ]);
+    expect(state.game.playerNameToSpectrum).toEqual({
+      Carol: [0, 1, 0],
+      Alice: [2, 2, 2],
+    });
   });
 });

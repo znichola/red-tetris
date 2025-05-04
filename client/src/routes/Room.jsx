@@ -8,7 +8,7 @@ import { SocketEvents } from "../../../shared/DTOs.js";
 import { useDispatch } from "react-redux";
 import { replaceRoom, setIsRoomAdmin } from "../redux/roomSlice.js";
 import { setIsSocketConnected } from "../redux/socketSlice.js";
-import { replaceGrid, replaceSpectra } from "../redux/gameSlice.js";
+import { replaceGameData } from "../redux/gameSlice.js";
 import "./room.css";
 import { resetAll } from "../redux/hooks.js";
 
@@ -35,14 +35,7 @@ function Room({ params }) {
     const onUpdateGameData = (
       /** @type {import("../../../shared/DTOs.js").GameData} */ data,
     ) => {
-      dispatch(replaceGrid(data.grid));
-      dispatch(
-        replaceSpectra(
-          Object.entries(data.playerNameToSpectrum).map((e) => {
-            return { player: e[0], spectra: e[1] };
-          }),
-        ),
-      );
+      dispatch(replaceGameData(data));
     };
 
     const onConnectionChange = () => {
@@ -71,8 +64,7 @@ function Room({ params }) {
       <Board player={params.player} room={params.room} />
       <GameManager />
       <SpectraOverview />
-      {/* TODO : remove */}
-      <Debug />
+      {process.env.NODE_ENV === "production" ? <></> : <Debug />}
     </div>
   );
 }

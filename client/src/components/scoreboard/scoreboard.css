@@ -1,0 +1,38 @@
+.scoreboard-table {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  font-family: monaco;
+  font-size: x-large;
+  border: 1px solid black;
+  background: none;
+}
+
+.table-row {
+  display: contents; /* Allows child divs to align with grid-template-columns */
+}
+
+.table-row > div {
+  padding: 4px 8px;
+  border: 1px solid black;
+}
+
+.table-row:nth-child(odd):not(.table-header) > div {
+  background: var(--tet-color-empty);
+}
+
+.score {
+  font-weight: 700;
+  color: var(--red);
+}
+
+.winner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3em;
+}
+
+.table-header > div {
+  background: var(--grey);
+  font-weight: 700;
+}

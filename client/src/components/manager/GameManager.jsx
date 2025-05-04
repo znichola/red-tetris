@@ -5,9 +5,17 @@ import { selectSocket } from "../../redux/socketSlice.js";
 import { selectRoom } from "../../redux/roomSlice.js";
 import { socket } from "../../socket.js";
 import { GameState, SocketEvents } from "../../../../shared/DTOs.js";
+import { selectGame } from "../../redux/gameSlice.js";
+import { useState } from "react";
+import {
+  DefaultGameGridDimensions,
+  MaxGameGridDimensions,
+  MinGameGridDimensions,
+} from "../../../../shared/Consts.js";
 
 function GameManager() {
   const socketState = useSelector(selectSocket);
+  const score = useSelector(selectGame).score;
 
   /**@type {GameState} */
   const roomState = useSelector(selectRoom).data?.gameState;
@@ -27,7 +35,12 @@ function GameManager() {
         {roomState == GameState.Ended ? (
           <GameOver />
         ) : roomState == GameState.Playing ? (
-          <div>Game in progress</div>
+          <>
+            <div> Game in progress </div>
+            <div>
+              Score : <strong>{score}</strong>
+            </div>
+          </>
         ) : roomState == GameState.Pending ? (
           <Pending />
         ) : (
@@ -44,12 +57,29 @@ function GameManager() {
 
 function Pending() {
   const isRoomAdmin = useSelector(selectRoom).isRoomAdmin;
+  const [gridDimensions, setGridDimensions] = useState({
+    x: DefaultGameGridDimensions.x,
+    y: DefaultGameGridDimensions.y,
+  });
+
+  const handleGridSizeChange = (e) => {
+    const { name, value } = e.target;
+    setGridDimensions((prev) => ({
+      ...prev,
+      [name]: Number(value),
+    }));
+  };
 
   const launchGame = () => {
     if (socket.connected) {
-      socket.emit(SocketEvents.StartGame);
+      /** @type {import("../../../../shared/DTOs.js").StartGameData} */
+      const startGameData = {
+        gridDimensions,
+      };
+      socket.emit(SocketEvents.StartGame, startGameData);
     }
   };
+
   return (
     <>
       {isRoomAdmin ? (
@@ -58,6 +88,34 @@ function Pending() {
           <button className="btn" onClick={launchGame}>
             start
           </button>
+          <div>
+            <label htmlFor="gridDimensionX">Grid X:</label>
+            <input
+              type="range"
+              id="gridDimensionX"
+              name="x"
+              value={gridDimensions.x}
+              onChange={handleGridSizeChange}
+              min={MinGameGridDimensions.x}
+              max={MaxGameGridDimensions.x}
+            />
+            <br />
+            <output>{gridDimensions.x}</output>
+            <br />
+
+            <label htmlFor="gridDimensionY">Grid Y:</label>
+            <input
+              type="range"
+              id="gridDimensionY"
+              name="y"
+              value={gridDimensions.y}
+              onChange={handleGridSizeChange}
+              min={MinGameGridDimensions.y}
+              max={MaxGameGridDimensions.y}
+            />
+            <br />
+            <output>{gridDimensions.y}</output>
+          </div>
         </div>
       ) : (
         <div>...waiting for game to start</div>
@@ -94,7 +152,7 @@ function PlayersInLobby() {
   const players = useSelector(selectRoom).data?.playerNames || [];
   return (
     <div>
-      <strong>Players in loobby:</strong>{" "}
+      <strong>Players in lobby:</strong>{" "}
       {players.reduce(
         (prev, player) => `${prev}${prev == "" ? "" : ", "} ${player}`,
         "",

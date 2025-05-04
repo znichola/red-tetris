@@ -1,12 +1,21 @@
 /**
+ * @typedef {Object} Vector
+ * @property {number} x
+ * @property {number} y
+ *
+ * @typedef {Object} StartGameData
+ * @property {Vector} gridDimensions
+ *
  * @typedef {Object} GameData
  * @property {Grid} grid
+ * @property {number} score
  * @property {PlayerNameToSpectrum} playerNameToSpectrum
  *
  * @typedef {CellType[][]} Grid
  *
  * @typedef {Object<string, Spectrum> } PlayerNameToSpectrum
  * @typedef {number[]} Spectrum
+ *
  * @typedef {Object} RoomData
  * @property {GameState} gameState
  * @property {string} ownerName
@@ -40,6 +49,7 @@ export const SocketEvents = {
   //NOTE: Server to clients events:
   UpdateRoomData: "updateRoomData",
   UpdateGameData: "updateGameData",
+  UpdateScores: "updateScores",
 };
 
 /** @readonly @enum {number} */
@@ -59,3 +69,9 @@ export const CellType = Object.freeze({
   ...TetrominoType,
   Indestructible: 8,
 });
+
+/**
+ * Use for the scoring table
+ * @typedef {"solo" | "multiplayer"} GameMode
+ * @typedef {{player: string, score: number, time: string, gameMode: GameMode, winner: boolean}} ScoreRecord
+ */

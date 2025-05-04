@@ -6,6 +6,11 @@ import { Server } from "socket.io";
 import http from "node:http";
 import Rooms from "./Rooms.js";
 
+import ScoreStore from "./ScoreStore.js";
+
+// Initialize the scoreStore, must be outside a funciton so it can be imported elsewhere for easy access
+export const scoreStore = new ScoreStore(params.server.scoreStoreFile);
+
 const __dirname = import.meta.dirname;
 const react_app = path.join(__dirname, "../dist");
 
@@ -15,7 +20,6 @@ function createApp() {
   app.use(express.static(react_app));
 
   app.get("/{*matchAll}", (req, res) => {
-    console.log("YYAYA");
     res.sendFile(path.join(react_app, "index.html"));
   });
 
@@ -36,14 +40,18 @@ function createApp() {
         },
   );
   const rooms = new Rooms(io);
+  scoreStore.setSocket(io);
 
   io.on("connection", (socket) => {
-    const { roomName, playerName } = socket.handshake.auth;
-    if (
-      typeof roomName !== "string" ||
-      typeof playerName !== "string" ||
-      !rooms.tryAddPlayer(socket, roomName, playerName)
-    ) {
+    const { roomName, playerName, scoreBoard } = socket.handshake.auth;
+
+    if (typeof roomName === "string" && typeof playerName === "string") {
+      if (!rooms.tryAddPlayer(socket, roomName, playerName)) {
+        socket.disconnect();
+      }
+    } else if (typeof scoreBoard === "string") {
+      scoreStore.broadcastScores();
+    } else {
       socket.disconnect();
     }
   });

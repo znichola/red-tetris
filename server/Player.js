@@ -4,7 +4,6 @@ import Piece from "./Piece.js";
 import { DROP_RATE } from "./TetrisConfig.js";
 import {
   VectorDown,
-  GameGridDimensions,
   VectorLeft,
   VectorRight,
   VectorUp,
@@ -12,8 +11,9 @@ import {
 
 export default class Player {
   #name;
+  #score = 0;
   #prng;
-  #pileGrid = Grid.fromRowsCols(GameGridDimensions.y, GameGridDimensions.x);
+  #pileGrid;
   #gameOver = false;
   /** @type {import("./Piece.js").default} */
   #currentTetromino;
@@ -22,6 +22,10 @@ export default class Player {
 
   get name() {
     return this.#name;
+  }
+
+  get score() {
+    return this.#score;
   }
 
   get gridArray() {
@@ -42,11 +46,16 @@ export default class Player {
 
   /**
    * @param {string} name
+   * @param {import("../shared/DTOs.js").StartGameData} startGameData
    * @param {function} prng
    */
-  constructor(name, prng) {
+  constructor(name, startGameData, prng) {
     this.#name = name;
     this.#prng = prng;
+    this.#pileGrid = Grid.fromRowsCols(
+      startGameData.gridDimensions.y,
+      startGameData.gridDimensions.x,
+    );
     this.#nextTetromino = this.#getRandomTetromino();
     this.#spawnNextTetromino();
   }
@@ -114,6 +123,8 @@ export default class Player {
         this.#pileCurrentTetromino();
         const clearedRows = this.#pileGrid.clearAndDropFullRows();
         const attackRowsCount = clearedRows - 1;
+        this.#score +=
+          Math.max(1, clearedRows + 1) * this.#currentTetromino.getScoreValue();
 
         if (attackRowsCount > 0) {
           this.#attackOpponents(opponents, attackRowsCount);
@@ -173,8 +184,12 @@ export default class Player {
     const randomNumber = this.#prng();
     const randomType =
       tetrominoTypes[Math.floor(randomNumber * tetrominoTypes.length)];
+    const position = {
+      x: Math.floor(this.#pileGrid.cols / 2) - 1,
+      y: 0,
+    };
 
-    return new Piece(randomType);
+    return new Piece(randomType, position);
   }
 
   isGameOver() {

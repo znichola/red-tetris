@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach, beforeEach } from "vitest";
+import { describe, it, expect, afterEach, beforeEach, vi } from "vitest";
 import { io as ioClient } from "socket.io-client";
 import createApp from "./server.js";
 import {
@@ -7,10 +7,25 @@ import {
   GameState,
   SocketEvents,
 } from "../shared/DTOs.js";
+import { DefaultGameGridDimensions } from "../shared/Consts.js";
 
 const TestPort = 3001;
 const RoomNames = ["testRoom1", "testRoom2"];
 const PlayerNames = Array.from({ length: 100 }, (_, i) => `Player${i + 1}`);
+
+// NOTE ensure the score store does nothing
+vi.mock("./ScoreStore.js", () => {
+  return {
+    default: class {
+      constructor() {}
+      pushPlayerScores() {}
+      getAllScores() {}
+      setSocket() {}
+      broadcastScores() {}
+    },
+    convertToPlayerScores: () => {},
+  };
+});
 
 describe("server", () => {
   /** @type { import("http").Server} */
@@ -159,6 +174,7 @@ describe("server", () => {
       playerNameToSpectrum: expect.objectContaining({
         [PlayerNames[1]]: expect.any(Array),
       }),
+      score: expect.any(Number),
     };
     expect(gameData).toMatchObject(expectedGameDataStructure);
   });
@@ -207,7 +223,9 @@ function waitFor(socket, event) {
  * @param {import("socket.io-client").Socket} socket
  */
 function emitStartGame(socket) {
-  socket.emit(SocketEvents.StartGame);
+  socket.emit(SocketEvents.StartGame, {
+    gridDimensions: DefaultGameGridDimensions,
+  });
 }
 
 /**
