@@ -53,7 +53,7 @@ function GameManager() {
 
 function Pending() {
   const isRoomAdmin = useSelector(selectRoom).isRoomAdmin;
-  const gridDimensions = useSelector(selectGameConfig).dim;
+  const gridDimensions = useSelector(selectGameConfig).gridDimensions;
 
   const launchGame = () => {
     if (socket.connected) {

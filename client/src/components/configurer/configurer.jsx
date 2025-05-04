@@ -4,7 +4,7 @@ import {
   setGridX,
   setGridY,
   setHeavy,
-  setBase,
+  setRuleset,
 } from "../../redux/configSlice.js";
 import {
   MinGameGridDimensions,
@@ -27,6 +27,10 @@ function Configurer() {
   );
 }
 
+/**
+ * @param {Object} params
+ * @param {import("../../../../shared/DTOs.js").GameConfigClient} params.config
+ */
 function OptsB({ config }) {
   const dispatch = useDispatch();
 
@@ -49,10 +53,10 @@ function OptsB({ config }) {
           id="gridX"
           min={MinGameGridDimensions.x}
           max={MaxGameGridDimensions.x}
-          value={config.dim.x}
+          value={config.gridDimensions.x}
           onChange={(e) => dispatch(setGridX(Number(e.target.value)))}
         />
-        <output>{config.dim.x}</output>
+        <output>{config.gridDimensions.x}</output>
       </div>
       <div className="field-row">
         <label htmlFor="gridY">Y:</label>
@@ -61,15 +65,19 @@ function OptsB({ config }) {
           id="gridY"
           min={MinGameGridDimensions.y}
           max={MaxGameGridDimensions.y}
-          value={config.dim.y}
+          value={config.gridDimensions.y}
           onChange={(e) => dispatch(setGridY(Number(e.target.value)))}
         />
-        <output>{config.dim.y}</output>
+        <output>{config.gridDimensions.y}</output>
       </div>
     </div>
   );
 }
 
+/**
+ * @param {Object} params
+ * @param {import("../../../../shared/DTOs.js").GameConfigClient} params.config
+ */
 function OptsA({ config }) {
   const dispatch = useDispatch();
 
@@ -81,8 +89,8 @@ function OptsA({ config }) {
           id="classic"
           type="radio"
           name="classic"
-          checked={config.base === "classic"}
-          onChange={() => dispatch(setBase("classic"))}
+          checked={config.ruleset === "classic"}
+          onChange={() => dispatch(setRuleset("classic"))}
         />
         <label htmlFor="classic">Classic</label>
       </div>
@@ -91,8 +99,8 @@ function OptsA({ config }) {
           id="invisible"
           type="radio"
           name="invisible"
-          checked={config.base === "invisible"}
-          onChange={() => dispatch(setBase("invisible"))}
+          checked={config.ruleset === "invisible"}
+          onChange={() => dispatch(setRuleset("invisible"))}
         />
         <label htmlFor="invisible">Invisible</label>
       </div>
@@ -101,8 +109,8 @@ function OptsA({ config }) {
           id="powerup"
           type="radio"
           name="powerup"
-          checked={config.base === "powerup"}
-          onChange={() => dispatch(setBase("powerup"))}
+          checked={config.ruleset === "powerup"}
+          onChange={() => dispatch(setRuleset("powerup"))}
         />
         <label htmlFor="powerup">Powerup</label>
       </div>

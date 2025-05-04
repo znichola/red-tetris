@@ -3,14 +3,13 @@ import { createSlice } from "@reduxjs/toolkit";
 import { DefaultGameGridDimensions } from "../../../shared/Consts.js";
 import { resetAll } from "./hooks.js";
 
-/** @typedef {import("../../../shared/DTOs.js").GameConfig} GameConfigClient */
+/** @typedef {import("../../../shared/DTOs.js").GameConfigClient} GameConfigClient */
 
 /** @type {GameConfigClient} */
 export const initialState = {
-  dim: { ...DefaultGameGridDimensions },
+  gridDimensions: { ...DefaultGameGridDimensions },
   heavy: false,
-  battle: false,
-  base: "classic",
+  ruleset: "classic",
 };
 
 export const configSlice = createSlice({
@@ -18,19 +17,16 @@ export const configSlice = createSlice({
   initialState,
   reducers: {
     setGridX: (state, action) => {
-      state.dim.x = action.payload;
+      state.gridDimensions.x = action.payload;
     },
     setGridY: (state, action) => {
-      state.dim.y = action.payload;
+      state.gridDimensions.y = action.payload;
     },
     setHeavy: (state, action) => {
       state.heavy = action.payload;
     },
-    setBattle: (state, action) => {
-      state.battle = action.payload;
-    },
-    setBase: (state, action) => {
-      state.base = action.payload;
+    setRuleset: (state, action) => {
+      state.ruleset = action.payload;
     },
     setFullConfig: (state, action) => {
       Object.assign(state, action.payload);
@@ -39,14 +35,8 @@ export const configSlice = createSlice({
   extraReducers: (builder) => builder.addCase(resetAll, () => initialState),
 });
 
-export const {
-  setGridX,
-  setGridY,
-  setHeavy,
-  setBattle,
-  setBase,
-  setFullConfig,
-} = configSlice.actions;
+export const { setGridX, setGridY, setHeavy, setRuleset, setFullConfig } =
+  configSlice.actions;
 
 export const selectGameConfig = (
   /** @type {import("./store.js").RootState} */ state,
