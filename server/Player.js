@@ -13,6 +13,7 @@ import seedrandom from "seedrandom";
 
 export default class Player {
   #name;
+  /**@type {import("../shared/DTOs.js").GameConfig} */
   #gameConfig;
   #powerUpsPrng;
   #piecesPrng;
@@ -64,6 +65,7 @@ export default class Player {
       gameConfig.gridDimensions.y,
       gameConfig.gridDimensions.x,
     );
+    this.#gameConfig = gameConfig;
     this.#nextTetromino = this.#getRandomTetromino();
     this.#spawnNextTetromino();
   }
@@ -86,7 +88,7 @@ export default class Player {
       this.#currentTetromino.move(VectorDown);
     }
 
-    this.#dropTimer = 1000 / DROP_RATE;
+    this.#dropTimer = 1000 / this.#getDropRate();
   }
 
   tryRotateTetromino() {
@@ -126,7 +128,7 @@ export default class Player {
   update(deltaTime, opponents) {
     this.#dropTimer += deltaTime;
 
-    if (this.#dropTimer >= 1000 / DROP_RATE) {
+    if (this.#dropTimer >= 1000 / this.#getDropRate()) {
       this.#dropTimer = 0;
 
       if (this.#currentTetromino.canMove(this.#pileGrid, VectorDown)) {
@@ -253,5 +255,9 @@ export default class Player {
 
   isGameOver() {
     return this.#gameOver;
+  }
+
+  #getDropRate() {
+    return this.#gameConfig.heavy ? DROP_RATE * 3 : DROP_RATE;
   }
 }

@@ -93,9 +93,7 @@ export const RulesetType = {
  * @typedef {{
  *    gridDimensions: Vector,
  *    heavy: boolean,
- *    battle: boolean,
  *    ruleset: RulesetType,
  *    enabledPowerUps: PowerUpCellType[]
  *  }} GameConfig
- * @typedef {Omit<GameConfig, "battle">} GameConfigClient
  */

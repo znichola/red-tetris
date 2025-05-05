@@ -227,7 +227,6 @@ function emitStartGame(socket) {
   /** @type {import("../shared/DTOs.js").GameConfig} */
   const gameConfig = {
     gridDimensions: DefaultGameGridDimensions,
-    battle: true,
     heavy: false,
     ruleset: RulesetType.Classic,
     enabledPowerUps: [],

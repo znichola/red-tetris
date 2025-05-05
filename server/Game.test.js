@@ -268,7 +268,6 @@ function createTetrisGame(playerNames = ["Player1", "Player2"]) {
     playerNames,
     {
       gridDimensions: DefaultGameGridDimensions,
-      battle: true,
       heavy: false,
       ruleset: RulesetType.Classic,
       enabledPowerUps: [],
