@@ -24,6 +24,7 @@ function Configurer() {
           <OptsA config={config} />
           <OptsB config={config} />
         </div>
+        <PowerUps config={config} />
       </div>
     </div>
   );
@@ -115,26 +116,38 @@ function OptsA({ config }) {
           onChange={() => dispatch(setRuleset(RulesetType.PowerUp))}
         />
         <label htmlFor="powerup">Powerup</label>
-
-        {config.ruleset === RulesetType.PowerUp &&
-          Object.entries(PowerUpCellType).map(([powerUpName, powerUpValue]) => (
-            <div key={powerUpValue} className="field-row">
-              <input
-                id={powerUpName}
-                type="checkbox"
-                name={powerUpName}
-                checked={config.enabledPowerUps.includes(powerUpValue)}
-                onChange={(e) => {
-                  const newPowerUps = e.target.checked
-                    ? [...config.enabledPowerUps, powerUpValue]
-                    : config.enabledPowerUps.filter((p) => p !== powerUpValue);
-                  dispatch(setEnabledPowerUps(newPowerUps));
-                }}
-              />
-              <label htmlFor={powerUpName}>{powerUpName}</label>
-            </div>
-          ))}
       </div>
+    </div>
+  );
+}
+
+/**
+ * @param {Object} params
+ * @param {import("../../../../shared/DTOs.js").GameConfig} params.config
+ */
+function PowerUps({ config }) {
+  const dispatch = useDispatch();
+
+  if (config.ruleset !== RulesetType.PowerUp) return <></>;
+  return (
+    <div className="opt-powerups">
+      {Object.entries(PowerUpCellType).map(([powerUpName, powerUpValue]) => (
+        <div key={powerUpValue}>
+          <input
+            id={powerUpName}
+            type="checkbox"
+            name={powerUpName}
+            checked={config.enabledPowerUps.includes(powerUpValue)}
+            onChange={(e) => {
+              const newPowerUps = e.target.checked
+                ? [...config.enabledPowerUps, powerUpValue]
+                : config.enabledPowerUps.filter((p) => p !== powerUpValue);
+              dispatch(setEnabledPowerUps(newPowerUps));
+            }}
+          />
+          <label htmlFor={powerUpName}>{powerUpName}</label>
+        </div>
+      ))}
     </div>
   );
 }
