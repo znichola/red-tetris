@@ -66,8 +66,7 @@ describe("GameManager component", () => {
     expect(screen.getByText("Game in progress")).toBeInTheDocument();
   });
 
-  //TODO: remove skip when by default no powerups are enabled
-  it.skip("shows admin view in Pending state with start button", () => {
+  it("shows admin view in Pending state with start button", () => {
     store.dispatch(
       replaceRoom({ ...mockRoomData, gameState: GameState.Pending }),
     );
