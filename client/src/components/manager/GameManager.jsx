@@ -10,12 +10,8 @@ import {
   SocketEvents,
 } from "../../../../shared/DTOs.js";
 import { selectGame } from "../../redux/gameSlice.js";
-import { useState } from "react";
-import {
-  DefaultGameGridDimensions,
-  MaxGameGridDimensions,
-  MinGameGridDimensions,
-} from "../../../../shared/Consts.js";
+import Configurer from "../configurer/configurer.jsx";
+import { selectGameConfig } from "../../redux/configSlice.js";
 
 function GameManager() {
   const socketState = useSelector(selectSocket);
@@ -61,18 +57,7 @@ function GameManager() {
 
 function Pending() {
   const isRoomAdmin = useSelector(selectRoom).isRoomAdmin;
-  const [gridDimensions, setGridDimensions] = useState({
-    x: DefaultGameGridDimensions.x,
-    y: DefaultGameGridDimensions.y,
-  });
-
-  const handleGridSizeChange = (e) => {
-    const { name, value } = e.target;
-    setGridDimensions((prev) => ({
-      ...prev,
-      [name]: Number(value),
-    }));
-  };
+  const gridDimensions = useSelector(selectGameConfig).gridDimensions;
 
   const launchGame = () => {
     if (socket.connected) {
@@ -94,34 +79,7 @@ function Pending() {
           <button className="btn" onClick={launchGame}>
             start
           </button>
-          <div>
-            <label htmlFor="gridDimensionX">Grid X:</label>
-            <input
-              type="range"
-              id="gridDimensionX"
-              name="x"
-              value={gridDimensions.x}
-              onChange={handleGridSizeChange}
-              min={MinGameGridDimensions.x}
-              max={MaxGameGridDimensions.x}
-            />
-            <br />
-            <output>{gridDimensions.x}</output>
-            <br />
-
-            <label htmlFor="gridDimensionY">Grid Y:</label>
-            <input
-              type="range"
-              id="gridDimensionY"
-              name="y"
-              value={gridDimensions.y}
-              onChange={handleGridSizeChange}
-              min={MinGameGridDimensions.y}
-              max={MaxGameGridDimensions.y}
-            />
-            <br />
-            <output>{gridDimensions.y}</output>
-          </div>
+          <Configurer />
         </div>
       ) : (
         <div>...waiting for game to start</div>

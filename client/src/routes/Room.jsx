@@ -10,7 +10,6 @@ import { replaceRoom, setIsRoomAdmin } from "../redux/roomSlice.js";
 import { setIsSocketConnected } from "../redux/socketSlice.js";
 import { replaceGameData } from "../redux/gameSlice.js";
 import "./room.css";
-import { resetAll } from "../redux/hooks.js";
 
 /**
  * @param {Object} props
@@ -55,7 +54,6 @@ function Room({ params }) {
       socket.off("connect", onConnectionChange);
       socket.off("disconnect", onConnectionChange);
       socket.disconnect();
-      dispatch(resetAll());
     };
   }, [params, dispatch]);
 

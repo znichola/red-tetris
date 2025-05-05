@@ -1,0 +1,10 @@
+.opt-flex {
+  display: flex;
+  gap: 1em;
+}
+
+.opt-heading {
+  font-family: Chicago;
+  font-size: smaller;
+  margin-bottom: 0.3em;
+}

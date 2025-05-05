@@ -84,3 +84,14 @@ export const CellType = Object.freeze({
  * @typedef {"solo" | "multiplayer"} GameMode
  * @typedef {{player: string, score: number, time: string, gameMode: GameMode, winner: boolean}} ScoreRecord
  */
+
+/**
+ * @typedef {{x: number, y: number}} Dim
+ * @typedef {{
+ *    gridDimensions: Vector,
+ *    heavy: boolean,
+ *    battle: boolean,
+ *    ruleset: "classic" | "invisible" | "powerup",
+ *  }} GameConfig
+ * @typedef {Omit<GameConfig, "battle">} GameConfigClient
+ */
