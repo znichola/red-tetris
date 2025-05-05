@@ -108,9 +108,9 @@ describe("Room component with real Redux store", () => {
 
     const state = store.getState();
 
-    expect(state.room.data.ownerName).toBe("Bob");
-    expect(state.room.data.gameState).toBe(GameState.Playing);
-    expect(state.room.data.playerNames).toEqual(["Bob", "Alice"]);
+    expect(state.room.data?.ownerName).toBe("Bob");
+    expect(state.room.data?.gameState).toBe(GameState.Playing);
+    expect(state.room.data?.playerNames).toEqual(["Bob", "Alice"]);
     expect(state.room.isRoomAdmin).toBe(true);
   });
 

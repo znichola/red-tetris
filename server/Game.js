@@ -15,18 +15,24 @@ export default class Game {
 
   /**
    * @param {string} playerName
-   * @returns {import("../shared/DTOs.js").GameData}
+   * @returns {import("../shared/DTOs.js").GameData | null}
    */
   getGameData(playerName) {
     /** @type {Object<string, import("../shared/DTOs.js").Spectrum>} */
     const playerNameToSpectrum = {};
-
-    this.#players
-      .filter((player) => player.name !== playerName)
-      .forEach((player) => {
-        playerNameToSpectrum[player.name] = player.spectrum;
-      });
     const player = this.#players.find((player) => player.name === playerName);
+
+    if (!player) {
+      return null;
+    }
+
+    const otherPlayers = this.#players.filter(
+      (player) => player.name !== playerName,
+    );
+    otherPlayers.forEach((player) => {
+      playerNameToSpectrum[player.name] = player.spectrum;
+    });
+
     return {
       grid: player.gridArray,
       playerNameToSpectrum,
@@ -46,6 +52,21 @@ export default class Game {
       (playerName) =>
         new Player(playerName, startGameData, seedrandom(randomSeed)),
     );
+  }
+
+  /**
+   * @param {string} playerName
+   */
+  removePlayer(playerName) {
+    const playerIndex = this.#players.findIndex(
+      (player) => player.name === playerName,
+    );
+
+    if (playerIndex === -1) {
+      return;
+    }
+
+    this.#players.splice(playerIndex, 1);
   }
 
   /**
@@ -85,6 +106,10 @@ export default class Game {
     this.#gameUpdateListeners.push(cb);
   }
 
+  removeAllGameUpdateListeners() {
+    this.#gameUpdateListeners = [];
+  }
+
   async gameLoop() {
     while (!this.#isGameOver()) {
       const currentTime = new Date();
@@ -98,18 +123,10 @@ export default class Game {
       await new Promise((res) => setTimeout(res, 1000 / TICK_RATE));
     }
 
-    //NOTE: A draw can occur when all players game over at the same time.
-    const winnerGameState = this.#players.find(
-      (player) => !player.isGameOver(),
-    );
-
-    //TODO: Decide on what to broadcast when a solo game ends, since there's no winner found for now.
-    //TODO: Broadcast game over
-    if (!winnerGameState) {
-      console.log("Game over: Draw!");
-    } else {
-      console.log(`Game over: ${winnerGameState.name} wins!`);
-    }
+    // NOTE: It is possible no winner is declared if one of the following happens:
+    // NOTE:  - It's a solo game
+    // NOTE:  - The game ends in a draw (all players game over at the same time)
+    const winnerPlayer = this.#players.find((player) => !player.isGameOver());
 
     /**@type {import("../shared/DTOs.js").GameMode} */
     const gameMode = this.#isSoloGame ? "solo" : "multiplayer";
@@ -117,11 +134,15 @@ export default class Game {
     scoreStore.pushPlayerScores(
       convertToPlayerScores(this.#players),
       gameMode,
-      winnerGameState?.name,
+      winnerPlayer?.name,
     );
   }
 
   #isGameOver() {
+    if (this.#players.length === 0) {
+      return true;
+    }
+
     if (this.#isSoloGame) {
       return this.#players[0].isGameOver();
     }

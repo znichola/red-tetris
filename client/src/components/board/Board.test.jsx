@@ -54,32 +54,42 @@ describe("Board view", () => {
 
   it("should emit socket action when buttons are clicked", () => {
     const { container } = render(<Keypad />);
+    /** @param {string} buttonClass */
+    const clickButton = (buttonClass) => {
+      const button = container.querySelector(`.${buttonClass}`);
 
-    fireEvent.click(container.querySelector(".left"));
+      if (!button) {
+        throw new Error(`Expected '.${buttonClass}' element to be in the DOM`);
+      }
+
+      fireEvent.click(button);
+    };
+
+    clickButton("left");
     expect(socket.emit).toHaveBeenCalledWith(
       SocketEvents.GameAction,
       ActionType.MoveLeft,
     );
 
-    fireEvent.click(container.querySelector(".right"));
+    clickButton("right");
     expect(socket.emit).toHaveBeenCalledWith(
       SocketEvents.GameAction,
       ActionType.MoveRight,
     );
 
-    fireEvent.click(container.querySelector(".up"));
+    clickButton("up");
     expect(socket.emit).toHaveBeenCalledWith(
       SocketEvents.GameAction,
       ActionType.Rotate,
     );
 
-    fireEvent.click(container.querySelector(".down"));
+    clickButton("down");
     expect(socket.emit).toHaveBeenCalledWith(
       SocketEvents.GameAction,
       ActionType.SoftDrop,
     );
 
-    fireEvent.click(container.querySelector(".space"));
+    clickButton("space");
     expect(socket.emit).toHaveBeenCalledWith(
       SocketEvents.GameAction,
       ActionType.HardDrop,

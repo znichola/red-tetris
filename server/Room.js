@@ -14,7 +14,7 @@ export default class Room {
   /** @type {{ socket: import("socket.io").Socket, name: string }[]} */
   #players = [];
   /** @type {import("./Game.js").default} */
-  #tetrisGame = null;
+  #tetrisGame;
 
   get name() {
     return this.#name;
@@ -69,6 +69,7 @@ export default class Room {
     }
 
     this.#players.splice(playerIndex, 1);
+    this.#tetrisGame?.removePlayer(playerName);
 
     if (this.#ownerName === playerName && this.#players.length > 0) {
       this.#ownerName = this.#players[0].name;
@@ -79,19 +80,19 @@ export default class Room {
 
   /**
    * @param {string} playerName
-   * @param {import("../shared/DTOs.js").GameConfig} startGameData
+   * @param {import("../shared/DTOs.js").GameConfig} gameConfig
    */
-  startGame(playerName, startGameData) {
+  startGame(playerName, gameConfig) {
     const isValidGridHeight =
-      startGameData.gridDimensions.y >= MinGameGridDimensions.y &&
-      startGameData.gridDimensions.y <= MaxGameGridDimensions.y;
+      gameConfig.gridDimensions.y >= MinGameGridDimensions.y &&
+      gameConfig.gridDimensions.y <= MaxGameGridDimensions.y;
     const isValidGridWidth =
-      startGameData.gridDimensions.x >= MinGameGridDimensions.x &&
-      startGameData.gridDimensions.x <= MaxGameGridDimensions.x;
+      gameConfig.gridDimensions.x >= MinGameGridDimensions.x &&
+      gameConfig.gridDimensions.x <= MaxGameGridDimensions.x;
     const isValidGridDimensions = isValidGridHeight && isValidGridWidth;
 
     if (
-      this.#gameState !== GameState.Pending ||
+      this.#gameState === GameState.Playing ||
       this.#ownerName !== playerName ||
       !isValidGridDimensions
     ) {
@@ -101,19 +102,27 @@ export default class Room {
     this.#gameState = GameState.Playing;
     this.#tetrisGame = new Game(
       this.#players.map((player) => player.name),
-      startGameData,
+      gameConfig,
     );
-    this.#tetrisGame.addGameUpdateListener(this.#OnGameUpdate);
-    this.#tetrisGame.gameLoop();
+    const OnGameUpdate = this.#OnGameUpdate.bind(this);
+    this.#tetrisGame.addGameUpdateListener(OnGameUpdate);
+    const OnGameEnd = this.#OnGameEnd.bind(this);
+    this.#tetrisGame.gameLoop().then(OnGameEnd);
     this.#broadcastRoomData();
   }
 
-  #OnGameUpdate = () => {
+  #OnGameUpdate() {
     this.#players.forEach((player) => {
       const gameData = this.#tetrisGame.getGameData(player.name);
       player.socket.emit(SocketEvents.UpdateGameData, gameData, 42);
     });
-  };
+  }
+
+  #OnGameEnd() {
+    this.#gameState = GameState.Ended;
+    this.#tetrisGame.removeAllGameUpdateListeners();
+    this.#broadcastRoomData();
+  }
 
   /**
    * @param {string} playerName

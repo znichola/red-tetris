@@ -8,7 +8,7 @@ function App() {
     <>
       <h1 className="red-title center">Red Tetris</h1>
       <main className="main">
-        <Router routes={[{ "/": Home }, { "/:room/:player": Room }]} />
+        <Router routes={{ "/": Home, "/:room/:player": Room }} />
       </main>
     </>
   );

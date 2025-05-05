@@ -32,13 +32,13 @@ describe("Router", () => {
     </>
   );
 
-  const routes = [
-    { "/": MockHome },
-    { "/somepage": MockSomepage },
-    { "/links": MockLinks },
-    { "/onePathElement/:first/:second": MockParams2 },
-    { "/multiple/path/elements/:first": MockParams1 },
-  ];
+  const routes = {
+    "/": MockHome,
+    "/somepage": MockSomepage,
+    "/links": MockLinks,
+    "/onePathElement/:first/:second": MockParams2,
+    "/multiple/path/elements/:first": MockParams1,
+  };
 
   it("renders Home page for '/' path", () => {
     render(<Router routes={routes} />);
