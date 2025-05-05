@@ -12,29 +12,6 @@
   color: #fff;
 }
 
-.gradient {
-  --col: rgb(211, 200, 200);
-  margin-top: 0.4em;
-  padding-top: 0.8em;
-  background: linear-gradient(
-    var(--col) 0em,
-    var(--col) 0.35em,
-    transparent 0.35em,
-    transparent 0.8em,
-    var(--col) 0.8em,
-    var(--col) 1.1em,
-    transparent 1.1em,
-    transparent 1.5em,
-    var(--col) 1.5em,
-    var(--col) 1.7em,
-    transparent 1.7em,
-    transparent 2.1em,
-    var(--col) 2.1em,
-    var(--col) 2.2em,
-    transparent 2.2em
-  );
-}
-
 .keypad-buffer {
   padding-top: 0.5em;
 }
@@ -120,14 +97,26 @@
 
 .tet-attack {
   background-color: var(--tet-color-attack);
+  background-image: url("/public/attack.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 24px 24px;
 }
 
 .tet-duplication {
   background-color: var(--tet-color-duplication);
+  background-image: url("/public/duplicate.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 24px 24px;
 }
 
 .tet-bomb {
   background-color: var(--tet-color-bomb);
+  background-image: url("/public/bomb.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 24px 24px;
 }
 
 .tet-shadow {
