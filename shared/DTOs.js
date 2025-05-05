@@ -74,6 +74,7 @@ export const CellType = Object.freeze({
   ...TetrominoType,
   Indestructible: 8,
   ...PowerUpCellType,
+  Shadow: 12,
 });
 
 /**

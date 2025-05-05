@@ -1,4 +1,9 @@
-import { CellType, PowerUpCellType, TetrominoType } from "../shared/DTOs.js";
+import {
+  CellType,
+  PowerUpCellType,
+  RulesetType,
+  TetrominoType,
+} from "../shared/DTOs.js";
 import Grid from "./Grid.js";
 import Piece from "./Piece.js";
 import { DROP_RATE } from "./TetrisConfig.js";
@@ -36,6 +41,9 @@ export default class Player {
   }
 
   get gridArray() {
+    if (this.#gameConfig.ruleset == RulesetType.Invisible) {
+      return this.#invisibleGridWithTetromino.array;
+    }
     return this.#gridWithTetromino.array;
   }
 
@@ -48,6 +56,32 @@ export default class Player {
       this.#pileGrid,
       this.#currentTetromino,
       this.#currentTetromino.position,
+    );
+  }
+
+  get #invisibleGridWithTetromino() {
+    var emptyGrid = Grid.fromArray(
+      (this.array = Array.from({ length: this.#pileGrid.rows }, () =>
+        Array(this.#pileGrid.cols).fill(CellType.Empty),
+      )),
+    );
+    const tet = this.#currentTetromino.duplicate();
+
+    while (tet.canMove(this.#pileGrid, VectorDown)) {
+      tet.move(VectorDown);
+    }
+    tet.array = tet.array.map((a) =>
+      a.map((v) => (v === CellType.Empty ? CellType.Empty : CellType.Shadow)),
+    );
+
+    return Grid.superimposeOnEmptyCellsAtPosition(
+      Grid.superimposeOnEmptyCellsAtPosition(
+        emptyGrid,
+        this.#currentTetromino,
+        this.#currentTetromino.position,
+      ),
+      tet,
+      tet.position,
     );
   }
 

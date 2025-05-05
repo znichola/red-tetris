@@ -107,4 +107,18 @@ export default class Piece extends Grid {
       .flat(1)
       .reduce((prev, curr) => (curr === CellType.Empty ? prev : prev + 1), 0);
   }
+
+  duplicate() {
+    const dupe = new Piece(
+      this.#type,
+      {
+        x: this.#position.x,
+        y: this.#position.y,
+      },
+      [],
+      () => {},
+    );
+    dupe.array = structuredClone(this.array);
+    return dupe;
+  }
 }

@@ -28,7 +28,12 @@ export const configSlice = createSlice({
       state.heavy = action.payload;
     },
     setRuleset: (state, action) => {
-      state.ruleset = action.payload;
+      if (action.payload != RulesetType.PowerUp) {
+        state.ruleset = action.payload;
+        state.enabledPowerUps = [];
+      } else {
+        state.ruleset = action.payload;
+      }
     },
     setEnabledPowerUps: (state, action) => {
       state.enabledPowerUps = action.payload;
