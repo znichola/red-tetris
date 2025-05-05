@@ -4,6 +4,9 @@ import roomReducer, { initialState as initialRoomState } from "./roomSlice.js";
 import socketReducer, {
   initialState as initialSocketState,
 } from "./socketSlice.js";
+import configReducer, {
+  initialState as intialConfigState,
+} from "./configSlice.js";
 
 // https://redux.js.org/tutorials/essentials/part-2-app-structure#creating-the-redux-store
 
@@ -14,6 +17,7 @@ export const initiaStoreState = {
   game: initialGameState,
   room: initialRoomState,
   socket: initialSocketState,
+  config: intialConfigState,
 };
 
 export const store = configureStore({
@@ -23,6 +27,7 @@ export const store = configureStore({
     game: gameReducer,
     room: roomReducer,
     socket: socketReducer,
+    config: configReducer,
   },
 });
 
