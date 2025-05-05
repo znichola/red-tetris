@@ -22,6 +22,8 @@ export default class Player {
   #currentTetromino;
   #nextTetromino;
   #dropTimer = 0;
+  #duplicatedTetrominoType = null;
+  #duplicatedTetrominoCount = 0;
 
   get name() {
     return this.#name;
@@ -134,19 +136,21 @@ export default class Player {
         const { clearedRows, clearedSpecialCells } =
           this.#pileGrid.clearAndDropFullRows(Object.values(PowerUpCellType));
 
-        const clearedAttackPowerUpsCount = clearedSpecialCells.filter(
-          (cell) => cell === PowerUpCellType.Attack,
-        ).length;
-        //TODO: implement the rest of the power-ups
-        // eslint-disable-next-line no-unused-vars
         const clearedDuplicationPowerUpsCount = clearedSpecialCells.filter(
           (cell) => cell === PowerUpCellType.Duplication,
         ).length;
+        this.#duplicatedTetrominoType = this.#currentTetromino.type;
+        this.#duplicatedTetrominoCount += clearedDuplicationPowerUpsCount;
+
+        //TODO: implement the rest of the power-ups
         // eslint-disable-next-line no-unused-vars
         const clearedBombPowerUpsCount = clearedSpecialCells.filter(
           (cell) => cell === PowerUpCellType.Bomb,
         ).length;
 
+        const clearedAttackPowerUpsCount = clearedSpecialCells.filter(
+          (cell) => cell === PowerUpCellType.Attack,
+        ).length;
         const attackRowsCount = clearedRows - 1 + clearedAttackPowerUpsCount;
 
         if (attackRowsCount > 0) {
@@ -166,8 +170,15 @@ export default class Player {
   }
 
   #spawnNextTetromino() {
-    this.#currentTetromino = this.#nextTetromino;
-    this.#nextTetromino = this.#getRandomTetromino();
+    if (this.#duplicatedTetrominoCount > 0) {
+      this.#currentTetromino = this.#getNewTetromino(
+        this.#duplicatedTetrominoType,
+      );
+      --this.#duplicatedTetrominoCount;
+    } else {
+      this.#currentTetromino = this.#nextTetromino;
+      this.#nextTetromino = this.#getRandomTetromino();
+    }
 
     if (
       Grid.overlapsAtPosition(
@@ -210,13 +221,21 @@ export default class Player {
     const randomNumber = this.#piecesPrng();
     const randomType =
       tetrominoTypes[Math.floor(randomNumber * tetrominoTypes.length)];
+
+    return this.#getNewTetromino(randomType);
+  }
+
+  /**
+   * @param {import("../shared/DTOs.js").TetrominoType} tetrominoType
+   */
+  #getNewTetromino(tetrominoType) {
     const position = {
       x: Math.floor(this.#pileGrid.cols / 2) - 1,
       y: 0,
     };
 
     return new Piece(
-      randomType,
+      tetrominoType,
       position,
       this.#gameConfig.enabledPowerUps,
       this.#powerUpsPrng,

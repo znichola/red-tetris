@@ -4,9 +4,14 @@ import { PowerUpSpawnChance, Tetrominoes } from "./TetrisConsts.js";
 
 export default class Piece extends Grid {
   #position;
+  #type;
 
   get position() {
     return this.#position;
+  }
+
+  get type() {
+    return this.#type;
   }
 
   /**
@@ -38,6 +43,7 @@ export default class Piece extends Grid {
     }
 
     this.#position = position;
+    this.#type = tetrominoType;
   }
 
   /**
