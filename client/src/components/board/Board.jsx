@@ -69,18 +69,17 @@ function Cell({ tet_color }) {
    * @returns {string} - color variable from index.css
    */
   const getColor = (cellType) => {
-    var color = "tet-";
-    if (cellType == CellType.I) color += "i";
-    else if (cellType == CellType.J) color += "j";
-    else if (cellType == CellType.L) color += "l";
-    else if (cellType == CellType.O) color += "o";
-    else if (cellType == CellType.S) color += "s";
-    else if (cellType == CellType.T) color += "t";
-    else if (cellType == CellType.Z) color += "z";
-    else if (cellType == CellType.Empty) color += "empty";
-    else if (cellType == CellType.Indestructible) color += "indestructible";
-    else if (cellType == CellType.Shadow) color += "shadow";
-    else color = "tet-error";
+    var color = "tet-error";
+    if (cellType == CellType.I) color = "tet-i";
+    else if (cellType == CellType.J) color = "tet-j";
+    else if (cellType == CellType.L) color = "tet-l";
+    else if (cellType == CellType.O) color = "tet-o";
+    else if (cellType == CellType.S) color = "tet-s";
+    else if (cellType == CellType.T) color = "tet-t";
+    else if (cellType == CellType.Z) color = "tet-z";
+    else if (cellType == CellType.Empty) color = "tet-empty";
+    else if (cellType == CellType.Indestructible) color = "tet-indestructible";
+    else if (cellType == CellType.Shadow) color = "tet-shadow";
 
     return color;
   };
