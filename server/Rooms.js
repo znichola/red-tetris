@@ -31,8 +31,8 @@ export default class Rooms {
       room.addPlayer(socket, playerName);
     }
 
-    socket.on(SocketEvents.StartGame, (gameSettings) =>
-      this.#OnStartGame(room, playerName, gameSettings),
+    socket.on(SocketEvents.StartGame, (gameConfig) =>
+      this.#OnStartGame(room, playerName, gameConfig),
     );
     socket.on(SocketEvents.GameAction, (actionType) =>
       this.#OnGameAction(room, playerName, actionType),
@@ -45,10 +45,10 @@ export default class Rooms {
   /**
    * @param {Room} room
    * @param {string} playerName
-   * @param {import("../shared/DTOs.js").GameSettings} gameSettings
+   * @param {import("../shared/DTOs.js").GameConfig} gameConfig
    */
-  #OnStartGame(room, playerName, gameSettings) {
-    room.startGame(playerName, gameSettings);
+  #OnStartGame(room, playerName, gameConfig) {
+    room.startGame(playerName, gameConfig);
   }
 
   /**

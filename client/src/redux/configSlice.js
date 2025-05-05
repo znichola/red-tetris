@@ -2,6 +2,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { DefaultGameGridDimensions } from "../../../shared/Consts.js";
 import { resetAll } from "./hooks.js";
+import { PowerUpCellType, RulesetType } from "../../../shared/DTOs.js";
 
 /** @typedef {import("../../../shared/DTOs.js").GameConfigClient} GameConfigClient */
 
@@ -9,7 +10,8 @@ import { resetAll } from "./hooks.js";
 export const initialState = {
   gridDimensions: { ...DefaultGameGridDimensions },
   heavy: false,
-  ruleset: "classic",
+  ruleset: RulesetType.Classic,
+  enabledPowerUps: Object.values(PowerUpCellType),
 };
 
 export const configSlice = createSlice({
@@ -28,6 +30,9 @@ export const configSlice = createSlice({
     setRuleset: (state, action) => {
       state.ruleset = action.payload;
     },
+    setEnabledPowerUps: (state, action) => {
+      state.enabledPowerUps = action.payload;
+    },
     setFullConfig: (state, action) => {
       Object.assign(state, action.payload);
     },
@@ -35,8 +40,14 @@ export const configSlice = createSlice({
   extraReducers: (builder) => builder.addCase(resetAll, () => initialState),
 });
 
-export const { setGridX, setGridY, setHeavy, setRuleset, setFullConfig } =
-  configSlice.actions;
+export const {
+  setGridX,
+  setGridY,
+  setHeavy,
+  setRuleset,
+  setEnabledPowerUps,
+  setFullConfig,
+} = configSlice.actions;
 
 export const selectGameConfig = (
   /** @type {import("./store.js").RootState} */ state,

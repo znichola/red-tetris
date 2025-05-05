@@ -4,7 +4,7 @@ import Game from "./Game.js";
 import { Tetrominoes } from "./TetrisConsts.js";
 import { DROP_RATE } from "./TetrisConfig.js";
 import Grid from "./Grid.js";
-import { ActionType, CellType } from "../shared/DTOs.js";
+import { ActionType, CellType, RulesetType } from "../shared/DTOs.js";
 import { DefaultGameGridDimensions } from "../shared/Consts.js";
 
 // NOTE ensure the score store does nothing
@@ -268,6 +268,9 @@ function createTetrisGame(playerNames = ["Player1", "Player2"]) {
     playerNames,
     {
       gridDimensions: DefaultGameGridDimensions,
+      battle: true,
+      heavy: false,
+      ruleset: RulesetType.Classic,
       enabledPowerUps: [],
     },
     TestsRandomSeed,

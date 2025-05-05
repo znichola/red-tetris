@@ -5,6 +5,7 @@ import {
   ActionType,
   CellType,
   GameState,
+  RulesetType,
   SocketEvents,
 } from "../shared/DTOs.js";
 import { DefaultGameGridDimensions } from "../shared/Consts.js";
@@ -223,12 +224,15 @@ function waitFor(socket, event) {
  * @param {import("socket.io-client").Socket} socket
  */
 function emitStartGame(socket) {
-  /** @type {import("../shared/DTOs.js").GameSettings} */
-  const gameSettings = {
+  /** @type {import("../shared/DTOs.js").GameConfig} */
+  const gameConfig = {
     gridDimensions: DefaultGameGridDimensions,
+    battle: true,
+    heavy: false,
+    ruleset: RulesetType.Classic,
     enabledPowerUps: [],
   };
-  socket.emit(SocketEvents.StartGame, gameSettings);
+  socket.emit(SocketEvents.StartGame, gameConfig);
 }
 
 /**

@@ -3,10 +3,6 @@
  * @property {number} x
  * @property {number} y
  *
- * @typedef {Object} GameSettings
- * @property {Vector} gridDimensions
- * @property {PowerUpCellType[]} enabledPowerUps
- *
  * @typedef {Object} GameData
  * @property {Grid} grid
  * @property {number} score
@@ -80,18 +76,25 @@ export const CellType = Object.freeze({
 });
 
 /**
- * Use for the scoring table
+ * Used for the scoring table
  * @typedef {"solo" | "multiplayer"} GameMode
  * @typedef {{player: string, score: number, time: string, gameMode: GameMode, winner: boolean}} ScoreRecord
  */
 
+/** @readonly @enum {number} */
+export const RulesetType = {
+  Classic: 0,
+  Invisible: 1,
+  PowerUp: 2,
+};
+
 /**
- * @typedef {{x: number, y: number}} Dim
  * @typedef {{
  *    gridDimensions: Vector,
  *    heavy: boolean,
  *    battle: boolean,
- *    ruleset: "classic" | "invisible" | "powerup",
+ *    ruleset: RulesetType,
+ *    enabledPowerUps: PowerUpCellType[]
  *  }} GameConfig
  * @typedef {Omit<GameConfig, "battle">} GameConfigClient
  */

@@ -57,17 +57,11 @@ function GameManager() {
 
 function Pending() {
   const isRoomAdmin = useSelector(selectRoom).isRoomAdmin;
-  const gridDimensions = useSelector(selectGameConfig).gridDimensions;
+  const gameConfig = useSelector(selectGameConfig);
 
   const launchGame = () => {
     if (socket.connected) {
-      /** @type {import("../../../../shared/DTOs.js").GameSettings} */
-      const gameSettings = {
-        gridDimensions,
-        //TODO: add powerup selection to the UI
-        enabledPowerUps: Object.values(PowerUpCellType),
-      };
-      socket.emit(SocketEvents.StartGame, gameSettings);
+      socket.emit(SocketEvents.StartGame, gameConfig);
     }
   };
 

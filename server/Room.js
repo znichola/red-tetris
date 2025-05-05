@@ -79,15 +79,15 @@ export default class Room {
 
   /**
    * @param {string} playerName
-   * @param {import("../shared/DTOs.js").GameSettings} gameSettings
+   * @param {import("../shared/DTOs.js").GameConfig} gameConfig
    */
-  startGame(playerName, gameSettings) {
+  startGame(playerName, gameConfig) {
     const isValidGridHeight =
-      gameSettings.gridDimensions.y >= MinGameGridDimensions.y &&
-      gameSettings.gridDimensions.y <= MaxGameGridDimensions.y;
+      gameConfig.gridDimensions.y >= MinGameGridDimensions.y &&
+      gameConfig.gridDimensions.y <= MaxGameGridDimensions.y;
     const isValidGridWidth =
-      gameSettings.gridDimensions.x >= MinGameGridDimensions.x &&
-      gameSettings.gridDimensions.x <= MaxGameGridDimensions.x;
+      gameConfig.gridDimensions.x >= MinGameGridDimensions.x &&
+      gameConfig.gridDimensions.x <= MaxGameGridDimensions.x;
     const isValidGridDimensions = isValidGridHeight && isValidGridWidth;
 
     if (
@@ -101,7 +101,7 @@ export default class Room {
     this.#gameState = GameState.Playing;
     this.#tetrisGame = new Game(
       this.#players.map((player) => player.name),
-      gameSettings,
+      gameConfig,
     );
     this.#tetrisGame.addGameUpdateListener(this.#OnGameUpdate);
     this.#tetrisGame.gameLoop();

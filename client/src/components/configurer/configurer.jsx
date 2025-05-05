@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import {
   selectGameConfig,
+  setEnabledPowerUps,
   setGridX,
   setGridY,
   setHeavy,
@@ -11,6 +12,7 @@ import {
   MaxGameGridDimensions,
 } from "../../../../shared/Consts.js";
 import "./configurer.css";
+import { PowerUpCellType, RulesetType } from "../../../../shared/DTOs.js";
 
 function Configurer() {
   const config = useSelector(selectGameConfig);
@@ -89,7 +91,7 @@ function OptsA({ config }) {
           id="classic"
           type="radio"
           name="classic"
-          checked={config.ruleset === "classic"}
+          checked={config.ruleset === RulesetType.Classic}
           onChange={() => dispatch(setRuleset("classic"))}
         />
         <label htmlFor="classic">Classic</label>
@@ -99,7 +101,7 @@ function OptsA({ config }) {
           id="invisible"
           type="radio"
           name="invisible"
-          checked={config.ruleset === "invisible"}
+          checked={config.ruleset === RulesetType.Invisible}
           onChange={() => dispatch(setRuleset("invisible"))}
         />
         <label htmlFor="invisible">Invisible</label>
@@ -109,10 +111,29 @@ function OptsA({ config }) {
           id="powerup"
           type="radio"
           name="powerup"
-          checked={config.ruleset === "powerup"}
+          checked={config.ruleset === RulesetType.PowerUp}
           onChange={() => dispatch(setRuleset("powerup"))}
         />
         <label htmlFor="powerup">Powerup</label>
+
+        {config.ruleset === RulesetType.PowerUp &&
+          Object.entries(PowerUpCellType).map(([powerUpName, powerUpValue]) => (
+            <div key={powerUpValue} className="field-row">
+              <input
+                id={powerUpName}
+                type="checkbox"
+                name={powerUpName}
+                checked={config.enabledPowerUps.includes(powerUpValue)}
+                onChange={(e) => {
+                  const newPowerUps = e.target.checked
+                    ? [...config.enabledPowerUps, powerUpValue]
+                    : config.enabledPowerUps.filter((p) => p !== powerUpValue);
+                  dispatch(setEnabledPowerUps(newPowerUps));
+                }}
+              />
+              <label htmlFor={powerUpName}>{powerUpName}</label>
+            </div>
+          ))}
       </div>
     </div>
   );

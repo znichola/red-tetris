@@ -12,7 +12,7 @@ import seedrandom from "seedrandom";
 
 export default class Player {
   #name;
-  #gameSettings;
+  #gameConfig;
   #powerUpsPrng;
   #piecesPrng;
   #score = 0;
@@ -49,17 +49,17 @@ export default class Player {
 
   /**
    * @param {string} name
-   * @param {import("../shared/DTOs.js").GameSettings} gameSettings
+   * @param {import("../shared/DTOs.js").GameConfig} gameConfig
    * @param {any} randomSeed
    */
-  constructor(name, gameSettings, randomSeed) {
+  constructor(name, gameConfig, randomSeed) {
     this.#name = name;
-    this.#gameSettings = gameSettings;
+    this.#gameConfig = gameConfig;
     this.#powerUpsPrng = seedrandom(randomSeed);
     this.#piecesPrng = seedrandom(randomSeed);
     this.#pileGrid = Grid.fromRowsCols(
-      gameSettings.gridDimensions.y,
-      gameSettings.gridDimensions.x,
+      gameConfig.gridDimensions.y,
+      gameConfig.gridDimensions.x,
     );
     this.#nextTetromino = this.#getRandomTetromino();
     this.#spawnNextTetromino();
@@ -218,7 +218,7 @@ export default class Player {
     return new Piece(
       randomType,
       position,
-      this.#gameSettings.enabledPowerUps,
+      this.#gameConfig.enabledPowerUps,
       this.#powerUpsPrng,
     );
   }
