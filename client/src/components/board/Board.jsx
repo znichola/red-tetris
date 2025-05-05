@@ -69,7 +69,7 @@ function Cell({ tet_color }) {
    * @returns {string} - color variable from index.css
    */
   const getColor = (cellType) => {
-    var color = "--tet-color-";
+    var color = "tet-";
     if (cellType == CellType.I) color += "i";
     else if (cellType == CellType.J) color += "j";
     else if (cellType == CellType.L) color += "l";
@@ -79,16 +79,12 @@ function Cell({ tet_color }) {
     else if (cellType == CellType.Z) color += "z";
     else if (cellType == CellType.Empty) color += "empty";
     else if (cellType == CellType.Indestructible) color += "indestructible";
-    else color = "--white";
+    else if (cellType == CellType.Shadow) color += "shadow";
+    else color = "tet-error";
 
     return color;
   };
-  return (
-    <div
-      className="cell"
-      style={{ backgroundColor: `var(${getColor(tet_color)})` }}
-    ></div>
-  );
+  return <div className={`cell ${getColor(tet_color)}`}></div>;
 }
 
 function Keypad() {

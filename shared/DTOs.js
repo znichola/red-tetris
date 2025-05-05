@@ -68,6 +68,7 @@ export const CellType = Object.freeze({
   Empty: 0,
   ...TetrominoType,
   Indestructible: 8,
+  Shadow: 9,
 });
 
 /**

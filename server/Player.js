@@ -31,6 +31,9 @@ export default class Player {
   }
 
   get gridArray() {
+    if (this.#gameConfig.ruleset == "invisible") {
+      return this.#invisibleGridWithTeromino.array;
+    }
     return this.#gridWithTetromino.array;
   }
 
@@ -43,6 +46,32 @@ export default class Player {
       this.#pileGrid,
       this.#currentTetromino,
       this.#currentTetromino.position,
+    );
+  }
+
+  get #invisibleGridWithTeromino() {
+    var emptyGrid = Grid.fromArray(
+      (this.array = Array.from({ length: this.#pileGrid.rows }, () =>
+        Array(this.#pileGrid.cols).fill(CellType.Empty),
+      )),
+    );
+    const tet = this.#currentTetromino.duplicate();
+
+    while (tet.canMove(this.#pileGrid, VectorDown)) {
+      tet.move(VectorDown);
+    }
+    tet.array = tet.array.map((a) =>
+      a.map((v) => (v === CellType.Empty ? CellType.Empty : CellType.Shadow)),
+    );
+
+    return Grid.superimposeAtPosition(
+      Grid.superimposeAtPosition(
+        emptyGrid,
+        this.#currentTetromino,
+        this.#currentTetromino.position,
+      ),
+      tet,
+      tet.position,
     );
   }
 

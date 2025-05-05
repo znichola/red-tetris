@@ -19,7 +19,7 @@ const mockGrid = [
     [CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.L    , CT.L],
     [CT.I    , CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.I],
     [CT.I,     CT.T    , CT.Empty, CT.Empty, CT.Empty, CT.S    , CT.S    , CT.Empty, CT.Empty, CT.I],
-    [CT.I,     CT.T    , CT.T    , CT.Empty, CT.S    , CT.S    , CT.Empty, CT.Empty, CT.Empty, CT.I],
+    [CT.I,     CT.T    , CT.T    , CT.Empty, CT.S    , CT.S    , CT.Empty, CT.Shadow, CT.Empty, CT.I],
     [CT.I,     CT.T    , CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.I],
     [CT.Indestructible, CT.Indestructible, CT.Indestructible, CT.Indestructible, CT.Indestructible, CT.Indestructible, CT.Indestructible, CT.Indestructible, CT.Indestructible, CT.Indestructible],
   ];
