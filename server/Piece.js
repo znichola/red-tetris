@@ -35,7 +35,7 @@ export default class Piece extends Grid {
           .filter((spot) => spot !== null),
       );
       const randomPowerUpLocationIndex = Math.floor(
-        Math.random() * possiblePowerUpLocations.length,
+        prng() * possiblePowerUpLocations.length,
       );
       const randomPowerUpLocation =
         possiblePowerUpLocations[randomPowerUpLocationIndex];
