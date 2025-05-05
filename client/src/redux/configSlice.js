@@ -11,7 +11,7 @@ export const initialState = {
   gridDimensions: { ...DefaultGameGridDimensions },
   heavy: false,
   ruleset: RulesetType.Classic,
-  enabledPowerUps: Object.values(PowerUpCellType),
+  enabledPowerUps: [],
 };
 
 export const configSlice = createSlice({
@@ -29,6 +29,11 @@ export const configSlice = createSlice({
     },
     setRuleset: (state, action) => {
       state.ruleset = action.payload;
+      if (action.payload === RulesetType.PowerUp) {
+        state.enabledPowerUps = Object.values(PowerUpCellType);
+      } else {
+        state.enabledPowerUps = [];
+      }
     },
     setEnabledPowerUps: (state, action) => {
       state.enabledPowerUps = action.payload;
