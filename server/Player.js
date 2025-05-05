@@ -32,7 +32,7 @@ export default class Player {
 
   get gridArray() {
     if (this.#gameConfig.ruleset == "invisible") {
-      return this.#invisibleGridWithTeromino.array;
+      return this.#invisibleGridWithTetromino.array;
     }
     return this.#gridWithTetromino.array;
   }
@@ -49,7 +49,7 @@ export default class Player {
     );
   }
 
-  get #invisibleGridWithTeromino() {
+  get #invisibleGridWithTetromino() {
     var emptyGrid = Grid.fromArray(
       (this.array = Array.from({ length: this.#pileGrid.rows }, () =>
         Array(this.#pileGrid.cols).fill(CellType.Empty),
