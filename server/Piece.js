@@ -18,7 +18,7 @@ export default class Piece extends Grid {
    * @param {import("../shared/DTOs.js").TetrominoType} tetrominoType
    * @param {import("./TetrisConsts.js").Vector} position
    * @param {PowerUpCellType[]} enabledPowerUps
-   * @param {function} prng
+   * @param {Function} prng
    */
   constructor(tetrominoType, position, enabledPowerUps, prng) {
     const array = structuredClone(Tetrominoes[tetrominoType]);

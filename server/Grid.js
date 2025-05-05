@@ -49,7 +49,16 @@ export default class Grid {
   }
 
   /**
+   * @typedef {{
+   *  type: CellType,
+   *  position: import("./TetrisConsts.js").Vector
+   * }} ClearedSpecialCell
+   *
    * @param {CellType[]} specialCells
+   * @returns {{
+   *  clearedRows: number,
+   *  clearedSpecialCells: ClearedSpecialCell[]
+   *  }}
    */
   clearAndDropFullRows(specialCells) {
     let clearedRows = 0;
@@ -62,9 +71,18 @@ export default class Grid {
         return;
       }
 
-      clearedSpecialCells.push(
-        ...row.filter((cell) => specialCells.includes(cell)),
-      );
+      const specialCellsInRow = row.reduce((acc, cell, x) => {
+        if (specialCells.includes(cell)) {
+          /** @type {ClearedSpecialCell} */
+          const clearedSpecialCell = {
+            type: cell,
+            position: { x, y: index },
+          };
+          acc.push(clearedSpecialCell);
+        }
+        return acc;
+      }, []);
+      clearedSpecialCells.push(...specialCellsInRow);
 
       for (let previousIndex = index - 1; previousIndex >= 0; --previousIndex) {
         this.array[previousIndex + 1] = this.array[previousIndex];
@@ -81,7 +99,6 @@ export default class Grid {
    * Returns `true` if any non-empty rows were pushed out of the grid.
    * @param {number} rowsToPushCount
    * @param {CellType} rowsValue
-   * @returns {boolean}
    */
   pushRowsFromBottom(rowsToPushCount, rowsValue) {
     const rows = this.array.length;
@@ -147,6 +164,9 @@ export default class Grid {
     return result.join("\n");
   }
 
+  /**
+   * @param {any[][]} array
+   */
   static fromArray(array) {
     return new Grid(array, null, null);
   }
@@ -160,53 +180,89 @@ export default class Grid {
   }
 
   /**
-   * Superimposes the contents of `gridB` onto another `gridA` at a specified position.
-   * `gridA` has priority over `gridB`, meaning cells in `gridA` will not be overwritten
-   * by non-empty cells in `gridB`.
-   * @param {Grid} gridA
-   * @param {Grid} gridB
-   * @param {import("./TetrisConsts.js").Vector} gridBPosition
-   * @returns {Grid}
+   * @param {Grid} baseGrid
+   * @param {Grid} overlayGrid
    */
-  static superimposeAtPosition(gridA, gridB, gridBPosition) {
-    const array = structuredClone(gridA.array);
+  static superimposeOnEmptyCells(baseGrid, overlayGrid) {
+    return Grid.superimposeGrids(baseGrid, overlayGrid);
+  }
 
-    for (let i = 0; i < gridB.array.length; i++) {
-      for (let j = 0; j < gridB.array[i].length; j++) {
-        const cellAIndices = {
-          y: i + gridBPosition.y,
-          x: j + gridBPosition.x,
-        };
-        const cellA = array[cellAIndices.y][cellAIndices.x];
+  /**
+   * @param {Grid} baseGrid
+   * @param {Grid} overlayGrid
+   * @param {import("./TetrisConsts.js").Vector} position
+   */
+  static superimposeOnEmptyCellsAtPosition(baseGrid, overlayGrid, position) {
+    return Grid.superimposeGrids(baseGrid, overlayGrid, { position });
+  }
 
-        if (cellA === CellType.Empty) {
-          array[cellAIndices.y][cellAIndices.x] = gridB.array[i][j];
+  /**
+   * @param {Grid} baseGrid
+   * @param {Grid} overlayGrid
+   */
+  static superimposeWithOverride(baseGrid, overlayGrid) {
+    return Grid.superimposeGrids(baseGrid, overlayGrid, {
+      cellMergeStrategy: (baseCell, overlayCell) =>
+        overlayCell !== CellType.None ? overlayCell : baseCell,
+    });
+  }
+
+  /**
+   * @param {Grid} baseGrid
+   * @param {Grid} overlayGrid
+   * @param {import("./TetrisConsts.js").Vector} position
+   */
+  static superimposeWithOverrideAtPosition(baseGrid, overlayGrid, position) {
+    return Grid.superimposeGrids(baseGrid, overlayGrid, {
+      position,
+      cellMergeStrategy: (baseCell, overlayCell) =>
+        overlayCell !== CellType.None ? overlayCell : baseCell,
+    });
+  }
+
+  /**
+   * @param {Grid} baseGrid
+   * @param {Grid} overlayGrid
+   * @param {Object} options
+   * @param {import("./TetrisConsts.js").Vector} [options.position]
+   * @param {function(CellType, CellType): CellType} [options.cellMergeStrategy]
+   */
+  static superimposeGrids(baseGrid, overlayGrid, options = {}) {
+    const position = options.position || { x: 0, y: 0 };
+    const cellMergeStrategy =
+      options.cellMergeStrategy ||
+      ((baseCell, overlayCell) =>
+        baseCell === CellType.Empty ? overlayCell : baseCell);
+
+    const resultArray = structuredClone(baseGrid.array);
+
+    for (let i = 0; i < overlayGrid.array.length; i++) {
+      for (let j = 0; j < overlayGrid.array[i].length; j++) {
+        const baseY = i + position.y;
+        const baseX = j + position.x;
+
+        if (
+          baseY < 0 ||
+          baseY >= resultArray.length ||
+          baseX < 0 ||
+          baseX >= resultArray[0].length
+        ) {
+          continue;
         }
+
+        const overlayCell = overlayGrid.array[i][j];
+        const baseCell = resultArray[baseY][baseX];
+        resultArray[baseY][baseX] = cellMergeStrategy(baseCell, overlayCell);
       }
     }
 
-    return Grid.fromArray(array);
-  }
-
-  /**
-   * @param {Grid} gridA
-   * @param {Grid} gridB
-   * @returns {Grid}
-   */
-  static superimpose(gridA, gridB) {
-    const array = gridA.array.map((row, i) =>
-      row.map((cell, j) =>
-        cell === CellType.Empty ? gridB.array[i][j] : cell,
-      ),
-    );
-    return Grid.fromArray(array);
+    return Grid.fromArray(resultArray);
   }
 
   /**
    * @param {Grid} gridA
    * @param {Grid} gridB
    * @param {import("./TetrisConsts.js").Vector} gridBPosition
-   * @returns {boolean}
    */
   static overlapsAtPosition(gridA, gridB, gridBPosition) {
     return gridB.array.some((row, i) =>
@@ -222,7 +278,6 @@ export default class Grid {
   /**
    * @param {Grid} gridA
    * @param {Grid} gridB
-   * @returns {boolean}
    */
   static overlaps(gridA, gridB) {
     return gridA.array.some((row, i) =>

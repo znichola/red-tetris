@@ -69,6 +69,7 @@ export const PowerUpCellType = Object.freeze({
 
 /** @readonly @enum {number} */
 export const CellType = Object.freeze({
+  None: -1,
   Empty: 0,
   ...TetrominoType,
   Indestructible: 8,

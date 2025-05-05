@@ -3,6 +3,7 @@ import Grid from "./Grid.js";
 import Piece from "./Piece.js";
 import { DROP_RATE } from "./TetrisConfig.js";
 import {
+  bombHoleGrid,
   VectorDown,
   VectorLeft,
   VectorRight,
@@ -42,7 +43,7 @@ export default class Player {
   }
 
   get #gridWithTetromino() {
-    return Grid.superimposeAtPosition(
+    return Grid.superimposeOnEmptyCellsAtPosition(
       this.#pileGrid,
       this.#currentTetromino,
       this.#currentTetromino.position,
@@ -137,19 +138,27 @@ export default class Player {
           this.#pileGrid.clearAndDropFullRows(Object.values(PowerUpCellType));
 
         const clearedDuplicationPowerUpsCount = clearedSpecialCells.filter(
-          (cell) => cell === PowerUpCellType.Duplication,
+          (cell) => cell.type === PowerUpCellType.Duplication,
         ).length;
         this.#duplicatedTetrominoType = this.#currentTetromino.type;
         this.#duplicatedTetrominoCount += clearedDuplicationPowerUpsCount;
 
-        //TODO: implement the rest of the power-ups
-        // eslint-disable-next-line no-unused-vars
-        const clearedBombPowerUpsCount = clearedSpecialCells.filter(
-          (cell) => cell === PowerUpCellType.Bomb,
-        ).length;
+        const clearedBombPowerUps = clearedSpecialCells.filter(
+          (cell) => cell.type === PowerUpCellType.Bomb,
+        );
+        clearedBombPowerUps.forEach((bomb) => {
+          this.#pileGrid = Grid.superimposeWithOverrideAtPosition(
+            this.#pileGrid,
+            bombHoleGrid,
+            {
+              x: bomb.position.x - Math.floor(bombHoleGrid.cols / 2),
+              y: bomb.position.y - Math.floor(bombHoleGrid.rows / 2),
+            },
+          );
+        });
 
         const clearedAttackPowerUpsCount = clearedSpecialCells.filter(
-          (cell) => cell === PowerUpCellType.Attack,
+          (cell) => cell.type === PowerUpCellType.Attack,
         ).length;
         const attackRowsCount = clearedRows - 1 + clearedAttackPowerUpsCount;
 

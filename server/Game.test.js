@@ -197,7 +197,7 @@ describe("Game", () => {
       x: DefaultGameGridDimensions.x - getTetrominoFromSpawnOrder(1).cols,
       y: 0,
     });
-    const expectedGrid = Grid.superimpose(
+    const expectedGrid = Grid.superimposeOnEmptyCells(
       gridWithFirstTetromino,
       gridWithSecondTetromino,
     );
@@ -333,7 +333,7 @@ function getGridWithTetrominoFromSpawnOrder(
     DefaultGameGridDimensions.y,
     DefaultGameGridDimensions.x,
   );
-  const expectedGrid = Grid.superimposeAtPosition(
+  const expectedGrid = Grid.superimposeOnEmptyCellsAtPosition(
     emptyGameGrid,
     tetromino,
     tetrominoPosition,

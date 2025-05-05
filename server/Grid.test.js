@@ -2,6 +2,7 @@ import { expect, expectGridArrayToEqual } from "./expect-extensions.js";
 import { describe, it } from "vitest";
 import Grid from "./Grid.js";
 import { CellType, PowerUpCellType } from "../shared/DTOs.js";
+import { bombHoleGrid } from "./TetrisConsts.js";
 
 describe("Grid", () => {
   it("should create a grid with the correct dimensions", () => {
@@ -97,20 +98,20 @@ describe("Grid", () => {
     }
   });
 
-  it("should superimpose two grids correctly", () => {
+  it("should superimpose on empty cells correctly", () => {
     const { gridA, gridB, expectedGrid } = createSuperimposeGrids();
-    const grid = Grid.superimpose(gridA, gridB).array;
+    const grid = Grid.superimposeOnEmptyCells(gridA, gridB).array;
     expectGridArrayToEqual(grid, expectedGrid);
   });
 
-  it("should not modify the original grids after a superimpose", () => {
+  it("should not modify the original grids after a superimpose on empty cells", () => {
     const { gridA, gridB, arrayA, arrayB } = createSuperimposeGrids();
-    Grid.superimpose(gridA, gridB);
+    Grid.superimposeOnEmptyCells(gridA, gridB);
     expectGridArrayToEqual(gridA.array, arrayA);
     expectGridArrayToEqual(gridB.array, arrayB);
   });
 
-  it("should superimpose at positions correctly", () => {
+  it("should superimpose on empty cells and at positions correctly", () => {
     const grid = Grid.fromRowsCols(4, 4);
     const tetrominoGridJ = createTetrominoGridJ();
     const expected1 = [
@@ -119,10 +120,14 @@ describe("Grid", () => {
       [CellType.Empty, CellType.J, CellType.Empty, CellType.Empty],
       [CellType.Empty, CellType.J, CellType.J, CellType.J],
     ];
-    const result1 = Grid.superimposeAtPosition(grid, tetrominoGridJ, {
-      x: 1,
-      y: 2,
-    });
+    const result1 = Grid.superimposeOnEmptyCellsAtPosition(
+      grid,
+      tetrominoGridJ,
+      {
+        x: 1,
+        y: 2,
+      },
+    );
     expectGridArrayToEqual(result1.array, expected1);
 
     const tetrominoGridZ = createTetrominoGridZ();
@@ -132,10 +137,14 @@ describe("Grid", () => {
       [CellType.Empty, CellType.J, CellType.Z, CellType.Z],
       [CellType.Empty, CellType.J, CellType.J, CellType.J],
     ];
-    const result2 = Grid.superimposeAtPosition(result1, tetrominoGridZ, {
-      x: 1,
-      y: 1,
-    });
+    const result2 = Grid.superimposeOnEmptyCellsAtPosition(
+      result1,
+      tetrominoGridZ,
+      {
+        x: 1,
+        y: 1,
+      },
+    );
     expectGridArrayToEqual(result2.array, expected2);
   });
 
@@ -174,8 +183,8 @@ describe("Grid", () => {
       expectGridArrayToEqual(grid.array, expectedGrid);
       expect(clearedRows).toEqual(2);
       expect(clearedSpecialCells).toEqual([
-        PowerUpCellType.Bomb,
-        PowerUpCellType.Duplication,
+        { type: CellType.Bomb, position: { x: 2, y: 2 } },
+        { type: CellType.Duplication, position: { x: 3, y: 4 } },
       ]);
     },
   );
@@ -244,6 +253,54 @@ describe("Grid", () => {
     const rotated = grid.rotateClockwise();
     expect(grid).toEqual(gridBeforeRotation);
     expectGridArrayToEqual(rotated, expectedGrid.array);
+  });
+
+  it("should superimpose with override", () => {
+    const grid = Grid.fromArray([
+      [CellType.O, CellType.O, CellType.Empty, CellType.O, CellType.O],
+      [CellType.O, CellType.O, CellType.Empty, CellType.O, CellType.O],
+      [CellType.O, CellType.O, CellType.Bomb, CellType.O, CellType.O],
+      [CellType.O, CellType.O, CellType.O, CellType.O, CellType.O],
+      [CellType.O, CellType.O, CellType.O, CellType.O, CellType.O],
+    ]);
+    // prettier-ignore
+    const expectedGrid = Grid.fromArray([
+      [CellType.O, CellType.O, CellType.Empty, CellType.O, CellType.O],
+      [CellType.O, CellType.Empty, CellType.Empty, CellType.Empty, CellType.O],
+      [CellType.Empty, CellType.Empty, CellType.Empty, CellType.Empty, CellType.Empty],
+      [CellType.O, CellType.Empty, CellType.Empty, CellType.Empty, CellType.O],
+      [CellType.O, CellType.O, CellType.Empty, CellType.O, CellType.O],
+    ]);
+    const gridWithHole = Grid.superimposeWithOverride(grid, bombHoleGrid);
+    expectGridArrayToEqual(gridWithHole.array, expectedGrid.array);
+  });
+
+  it("should superimpose with override at a position", () => {
+    // prettier-ignore
+    const grid = Grid.fromArray([
+      [CellType.O, CellType.O, CellType.O, CellType.O, CellType.O, CellType.O, CellType.O],
+      [CellType.O, CellType.O, CellType.Empty, CellType.O, CellType.O, CellType.O, CellType.O],
+      [CellType.O, CellType.O, CellType.O, CellType.O, CellType.Empty, CellType.O, CellType.O],
+      [CellType.O, CellType.O, CellType.O, CellType.O, CellType.Empty, CellType.Bomb, CellType.O],
+      [CellType.O, CellType.O, CellType.O, CellType.O, CellType.Empty, CellType.O, CellType.O],
+    ]);
+    // prettier-ignore
+    const expectedGrid = Grid.fromArray([
+      [CellType.O, CellType.O, CellType.O, CellType.O, CellType.O, CellType.O, CellType.O],
+      [CellType.O, CellType.O, CellType.Empty, CellType.O, CellType.O, CellType.Empty, CellType.O],
+      [CellType.O, CellType.O, CellType.O, CellType.O, CellType.Empty, CellType.Empty, CellType.Empty],
+      [CellType.O, CellType.O, CellType.O, CellType.Empty, CellType.Empty, CellType.Empty, CellType.Empty],
+      [CellType.O, CellType.O, CellType.O, CellType.O, CellType.Empty, CellType.Empty, CellType.Empty],
+    ]);
+    const gridWithHole = Grid.superimposeWithOverrideAtPosition(
+      grid,
+      bombHoleGrid,
+      {
+        x: 5 - Math.floor(bombHoleGrid.cols / 2),
+        y: 3 - Math.floor(bombHoleGrid.rows / 2),
+      },
+    );
+    expectGridArrayToEqual(gridWithHole.array, expectedGrid.array);
   });
 });
 

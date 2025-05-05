@@ -31,7 +31,7 @@ vi.mock("./ScoreStore.js", () => {
 describe("server", () => {
   /** @type { import("http").Server} */
   let server;
-  /** @type {function} */
+  /** @type {Function} */
   let closeServer;
 
   beforeEach(async () => {

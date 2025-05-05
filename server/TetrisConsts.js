@@ -1,3 +1,4 @@
+import Grid from "./Grid.js";
 import { CellType, TetrominoType } from "../shared/DTOs.js";
 
 export const Tetrominoes = deepFreeze({
@@ -60,3 +61,12 @@ export const VectorUp = Object.freeze({ x: 0, y: -1 });
 export const VectorDown = Object.freeze({ x: 0, y: 1 });
 
 export const PowerUpSpawnChance = 0.1;
+
+// prettier-ignore
+export const bombHoleGrid = Grid.fromArray([
+  [CellType.None, CellType.None, CellType.Empty, CellType.None, CellType.None],
+  [CellType.None, CellType.Empty, CellType.Empty, CellType.Empty, CellType.None],
+  [CellType.Empty, CellType.Empty, CellType.Empty, CellType.Empty, CellType.Empty],
+  [CellType.None, CellType.Empty, CellType.Empty, CellType.Empty, CellType.None],
+  [CellType.None, CellType.None, CellType.Empty, CellType.None, CellType.None],
+]);
