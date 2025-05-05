@@ -29,7 +29,7 @@ function Configurer() {
 
 /**
  * @param {Object} params
- * @param {import("../../../../shared/DTOs.js").GameConfigClient} params.config
+ * @param {import("../../../../shared/DTOs.js").GameConfig} params.config
  */
 function OptsB({ config }) {
   const dispatch = useDispatch();
@@ -76,7 +76,7 @@ function OptsB({ config }) {
 
 /**
  * @param {Object} params
- * @param {import("../../../../shared/DTOs.js").GameConfigClient} params.config
+ * @param {import("../../../../shared/DTOs.js").GameConfig} params.config
  */
 function OptsA({ config }) {
   const dispatch = useDispatch();

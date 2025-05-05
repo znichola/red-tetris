@@ -3,9 +3,9 @@ import { createSlice } from "@reduxjs/toolkit";
 import { DefaultGameGridDimensions } from "../../../shared/Consts.js";
 import { resetAll } from "./hooks.js";
 
-/** @typedef {import("../../../shared/DTOs.js").GameConfigClient} GameConfigClient */
+/** @typedef {import("../../../shared/DTOs.js").GameConfig} GameConfig */
 
-/** @type {GameConfigClient} */
+/** @type {GameConfig} */
 export const initialState = {
   gridDimensions: { ...DefaultGameGridDimensions },
   heavy: false,

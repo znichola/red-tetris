@@ -57,7 +57,7 @@ function Pending() {
 
   const launchGame = () => {
     if (socket.connected) {
-      /** @type {import("../../../../shared/DTOs.js").GameConfigClient} */
+      /** @type {import("../../../../shared/DTOs.js").GameConfig} */
       socket.emit(SocketEvents.StartGame, gameConfig);
     }
   };
