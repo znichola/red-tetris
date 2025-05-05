@@ -45,7 +45,7 @@ export default class Rooms {
   /**
    * @param {Room} room
    * @param {string} playerName
-   * @param {import("../shared/DTOs.js").GameConfigClient} startGameData
+   * @param {import("../shared/DTOs.js").GameConfig} startGameData
    */
   #OnStartGame(room, playerName, startGameData) {
     room.startGame(playerName, startGameData);

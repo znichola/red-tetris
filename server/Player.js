@@ -19,7 +19,7 @@ export default class Player {
   #currentTetromino;
   #nextTetromino;
   #dropTimer = 0;
-  /**@type {import("../shared/DTOs.js").GameConfigClient} */
+  /**@type {import("../shared/DTOs.js").GameConfig} */
   #gameConfig;
 
   get name() {
@@ -48,7 +48,7 @@ export default class Player {
 
   /**
    * @param {string} name
-   * @param {import("../shared/DTOs.js").GameConfigClient} startGameData
+   * @param {import("../shared/DTOs.js").GameConfig} startGameData
    * @param {function} prng
    */
   constructor(name, startGameData, prng) {

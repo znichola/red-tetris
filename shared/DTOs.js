@@ -77,12 +77,9 @@ export const CellType = Object.freeze({
  */
 
 /**
- * @typedef {{x: number, y: number}} Dim
  * @typedef {{
  *    gridDimensions: Vector,
  *    heavy: boolean,
- *    battle: boolean,
  *    ruleset: "classic" | "invisible" | "powerup",
  *  }} GameConfig
- * @typedef {Omit<GameConfig, "battle">} GameConfigClient
  */

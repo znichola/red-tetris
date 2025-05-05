@@ -36,7 +36,7 @@ export default class Game {
 
   /**
    * @param {string[]} playerNames
-   * @param {import("../shared/DTOs.js").GameConfigClient} startGameData
+   * @param {import("../shared/DTOs.js").GameConfig} startGameData
    * @param {any} randomSeed
    */
   constructor(playerNames, startGameData, randomSeed = null) {
