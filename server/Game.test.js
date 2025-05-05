@@ -6,6 +6,7 @@ import { DROP_RATE } from "./TetrisConfig.js";
 import Grid from "./Grid.js";
 import { ActionType, CellType } from "../shared/DTOs.js";
 import { DefaultGameGridDimensions } from "../shared/Consts.js";
+import { initialState as intialGameConfigState } from "../client/src/redux/configSlice.js";
 
 // NOTE ensure the score store does nothing
 vi.mock("./ScoreStore.js", () => {
@@ -267,13 +268,7 @@ describe("Game", () => {
 });
 
 function createTetrisGame(playerNames = ["Player1", "Player2"]) {
-  const game = new Game(
-    playerNames,
-    {
-      gridDimensions: DefaultGameGridDimensions,
-    },
-    TestsRandomSeed,
-  );
+  const game = new Game(playerNames, intialGameConfigState, TestsRandomSeed);
   game.gameLoop();
   return { game, playerNames };
 }
