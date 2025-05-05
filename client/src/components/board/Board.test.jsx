@@ -33,16 +33,16 @@ describe("Board view", () => {
 
     const allCells = container.getElementsByClassName("cell");
 
-    const bgColors = new Set();
+    const tetClasses = new Set();
     for (let cell of allCells) {
-      const style = window.getComputedStyle(cell);
-      const bgColor = style.backgroundColor;
-      if (bgColor) {
-        bgColors.add(bgColor);
+      const classList = Array.from(cell.classList);
+      const tetClass = classList.find((cls) => cls.startsWith("tet-"));
+      if (tetClass) {
+        tetClasses.add(tetClass);
       }
     }
 
-    expect(bgColors.size).toBe(Object.values(CellType).length);
+    expect(tetClasses.size).toBe(Object.values(CellType).length);
   });
 
   it("should have 5 action buttons visible", () => {
