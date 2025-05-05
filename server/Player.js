@@ -19,6 +19,8 @@ export default class Player {
   #currentTetromino;
   #nextTetromino;
   #dropTimer = 0;
+  /**@type {import("../shared/DTOs.js").GameConfigClient} */
+  #gameConfig;
 
   get name() {
     return this.#name;
@@ -46,7 +48,7 @@ export default class Player {
 
   /**
    * @param {string} name
-   * @param {import("../shared/DTOs.js").StartGameData} startGameData
+   * @param {import("../shared/DTOs.js").GameConfigClient} startGameData
    * @param {function} prng
    */
   constructor(name, startGameData, prng) {
@@ -56,6 +58,7 @@ export default class Player {
       startGameData.gridDimensions.y,
       startGameData.gridDimensions.x,
     );
+    this.#gameConfig = startGameData;
     this.#nextTetromino = this.#getRandomTetromino();
     this.#spawnNextTetromino();
   }
@@ -74,7 +77,7 @@ export default class Player {
       this.#currentTetromino.move(VectorDown);
     }
 
-    this.#dropTimer = 1000 / DROP_RATE;
+    this.#dropTimer = 1000 / this.#getDropRate();
   }
 
   tryRotateTetromino() {
@@ -114,7 +117,7 @@ export default class Player {
   update(deltaTime, opponents) {
     this.#dropTimer += deltaTime;
 
-    if (this.#dropTimer >= 1000 / DROP_RATE) {
+    if (this.#dropTimer >= 1000 / this.#getDropRate()) {
       this.#dropTimer = 0;
 
       if (this.#currentTetromino.canMove(this.#pileGrid, VectorDown)) {
@@ -194,5 +197,9 @@ export default class Player {
 
   isGameOver() {
     return this.#gameOver;
+  }
+
+  #getDropRate() {
+    return this.#gameConfig.heavy ? DROP_RATE * 3 : DROP_RATE;
   }
 }

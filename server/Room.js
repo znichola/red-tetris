@@ -79,7 +79,7 @@ export default class Room {
 
   /**
    * @param {string} playerName
-   * @param {import("../shared/DTOs.js").StartGameData} startGameData
+   * @param {import("../shared/DTOs.js").GameConfigClient} startGameData
    */
   startGame(playerName, startGameData) {
     const isValidGridHeight =

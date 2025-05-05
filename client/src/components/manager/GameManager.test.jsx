@@ -23,6 +23,7 @@ vi.mock("../../socket.js", () => {
 });
 import { socket } from "../../socket.js";
 import { DefaultGameGridDimensions } from "../../../../shared/Consts.js";
+import { initialState } from "../../redux/configSlice.js";
 
 describe("GameManager component", () => {
   beforeEach(() => {
@@ -79,9 +80,10 @@ describe("GameManager component", () => {
     act(() => {
       fireEvent.click(button);
     });
-    expect(socket.emit).toHaveBeenCalledWith(SocketEvents.StartGame, {
-      gridDimensions: DefaultGameGridDimensions,
-    });
+    expect(socket.emit).toHaveBeenCalledWith(
+      SocketEvents.StartGame,
+      initialState,
+    );
   });
 
   it("shows waiting message in Pending state for non-admin", () => {

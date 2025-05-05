@@ -53,15 +53,12 @@ function GameManager() {
 
 function Pending() {
   const isRoomAdmin = useSelector(selectRoom).isRoomAdmin;
-  const gridDimensions = useSelector(selectGameConfig).gridDimensions;
+  const gameConfig = useSelector(selectGameConfig);
 
   const launchGame = () => {
     if (socket.connected) {
-      /** @type {import("../../../../shared/DTOs.js").StartGameData} */
-      const startGameData = {
-        gridDimensions,
-      };
-      socket.emit(SocketEvents.StartGame, startGameData);
+      /** @type {import("../../../../shared/DTOs.js").GameConfigClient} */
+      socket.emit(SocketEvents.StartGame, gameConfig);
     }
   };
 
