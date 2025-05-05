@@ -92,7 +92,7 @@ function OptsA({ config }) {
           type="radio"
           name="classic"
           checked={config.ruleset === RulesetType.Classic}
-          onChange={() => dispatch(setRuleset("classic"))}
+          onChange={() => dispatch(setRuleset(RulesetType.Classic))}
         />
         <label htmlFor="classic">Classic</label>
       </div>
@@ -102,7 +102,7 @@ function OptsA({ config }) {
           type="radio"
           name="invisible"
           checked={config.ruleset === RulesetType.Invisible}
-          onChange={() => dispatch(setRuleset("invisible"))}
+          onChange={() => dispatch(setRuleset(RulesetType.Invisible))}
         />
         <label htmlFor="invisible">Invisible</label>
       </div>
@@ -112,7 +112,7 @@ function OptsA({ config }) {
           type="radio"
           name="powerup"
           checked={config.ruleset === RulesetType.PowerUp}
-          onChange={() => dispatch(setRuleset("powerup"))}
+          onChange={() => dispatch(setRuleset(RulesetType.PowerUp))}
         />
         <label htmlFor="powerup">Powerup</label>
 
