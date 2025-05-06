@@ -1,3 +1,4 @@
+import { DefaultGameGridDimensions } from "../shared/Consts.js";
 import {
   CellType,
   PowerUpCellType,
@@ -41,7 +42,16 @@ export default class Player {
   }
 
   get gridArray() {
-    return this.#gridWithTetromino.array;
+    const grid =
+      this.#gameConfig.ruleset === RulesetType.Invisible
+        ? this.#invisibleGridWithTetromino
+        : this.#gridWithTetromino;
+    const showShadow =
+      this.#gameConfig.ruleset !== RulesetType.Classic ||
+      this.#gameConfig.gridDimensions.x > DefaultGameGridDimensions.x ||
+      this.#gameConfig.gridDimensions.y > DefaultGameGridDimensions.y;
+
+    return showShadow ? this.#addShadowToGrid(grid).array : grid.array;
   }
 
   get spectrum() {
@@ -51,6 +61,19 @@ export default class Player {
   get #gridWithTetromino() {
     return Grid.superimposeOnEmptyCellsAtPosition(
       this.#pileGrid,
+      this.#currentTetromino,
+      this.#currentTetromino.position,
+    );
+  }
+
+  get #invisibleGridWithTetromino() {
+    const emptyGrid = Grid.fromRowsCols(
+      this.#pileGrid.rows,
+      this.#pileGrid.cols,
+    );
+
+    return Grid.superimposeOnEmptyCellsAtPosition(
+      emptyGrid,
       this.#currentTetromino,
       this.#currentTetromino.position,
     );
@@ -265,5 +288,26 @@ export default class Player {
 
   #getDropRate() {
     return this.#gameConfig.heavy ? DROP_RATE * 3 : DROP_RATE;
+  }
+
+  /**
+   * @param {Grid} grid
+   */
+  #addShadowToGrid(grid) {
+    const shadow = this.#currentTetromino.duplicate();
+
+    while (shadow.canMove(this.#pileGrid, VectorDown)) {
+      shadow.move(VectorDown);
+    }
+
+    shadow.array = shadow.array.map((a) =>
+      a.map((v) => (v === CellType.Empty ? CellType.Empty : CellType.Shadow)),
+    );
+
+    return Grid.superimposeOnEmptyCellsAtPosition(
+      grid,
+      shadow,
+      shadow.position,
+    );
   }
 }
