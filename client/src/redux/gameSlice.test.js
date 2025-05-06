@@ -1,5 +1,9 @@
 import { describe, it, expect } from "vitest";
-import gameReducer, { initialState, replaceGameData, selectGame } from "./gameSlice.js";
+import gameReducer, {
+  initialState,
+  replaceGameData,
+  selectGame,
+} from "./gameSlice.js";
 import { CellType } from "../../../shared/DTOs.js";
 import { initiaStoreState } from "./store.js";
 import { DefaultGameGridDimensions } from "../../../shared/Consts.js";
