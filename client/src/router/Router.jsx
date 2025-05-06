@@ -4,7 +4,7 @@ import { navigate } from "./navigate.js";
 
 /**
  * @param {Object} props
- * @param {Record<string, React.ComponentType>[]} props.routes
+ * @param {{ path: string, component: React.ComponentType }[]} props.routes
  * @returns {React.JSX.Element}
  */
 function Router({ routes }) {
@@ -24,8 +24,7 @@ function Router({ routes }) {
   }, []);
 
   useEffect(() => {
-    for (const routeObj of routes) {
-      const [path, Comp] = Object.entries(routeObj)[0];
+    for (const { path, component: Comp } of routes) {
       const params = matchParams(path, currentPath);
       const isMatch = params !== null;
       if (isMatch) {

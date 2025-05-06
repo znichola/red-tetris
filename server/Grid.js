@@ -78,18 +78,25 @@ export default class Grid {
   }
 
   /**
-   * @param {import("../shared/DTOs.js").Grid} array
-   * @param {number} rows
-   * @param {number} cols
+   * @param {import("../shared/DTOs.js").Grid | null} array
+   * @param {number | null} rows
+   * @param {number | null} cols
    */
   constructor(array, rows, cols) {
+    /** @type {any[][]} */
+    let gridArray;
+
     if (Array.isArray(array) && array.length > 0) {
-      this.array = array;
+      gridArray = array;
     } else {
-      this.array = Array.from({ length: rows }, () =>
+      rows = rows ?? 0;
+      cols = cols ?? 0;
+      gridArray = Array.from({ length: rows }, () =>
         Array(cols).fill(CellType.Empty),
       );
     }
+
+    this.array = gridArray;
   }
 
   toString() {

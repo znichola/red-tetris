@@ -29,10 +29,14 @@ expect.extend({
 });
 
 /**
- * @param {GridArray} grid
+ * @param {GridArray | undefined} grid
  * @param {GridArray} expectedGrid
  */
 function expectGridArrayToEqual(grid, expectedGrid) {
+  if (!grid) {
+    throw new Error("Grid is null");
+  }
+
   //NOTE: This @ts-ignore is needed because `toEqualGridArray` function is not recognized.
   //NOTE: This could be fixed with type declarations in a .d.ts file,
   //NOTE: but we cannot write typescript because of the subject.

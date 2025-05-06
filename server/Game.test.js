@@ -309,13 +309,20 @@ async function progressGameByDropCount(dropCount) {
  * @param {Game} game
  * @param {string} playerName
  * @param {string[]} allPlayerNames
+ * @return {import("../shared/DTOs.js").GameData}
  */
 function getAndValidateGameData(game, playerName, allPlayerNames) {
   const gameData = game.getGameData(playerName);
+
+  if (!gameData) {
+    throw new Error(`Game data for ${playerName} is null`);
+  }
+
   const otherPlayerNames = allPlayerNames.filter(
     (otherPlayerName) => otherPlayerName !== playerName,
   );
   expectValidGameData(gameData, otherPlayerNames);
+
   return gameData;
 }
 

@@ -30,7 +30,8 @@ export default class Player {
   #currentTetromino;
   #nextTetromino;
   #dropTimer = 0;
-  #duplicatedTetrominoType = null;
+  /** @type {import("../shared/DTOs.js").TetrominoType} */
+  #duplicatedTetrominoType;
   #duplicatedTetrominoCount = 0;
 
   get name() {
