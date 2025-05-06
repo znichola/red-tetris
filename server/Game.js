@@ -1,5 +1,10 @@
 import Player from "./Player.js";
-import { TickRate, VectorDown, VectorLeft, VectorRight } from "./TetrisConsts.js";
+import {
+  TickRate,
+  VectorDown,
+  VectorLeft,
+  VectorRight,
+} from "./TetrisConsts.js";
 import { ActionType } from "../shared/DTOs.js";
 import { scoreStore } from "./server.js";
 import { convertToPlayerScores } from "./ScoreStore.js";
