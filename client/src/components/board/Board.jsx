@@ -81,9 +81,9 @@ function Cell({ tet_color }) {
     else if (cellType == CellType.Indestructible) color = "tet-indestructible";
     else if (cellType == CellType.Shadow) color = "tet-shadow";
     //TODO: add icons on the powerup cells
-    else if (cellType == CellType.Attack) color += "tet-attack";
-    else if (cellType == CellType.Duplication) color += "tet-duplication";
-    else if (cellType == CellType.Bomb) color += "tet-bomb";
+    else if (cellType == CellType.Attack) color = "tet-attack";
+    else if (cellType == CellType.Duplication) color = "tet-duplication";
+    else if (cellType == CellType.Bomb) color = "tet-bomb";
 
     return color;
   };
