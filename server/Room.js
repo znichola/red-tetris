@@ -4,6 +4,7 @@ import {
 } from "../shared/Consts.js";
 import { GameState, SocketEvents } from "../shared/DTOs.js";
 import Game from "./Game.js";
+import { deepFreeze } from "./TetrisConsts.js";
 
 export default class Room {
   #io;
@@ -79,9 +80,10 @@ export default class Room {
 
   /**
    * @param {string} playerName
-   * @param {import("../shared/DTOs.js").GameConfig} gameConfig
+   * @param {Readonly<import("../shared/DTOs.js").GameConfig>} gameConfig
    */
   startGame(playerName, gameConfig) {
+    gameConfig = deepFreeze(gameConfig);
     const isValidGridHeight =
       gameConfig.gridDimensions.y >= MinGameGridDimensions.y &&
       gameConfig.gridDimensions.y <= MaxGameGridDimensions.y;

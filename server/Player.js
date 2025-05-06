@@ -18,7 +18,7 @@ import seedrandom from "seedrandom";
 
 export default class Player {
   #name;
-  /**@type {import("../shared/DTOs.js").GameConfig} */
+  /** @type {Readonly<import("../shared/DTOs.js").GameConfig>} */
   #gameConfig;
   #powerUpsPrng;
   #piecesPrng;
@@ -58,7 +58,7 @@ export default class Player {
 
   /**
    * @param {string} name
-   * @param {import("../shared/DTOs.js").GameConfig} gameConfig
+   * @param {Readonly<import("../shared/DTOs.js").GameConfig>} gameConfig
    * @param {any} randomSeed
    */
   constructor(name, gameConfig, randomSeed) {
@@ -70,7 +70,6 @@ export default class Player {
       gameConfig.gridDimensions.y,
       gameConfig.gridDimensions.x,
     );
-    this.#gameConfig = gameConfig;
     this.#nextTetromino = this.#getRandomTetromino();
     this.#spawnNextTetromino();
   }
