@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import {
   selectGameConfig,
+  setEnabledPowerUps,
   setGridX,
   setGridY,
   setHeavy,
@@ -11,6 +12,7 @@ import {
   MaxGameGridDimensions,
 } from "../../../../shared/Consts.js";
 import "./configurer.css";
+import { PowerUpCellType, RulesetType } from "../../../../shared/DTOs.js";
 
 function Configurer() {
   const config = useSelector(selectGameConfig);
@@ -22,6 +24,7 @@ function Configurer() {
           <OptsA config={config} />
           <OptsB config={config} />
         </div>
+        <PowerUps config={config} />
       </div>
     </div>
   );
@@ -89,8 +92,8 @@ function OptsA({ config }) {
           id="classic"
           type="radio"
           name="classic"
-          checked={config.ruleset === "classic"}
-          onChange={() => dispatch(setRuleset("classic"))}
+          checked={config.ruleset === RulesetType.Classic}
+          onChange={() => dispatch(setRuleset(RulesetType.Classic))}
         />
         <label htmlFor="classic">Classic</label>
       </div>
@@ -99,8 +102,8 @@ function OptsA({ config }) {
           id="invisible"
           type="radio"
           name="invisible"
-          checked={config.ruleset === "invisible"}
-          onChange={() => dispatch(setRuleset("invisible"))}
+          checked={config.ruleset === RulesetType.Invisible}
+          onChange={() => dispatch(setRuleset(RulesetType.Invisible))}
         />
         <label htmlFor="invisible">Invisible</label>
       </div>
@@ -109,11 +112,42 @@ function OptsA({ config }) {
           id="powerup"
           type="radio"
           name="powerup"
-          checked={config.ruleset === "powerup"}
-          onChange={() => dispatch(setRuleset("powerup"))}
+          checked={config.ruleset === RulesetType.PowerUp}
+          onChange={() => dispatch(setRuleset(RulesetType.PowerUp))}
         />
         <label htmlFor="powerup">Powerup</label>
       </div>
+    </div>
+  );
+}
+
+/**
+ * @param {Object} params
+ * @param {import("../../../../shared/DTOs.js").GameConfig} params.config
+ */
+function PowerUps({ config }) {
+  const dispatch = useDispatch();
+
+  if (config.ruleset !== RulesetType.PowerUp) return <></>;
+  return (
+    <div className="opt-powerups">
+      {Object.entries(PowerUpCellType).map(([powerUpName, powerUpValue]) => (
+        <div key={powerUpValue}>
+          <input
+            id={powerUpName}
+            type="checkbox"
+            name={powerUpName}
+            checked={config.enabledPowerUps.includes(powerUpValue)}
+            onChange={(e) => {
+              const newPowerUps = e.target.checked
+                ? [...config.enabledPowerUps, powerUpValue]
+                : config.enabledPowerUps.filter((p) => p !== powerUpValue);
+              dispatch(setEnabledPowerUps(newPowerUps));
+            }}
+          />
+          <label htmlFor={powerUpName}>{powerUpName}</label>
+        </div>
+      ))}
     </div>
   );
 }

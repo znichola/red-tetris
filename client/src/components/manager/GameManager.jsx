@@ -4,7 +4,11 @@ import "./game_manager.css";
 import { selectSocket } from "../../redux/socketSlice.js";
 import { selectRoom } from "../../redux/roomSlice.js";
 import { socket } from "../../socket.js";
-import { GameState, SocketEvents } from "../../../../shared/DTOs.js";
+import {
+  GameState,
+  PowerUpCellType,
+  SocketEvents,
+} from "../../../../shared/DTOs.js";
 import { selectGame } from "../../redux/gameSlice.js";
 import Configurer from "../configurer/configurer.jsx";
 import { selectGameConfig } from "../../redux/configSlice.js";

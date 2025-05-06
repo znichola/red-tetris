@@ -5,7 +5,6 @@ import params from "../params.js";
 import { Server } from "socket.io";
 import http from "node:http";
 import Rooms from "./Rooms.js";
-
 import ScoreStore from "./ScoreStore.js";
 
 // Initialize the scoreStore, must be outside a funciton so it can be imported elsewhere for easy access

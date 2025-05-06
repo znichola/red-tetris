@@ -69,26 +69,25 @@ function Cell({ tet_color }) {
    * @returns {string} - color variable from index.css
    */
   const getColor = (cellType) => {
-    var color = "--tet-color-";
-    if (cellType == CellType.I) color += "i";
-    else if (cellType == CellType.J) color += "j";
-    else if (cellType == CellType.L) color += "l";
-    else if (cellType == CellType.O) color += "o";
-    else if (cellType == CellType.S) color += "s";
-    else if (cellType == CellType.T) color += "t";
-    else if (cellType == CellType.Z) color += "z";
-    else if (cellType == CellType.Empty) color += "empty";
-    else if (cellType == CellType.Indestructible) color += "indestructible";
-    else color = "--white";
+    var color = "tet-error";
+    if (cellType == CellType.I) color = "tet-i";
+    else if (cellType == CellType.J) color = "tet-j";
+    else if (cellType == CellType.L) color = "tet-l";
+    else if (cellType == CellType.O) color = "tet-o";
+    else if (cellType == CellType.S) color = "tet-s";
+    else if (cellType == CellType.T) color = "tet-t";
+    else if (cellType == CellType.Z) color = "tet-z";
+    else if (cellType == CellType.Empty) color = "tet-empty";
+    else if (cellType == CellType.Indestructible) color = "tet-indestructible";
+    else if (cellType == CellType.Shadow) color = "tet-shadow";
+    //TODO: add icons on the powerup cells
+    else if (cellType == CellType.Attack) color = "tet-attack";
+    else if (cellType == CellType.Duplication) color = "tet-duplication";
+    else if (cellType == CellType.Bomb) color = "tet-bomb";
 
     return color;
   };
-  return (
-    <div
-      className="cell"
-      style={{ backgroundColor: `var(${getColor(tet_color)})` }}
-    ></div>
-  );
+  return <div className={`cell ${getColor(tet_color)}`}></div>;
 }
 
 function Keypad() {

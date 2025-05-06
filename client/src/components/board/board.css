@@ -81,3 +81,60 @@
 .right {
   grid-area: right;
 }
+
+.tet-i {
+  background-color: var(--tet-color-i);
+}
+
+.tet-j {
+  background-color: var(--tet-color-j);
+}
+
+.tet-l {
+  background-color: var(--tet-color-l);
+}
+
+.tet-o {
+  background-color: var(--tet-color-o);
+}
+
+.tet-s {
+  background-color: var(--tet-color-s);
+}
+
+.tet-t {
+  background-color: var(--tet-color-t);
+}
+
+.tet-z {
+  background-color: var(--tet-color-z);
+}
+
+.tet-empty {
+  background-color: var(--tet-color-empty);
+}
+
+.tet-indestructable {
+  background-color: var(--tet-color-indestructable);
+}
+
+.tet-attack {
+  background-color: var(--tet-color-attack);
+}
+
+.tet-duplication {
+  background-color: var(--tet-color-duplication);
+}
+
+.tet-bomb {
+  background-color: var(--tet-color-bomb);
+}
+
+.tet-shadow {
+  box-shadow: inset 0 0 0 2px var(--dark);
+  background-color: var(--tet-color-empty);
+}
+
+.tet-error {
+  background-color: var(--white);
+}

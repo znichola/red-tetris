@@ -3,9 +3,6 @@
  * @property {number} x
  * @property {number} y
  *
- * @typedef {Object} StartGameData
- * @property {Vector} gridDimensions
- *
  * @typedef {Object} GameData
  * @property {Grid} grid
  * @property {number} score
@@ -64,22 +61,40 @@ export const TetrominoType = Object.freeze({
 });
 
 /** @readonly @enum {number} */
+export const PowerUpCellType = Object.freeze({
+  Attack: 10,
+  Duplication: 11,
+  Bomb: 12,
+});
+
+/** @readonly @enum {number} */
 export const CellType = Object.freeze({
+  None: -1,
   Empty: 0,
   ...TetrominoType,
   Indestructible: 8,
+  Shadow: 9,
+  ...PowerUpCellType,
 });
 
 /**
- * Use for the scoring table
+ * Used for the scoring table
  * @typedef {"solo" | "multiplayer"} GameMode
  * @typedef {{player: string, score: number, time: string, gameMode: GameMode, winner: boolean}} ScoreRecord
  */
+
+/** @readonly @enum {number} */
+export const RulesetType = {
+  Classic: 0,
+  Invisible: 1,
+  PowerUp: 2,
+};
 
 /**
  * @typedef {{
  *    gridDimensions: Vector,
  *    heavy: boolean,
- *    ruleset: "classic" | "invisible" | "powerup",
+ *    ruleset: RulesetType,
+ *    enabledPowerUps: PowerUpCellType[]
  *  }} GameConfig
  */
