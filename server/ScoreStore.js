@@ -21,7 +21,7 @@ export default class ScoreStore {
   }
 
   /**
-   * Converting the players to a simpler list becasue testing `ScoreStore`
+   * Converting the players to a simpler list because testing `ScoreStore`
    * with player class does so much that mocking it is non trivial
    * @param {{name: string, score: number}[]} players
    * @param {GameMode} gameMode
