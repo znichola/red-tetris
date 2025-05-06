@@ -120,7 +120,7 @@ function PlayersInLobby() {
 
 function NextTetromino() {
   const gameData = useSelector(selectGame);
-  const tetrominoType = gameData?.nextTetromino;
+  const tetrominoType = gameData.nextTetromino;
 
   if (!tetrominoType || !Tetrominoes[tetrominoType]) {
     return <div>No active tetromino</div>;

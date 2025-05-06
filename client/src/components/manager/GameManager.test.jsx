@@ -98,7 +98,7 @@ describe("GameManager component", () => {
   });
 
   it("shows unknown state message if gameState is wrong", () => {
-    store.dispatch(replaceRoom({ ...mockRoomData, gameState: undefined }));
+    store.dispatch(replaceRoom({ ...mockRoomData, gameState: null }));
     renderWithStore();
     expect(
       screen.getByText("Room not found, please go back home"),
@@ -108,7 +108,7 @@ describe("GameManager component", () => {
   it("socket connection erroed when connection is not active", () => {
     socket.connected = false;
     store.dispatch(setIsSocketConnected(false));
-    store.dispatch(replaceRoom({ ...mockRoomData, gameState: undefined }));
+    store.dispatch(replaceRoom({ ...mockRoomData, gameState: null }));
     renderWithStore();
     expect(
       screen.getByText("Room not found, please go back home"),
