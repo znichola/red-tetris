@@ -59,8 +59,12 @@ export default class Player {
     return this.#pileGrid.spectrum;
   }
 
-  get nextTetromino() {
-    return this.#nextTetromino;
+  get nextTetrominoType() {
+    if (this.#duplicatedTetrominoCount > 0) {
+      return this.#duplicatedTetrominoType;
+    }
+
+    return this.#nextTetromino.type;
   }
 
   get #gridWithTetromino() {
