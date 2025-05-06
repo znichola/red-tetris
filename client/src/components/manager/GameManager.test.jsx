@@ -54,7 +54,9 @@ describe("GameManager component", () => {
       replaceRoom({ ...mockRoomData, gameState: GameState.Ended }),
     );
     renderWithStore();
-    expect(screen.getByText("Game over")).toBeInTheDocument();
+    expect(
+      screen.getByText("Game over, waiting for the game to be restarted"),
+    ).toBeInTheDocument();
   });
 
   it("shows 'Game in progress' when gameState is Playing", () => {
@@ -72,7 +74,7 @@ describe("GameManager component", () => {
     store.dispatch(setIsRoomAdmin("Alice"));
     renderWithStore();
 
-    expect(screen.getByText("Launch the game when ready")).toBeInTheDocument();
+    expect(screen.getByText("Start the game when ready")).toBeInTheDocument();
     const button = screen.getByText("start");
     expect(button).toBeInTheDocument();
 
@@ -93,22 +95,22 @@ describe("GameManager component", () => {
     renderWithStore();
 
     expect(
-      screen.getByText("...waiting for game to start"),
+      screen.getByText("Waiting for the game to be started"),
     ).toBeInTheDocument();
   });
 
   it("shows unknown state message if gameState is wrong", () => {
-    store.dispatch(replaceRoom({ ...mockRoomData, gameState: null }));
+    store.dispatch(replaceRoom({ ...mockRoomData, gameState: 42 }));
     renderWithStore();
     expect(
       screen.getByText("Room not found, please go back home"),
     ).toBeInTheDocument();
   });
 
-  it("socket connection erroed when connection is not active", () => {
+  it("socket connection error when connection is not active", () => {
     socket.connected = false;
     store.dispatch(setIsSocketConnected(false));
-    store.dispatch(replaceRoom({ ...mockRoomData, gameState: null }));
+    store.dispatch(replaceRoom({ ...mockRoomData, gameState: 42 }));
     renderWithStore();
     expect(
       screen.getByText("Room not found, please go back home"),

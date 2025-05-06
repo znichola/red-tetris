@@ -9,6 +9,54 @@ export default class Grid {
     return this.array[0].length;
   }
 
+  get leftMostNonEmptyCol() {
+    for (let x = 0; x < this.cols; x++) {
+      if (this.array.some((row) => row[x] !== CellType.Empty)) {
+        return x;
+      }
+    }
+
+    return -1;
+  }
+
+  get rightMostNonEmptyCol() {
+    for (let x = this.cols - 1; x >= 0; x--) {
+      if (this.array.some((row) => row[x] !== CellType.Empty)) {
+        return x;
+      }
+    }
+
+    return -1;
+  }
+
+  get bottomMostNonEmptyRow() {
+    for (let y = this.rows - 1; y >= 0; y--) {
+      if (this.array[y].some((cell) => cell !== CellType.Empty)) {
+        return y;
+      }
+    }
+
+    return -1;
+  }
+
+  get topMostNonEmptyRow() {
+    for (let y = 0; y < this.rows; y++) {
+      if (this.array[y].some((cell) => cell !== CellType.Empty)) {
+        return y;
+      }
+    }
+
+    return -1;
+  }
+
+  get width() {
+    return this.rightMostNonEmptyCol - this.leftMostNonEmptyCol + 1;
+  }
+
+  get height() {
+    return this.bottomMostNonEmptyRow - this.topMostNonEmptyRow + 1;
+  }
+
   /**
    * @return {import("../shared/DTOs.js").Spectrum}
    */
@@ -30,18 +78,25 @@ export default class Grid {
   }
 
   /**
-   * @param {import("../shared/DTOs.js").Grid} array
-   * @param {number} rows
-   * @param {number} cols
+   * @param {import("../shared/DTOs.js").Grid | null} array
+   * @param {number | null} rows
+   * @param {number | null} cols
    */
   constructor(array, rows, cols) {
+    /** @type {any[][]} */
+    let gridArray;
+
     if (Array.isArray(array) && array.length > 0) {
-      this.array = array;
+      gridArray = array;
     } else {
-      this.array = Array.from({ length: rows }, () =>
+      rows = rows ?? 0;
+      cols = cols ?? 0;
+      gridArray = Array.from({ length: rows }, () =>
         Array(cols).fill(CellType.Empty),
       );
     }
+
+    this.array = gridArray;
   }
 
   toString() {
@@ -267,8 +322,8 @@ export default class Grid {
   static overlapsAtPosition(gridA, gridB, gridBPosition) {
     return gridB.array.some((row, i) =>
       row.some(
-        (cell, j) =>
-          cell !== CellType.Empty &&
+        (cellB, j) =>
+          cellB !== CellType.Empty &&
           gridA.array[i + gridBPosition.y]?.[j + gridBPosition.x] !==
             CellType.Empty,
       ),
@@ -280,10 +335,10 @@ export default class Grid {
    * @param {Grid} gridB
    */
   static overlaps(gridA, gridB) {
-    return gridA.array.some((row, i) =>
+    return gridB.array.some((row, i) =>
       row.some(
-        (cell, j) =>
-          cell !== CellType.Empty && gridB.array[i][j] !== CellType.Empty,
+        (cellB, j) =>
+          cellB !== CellType.Empty && gridA.array[i][j] !== CellType.Empty,
       ),
     );
   }

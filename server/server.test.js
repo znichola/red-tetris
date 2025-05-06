@@ -14,7 +14,7 @@ const TestPort = 3001;
 const RoomNames = ["testRoom1", "testRoom2"];
 const PlayerNames = Array.from({ length: 100 }, (_, i) => `Player${i + 1}`);
 
-// NOTE ensure the score store does nothing
+//NOTE: ensure the score store does nothing
 vi.mock("./ScoreStore.js", () => {
   return {
     default: class {
@@ -36,7 +36,9 @@ describe("server", () => {
 
   beforeEach(async () => {
     ({ server, closeServer } = createApp());
-    await new Promise((resolve) => server.listen(TestPort, () => resolve()));
+    await new Promise((resolve) =>
+      server.listen(TestPort, () => resolve(undefined)),
+    );
   });
 
   afterEach(async () => {
@@ -249,7 +251,7 @@ function emitGameAction(socket, actionType) {
  */
 function waitForUnexpectedSocketEventOrTimeout(socket, socketEvent) {
   return new Promise((resolve, reject) => {
-    const timeoutId = setTimeout(() => resolve(), 500);
+    const timeoutId = setTimeout(() => resolve(undefined), 500);
     socket.once(socketEvent, () => {
       clearTimeout(timeoutId);
       reject(new Error("Received update when not expected"));

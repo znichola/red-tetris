@@ -15,7 +15,7 @@ function GameManager() {
   const socketState = useSelector(selectSocket);
   const score = useSelector(selectGame).score;
 
-  /**@type {GameState} */
+  /** @type {GameState | undefined} */
   const roomState = useSelector(selectRoom).data?.gameState;
 
   return (
@@ -31,7 +31,10 @@ function GameManager() {
       </div>
       <div className="dialog-body">
         {roomState == GameState.Ended ? (
-          <GameOver />
+          <GameStarter
+            startMessage="Game over, restart when ready"
+            waitingMessage="Game over, waiting for the game to be restarted"
+          />
         ) : roomState == GameState.Playing ? (
           <>
             <div> Game in progress </div>
@@ -41,7 +44,10 @@ function GameManager() {
             <NextTetromino />
           </>
         ) : roomState == GameState.Pending ? (
-          <Pending />
+          <GameStarter
+            startMessage="Start the game when ready"
+            waitingMessage="Waiting for the game to be started"
+          />
         ) : (
           <div>Room not found, please go back home</div>
         )}
@@ -54,11 +60,11 @@ function GameManager() {
   );
 }
 
-function Pending() {
+function GameStarter({ startMessage, waitingMessage }) {
   const isRoomAdmin = useSelector(selectRoom).isRoomAdmin;
   const gameConfig = useSelector(selectGameConfig);
 
-  const launchGame = () => {
+  const startGame = () => {
     if (socket.connected) {
       socket.emit(SocketEvents.StartGame, gameConfig);
     }
@@ -68,38 +74,14 @@ function Pending() {
     <>
       {isRoomAdmin ? (
         <div>
-          Launch the game when ready{" "}
-          <button className="btn" onClick={launchGame}>
+          {startMessage}{" "}
+          <button className="btn" onClick={startGame}>
             start
           </button>
           <Configurer />
         </div>
       ) : (
-        <div>...waiting for game to start</div>
-      )}
-    </>
-  );
-}
-
-function GameOver() {
-  const isRoomAdmin = useSelector(selectRoom).isRoomAdmin;
-
-  const launchGame = () => {
-    if (socket.connected) {
-      socket.emit(SocketEvents.StartGame);
-    }
-  };
-  return (
-    <>
-      {isRoomAdmin ? (
-        <div>
-          Game over, relaunch when ready{" "}
-          <button className="btn" onClick={launchGame}>
-            start
-          </button>
-        </div>
-      ) : (
-        <div>Game over</div>
+        <div>{waitingMessage}</div>
       )}
     </>
   );

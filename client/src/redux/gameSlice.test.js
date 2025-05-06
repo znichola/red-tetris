@@ -4,7 +4,7 @@ import gameReducer, {
   replaceGameData,
   selectGame,
 } from "./gameSlice.js";
-import { CellType } from "../../../shared/DTOs.js";
+import { CellType, TetrominoType } from "../../../shared/DTOs.js";
 import { initiaStoreState } from "./store.js";
 import { DefaultGameGridDimensions } from "../../../shared/Consts.js";
 
@@ -24,11 +24,12 @@ describe("gameSlice", () => {
   it("selectGame should return the grid from state", () => {
     const state = {
       ...initiaStoreState,
+      /** @type {import("../../../shared/DTOs.js").GameData} */
       game: {
         grid: [[CellType.I]],
-        playerNameToSpectrum: { JARED: [0, 2, 3, 1, 0] },
         score: 0,
-        nextTetromino: null,
+        playerNameToSpectrum: { JARED: [0, 2, 3, 1, 0] },
+        nextTetromino: TetrominoType.I,
       },
     };
 

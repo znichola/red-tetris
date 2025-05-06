@@ -63,9 +63,9 @@ export const TetrominoType = Object.freeze({
 
 /** @readonly @enum {number} */
 export const PowerUpCellType = Object.freeze({
-  Attack: 9,
-  Duplication: 10,
-  Bomb: 11,
+  Attack: 10,
+  Duplication: 11,
+  Bomb: 12,
 });
 
 /** @readonly @enum {number} */
@@ -74,13 +74,13 @@ export const CellType = Object.freeze({
   Empty: 0,
   ...TetrominoType,
   Indestructible: 8,
+  Shadow: 9,
   ...PowerUpCellType,
-  Shadow: 12,
 });
 
 /**
  * Used for the scoring table
- * @typedef {"solo" | "multiplayer"} GameMode
+ * @typedef {string} GameMode
  * @typedef {{player: string, score: number, time: string, gameMode: GameMode, winner: boolean}} ScoreRecord
  */
 

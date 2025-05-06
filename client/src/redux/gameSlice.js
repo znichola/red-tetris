@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { CellType } from "../../../shared/DTOs.js";
+import { CellType, TetrominoType } from "../../../shared/DTOs.js";
 import { resetAll } from "./hooks.js";
 
 // https://redux.js.org/tutorials/essentials/part-2-app-structure#creating-slice-reducers-and-actions
@@ -14,7 +14,7 @@ export const initialState = {
   ),
   score: 0,
   playerNameToSpectrum: {},
-  nextTetromino: null,
+  nextTetromino: TetrominoType.I,
 };
 
 /**

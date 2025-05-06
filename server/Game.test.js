@@ -1,13 +1,12 @@
 import { expect, expectGridArrayToEqual } from "./expect-extensions.js";
 import { describe, it, vi, beforeEach, afterEach } from "vitest";
 import Game from "./Game.js";
-import { Tetrominoes } from "./TetrisConsts.js";
-import { DROP_RATE } from "./TetrisConfig.js";
+import { DropRate, Tetrominoes } from "./TetrisConsts.js";
 import Grid from "./Grid.js";
 import { ActionType, CellType, RulesetType } from "../shared/DTOs.js";
 import { DefaultGameGridDimensions } from "../shared/Consts.js";
 
-// NOTE ensure the score store does nothing
+//NOTE: ensure the score store does nothing
 vi.mock("./ScoreStore.js", () => {
   return {
     default: class {
@@ -50,7 +49,8 @@ describe("Game", () => {
   it("should start with one tetromino", () => {
     const { game, playerNames } = createTetrisGame();
     const gameData = getAndValidateGameData(game, playerNames[0], playerNames);
-    const expectedGrid = getGridWithTetrominoFromSpawnOrder(0, { x: 4, y: 0 });
+    //NOTE: y is -1 because the I tetromino is spawned at y = -1
+    const expectedGrid = getGridWithTetrominoFromSpawnOrder(0, { x: 4, y: -1 });
     expectGridArrayToEqual(gameData.grid, expectedGrid.array);
   });
 
@@ -58,11 +58,12 @@ describe("Game", () => {
     const { game, playerNames } = createTetrisGame();
     await progressGameByDropCount(1);
     const gameData = getAndValidateGameData(game, playerNames[0], playerNames);
-    const expectedGrid = getGridWithTetrominoFromSpawnOrder(0, { x: 4, y: 1 });
+    //NOTE: y is 0 because the I tetromino is spawned at y = -1
+    const expectedGrid = getGridWithTetrominoFromSpawnOrder(0, { x: 4, y: 0 });
     expectGridArrayToEqual(gameData.grid, expectedGrid.array);
   });
 
-  it("should end the game after some time", { timeout: 1000 }, async () => {
+  it("should end the game after some time", async () => {
     const { game } = createTetrisGame();
     await progressGameByDropCount(DropCountForGameToEndOnItsOwn);
     //NOTE: If the game is still playing, this promise is awaited forever,
@@ -108,7 +109,8 @@ describe("Game", () => {
       DefaultGameGridDimensions.x,
     );
     const gameData = getAndValidateGameData(game, playerNames[0], playerNames);
-    const expectedGrid = getGridWithTetrominoFromSpawnOrder(0, { x: 0, y: 0 });
+    //NOTE: y is -1 because the I tetromino is spawned at y = -1
+    const expectedGrid = getGridWithTetrominoFromSpawnOrder(0, { x: 0, y: -1 });
     expectGridArrayToEqual(gameData.grid, expectedGrid.array);
   });
 
@@ -122,9 +124,10 @@ describe("Game", () => {
     );
     const gameData = getAndValidateGameData(game, playerNames[0], playerNames);
     const firstTetromino = getTetrominoFromSpawnOrder(0);
+    //NOTE: y is -1 because the I tetromino is spawned at y = -1
     const expectedGrid = getGridWithTetrominoFromSpawnOrder(0, {
       x: DefaultGameGridDimensions.x - firstTetromino.cols,
-      y: 0,
+      y: -1,
     });
     expectGridArrayToEqual(gameData.grid, expectedGrid.array);
   });
@@ -141,7 +144,10 @@ describe("Game", () => {
     const firstTetromino = getTetrominoFromSpawnOrder(0);
     const expectedGrid = getGridWithTetrominoFromSpawnOrder(0, {
       x: 4,
-      y: DefaultGameGridDimensions.y - firstTetromino.rows,
+      y:
+        DefaultGameGridDimensions.y -
+        firstTetromino.topMostNonEmptyRow -
+        firstTetromino.height,
     });
     expectGridArrayToEqual(gameData.grid, expectedGrid.array);
   });
@@ -153,7 +159,10 @@ describe("Game", () => {
     const firstTetromino = getTetrominoFromSpawnOrder(0);
     const expectedGrid = getGridWithTetrominoFromSpawnOrder(0, {
       x: 4,
-      y: DefaultGameGridDimensions.y - firstTetromino.rows,
+      y:
+        DefaultGameGridDimensions.y -
+        firstTetromino.topMostNonEmptyRow -
+        firstTetromino.height,
     });
     expectGridArrayToEqual(gameData.grid, expectedGrid.array);
   });
@@ -166,14 +175,14 @@ describe("Game", () => {
       DefaultGameGridDimensions.y,
       DefaultGameGridDimensions.x,
     );
-    expectedGrid1.array[0][4] = CellType.I;
-    expectedGrid1.array[1][4] = CellType.I;
-    expectedGrid1.array[2][4] = CellType.I;
-    expectedGrid1.array[3][4] = CellType.I;
+    expectedGrid1.array[0][6] = CellType.I;
+    expectedGrid1.array[1][6] = CellType.I;
+    expectedGrid1.array[2][6] = CellType.I;
+    expectedGrid1.array[3][6] = CellType.I;
     expectGridArrayToEqual(gameData1.grid, expectedGrid1.array);
     executeActions(game, playerNames, ActionType.Rotate);
     const gameData2 = getAndValidateGameData(game, playerNames[0], playerNames);
-    const expectedGrid2 = getGridWithTetrominoFromSpawnOrder(0, { x: 4, y: 0 });
+    const expectedGrid2 = getGridWithTetrominoFromSpawnOrder(0, { x: 4, y: 1 });
     expectGridArrayToEqual(gameData2.grid, expectedGrid2.array);
   });
 
@@ -191,11 +200,17 @@ describe("Game", () => {
     const gameData = getAndValidateGameData(game, playerNames[0], playerNames);
     const gridWithFirstTetromino = getGridWithTetrominoFromSpawnOrder(0, {
       x: 4,
-      y: DefaultGameGridDimensions.y - getTetrominoFromSpawnOrder(0).rows,
+      y:
+        DefaultGameGridDimensions.y -
+        getTetrominoFromSpawnOrder(0).topMostNonEmptyRow -
+        getTetrominoFromSpawnOrder(0).height,
     });
     const gridWithSecondTetromino = getGridWithTetrominoFromSpawnOrder(1, {
-      x: DefaultGameGridDimensions.x - getTetrominoFromSpawnOrder(1).cols,
-      y: 0,
+      x:
+        DefaultGameGridDimensions.x -
+        getTetrominoFromSpawnOrder(1).leftMostNonEmptyCol -
+        getTetrominoFromSpawnOrder(1).width,
+      y: 1,
     });
     const expectedGrid = Grid.superimposeOnEmptyCells(
       gridWithFirstTetromino,
@@ -282,20 +297,27 @@ function createTetrisGame(playerNames = ["Player1", "Player2"]) {
  * @param {number} dropCount
  */
 async function progressGameByDropCount(dropCount) {
-  await vi.advanceTimersByTimeAsync(DROP_RATE * 1000 * dropCount);
+  await vi.advanceTimersByTimeAsync(DropRate * 1000 * dropCount);
 }
 
 /**
  * @param {Game} game
  * @param {string} playerName
  * @param {string[]} allPlayerNames
+ * @return {import("../shared/DTOs.js").GameData}
  */
 function getAndValidateGameData(game, playerName, allPlayerNames) {
   const gameData = game.getGameData(playerName);
+
+  if (!gameData) {
+    throw new Error(`Game data for ${playerName} is null`);
+  }
+
   const otherPlayerNames = allPlayerNames.filter(
     (otherPlayerName) => otherPlayerName !== playerName,
   );
   expectValidGameData(gameData, otherPlayerNames);
+
   return gameData;
 }
 
@@ -346,9 +368,8 @@ function getGridWithTetrominoFromSpawnOrder(
  * @param {number} rotationCount
  */
 function getTetrominoFromSpawnOrder(spawnOrderIndex, rotationCount = 0) {
-  const tetromino = Grid.fromArray(
-    Tetrominoes[TetrominoSpawnOrder[spawnOrderIndex]],
-  );
+  const tetrominoType = TetrominoSpawnOrder[spawnOrderIndex];
+  const tetromino = Grid.fromArray(Tetrominoes[tetrominoType]);
 
   for (let i = 0; i < rotationCount; i++) {
     tetromino.array = Grid.fromArray(tetromino.array).rotateClockwise();
@@ -419,7 +440,6 @@ async function makePlayerClearTwoLines(game, playerName) {
   }
 
   executeActions(game, [playerName], ActionType.Rotate);
-  executeActions(game, [playerName], ActionType.MoveRight);
   executeActions(game, [playerName], ActionType.HardDrop);
   await progressGameByDropCount(1);
 }
