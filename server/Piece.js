@@ -57,10 +57,12 @@ export default class Piece extends Grid {
       x: this.#position.x + direction.x,
       y: this.#position.y + direction.y,
     };
-    const overflowsLeft = movedPosition.x < 0;
+
+    const overflowsLeft = movedPosition.x + this.leftMostNonEmptyCol < 0;
     const overflowsRight =
-      movedPosition.x + this.cols > gameGrid.array[0].length;
-    const overflowsBottom = movedPosition.y + this.rows > gameGrid.array.length;
+      movedPosition.x + this.rightMostNonEmptyCol >= gameGrid.array[0].length;
+    const overflowsBottom =
+      movedPosition.y + this.bottomMostNonEmptyRow >= gameGrid.array.length;
     const overflows = overflowsLeft || overflowsRight || overflowsBottom;
 
     return (

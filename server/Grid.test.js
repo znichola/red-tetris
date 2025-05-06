@@ -1,8 +1,8 @@
 import { expect, expectGridArrayToEqual } from "./expect-extensions.js";
 import { describe, it } from "vitest";
 import Grid from "./Grid.js";
-import { CellType, PowerUpCellType } from "../shared/DTOs.js";
-import { bombHoleGrid } from "./TetrisConsts.js";
+import { CellType, PowerUpCellType, TetrominoType } from "../shared/DTOs.js";
+import { bombHoleGrid, Tetrominoes } from "./TetrisConsts.js";
 
 describe("Grid", () => {
   it("should create a grid with the correct dimensions", () => {
@@ -49,7 +49,7 @@ describe("Grid", () => {
     expect(result1).toBe(false);
 
     const grid = Grid.fromRowsCols(20, 10);
-    const tetrominoGridO = createTetrominoGridO();
+    const tetrominoGridO = createTetrominoGrid(TetrominoType.O);
     grid.array[19][2] = CellType.I;
     grid.array[19][3] = CellType.I;
     grid.array[19][4] = CellType.I;
@@ -73,7 +73,7 @@ describe("Grid", () => {
 
     {
       const grid = Grid.fromRowsCols(20, 10);
-      const tetrominoGridO = createTetrominoGridO();
+      const tetrominoGridO = createTetrominoGrid(TetrominoType.O);
       grid.array[19][2] = CellType.I;
       grid.array[19][3] = CellType.I;
       grid.array[19][4] = CellType.I;
@@ -91,7 +91,7 @@ describe("Grid", () => {
       grid.array[17][4] = CellType.I;
       grid.array[18][4] = CellType.I;
       grid.array[19][4] = CellType.I;
-      const tetrominoGridZ = createTetrominoGridZ();
+      const tetrominoGridZ = createTetrominoGrid(TetrominoType.Z);
       const position = { x: 2, y: 16 };
       const overlaps = Grid.overlapsAtPosition(grid, tetrominoGridZ, position);
       expect(overlaps).toBe(true);
@@ -113,7 +113,7 @@ describe("Grid", () => {
 
   it("should superimpose on empty cells and at positions correctly", () => {
     const grid = Grid.fromRowsCols(4, 4);
-    const tetrominoGridJ = createTetrominoGridJ();
+    const tetrominoGridJ = createTetrominoGrid(TetrominoType.J);
     const expected1 = [
       [CellType.Empty, CellType.Empty, CellType.Empty, CellType.Empty],
       [CellType.Empty, CellType.Empty, CellType.Empty, CellType.Empty],
@@ -130,7 +130,7 @@ describe("Grid", () => {
     );
     expectGridArrayToEqual(result1.array, expected1);
 
-    const tetrominoGridZ = createTetrominoGridZ();
+    const tetrominoGridZ = createTetrominoGrid(TetrominoType.Z);
     const expected2 = [
       [CellType.Empty, CellType.Empty, CellType.Empty, CellType.Empty],
       [CellType.Empty, CellType.Z, CellType.Z, CellType.Empty],
@@ -239,20 +239,37 @@ describe("Grid", () => {
   });
 
   it("should rotate clockwise", () => {
-    const grid = Grid.fromArray([
-      [CellType.Empty, CellType.Z, CellType.Empty],
-      [CellType.Empty, CellType.I, CellType.Empty],
+    const tetrominoJ = createTetrominoGrid(TetrominoType.J);
+    const arrayBeforeRotation = tetrominoJ.array;
+
+    let rotated = tetrominoJ.rotateClockwise();
+    const expectedGridRotation90 = Grid.fromArray([
+      [CellType.Empty, CellType.J, CellType.J],
+      [CellType.Empty, CellType.J, CellType.Empty],
       [CellType.Empty, CellType.J, CellType.Empty],
     ]);
-    const gridBeforeRotation = grid;
-    const expectedGrid = Grid.fromArray([
+    expectGridArrayToEqual(rotated, expectedGridRotation90.array);
+
+    expectGridArrayToEqual(tetrominoJ.array, arrayBeforeRotation);
+
+    rotated = Grid.fromArray(rotated).rotateClockwise();
+    const Rotation180 = Grid.fromArray([
       [CellType.Empty, CellType.Empty, CellType.Empty],
-      [CellType.J, CellType.I, CellType.Z],
-      [CellType.Empty, CellType.Empty, CellType.Empty],
+      [CellType.J, CellType.J, CellType.J],
+      [CellType.Empty, CellType.Empty, CellType.J],
     ]);
-    const rotated = grid.rotateClockwise();
-    expect(grid).toEqual(gridBeforeRotation);
-    expectGridArrayToEqual(rotated, expectedGrid.array);
+    expectGridArrayToEqual(rotated, Rotation180.array);
+
+    rotated = Grid.fromArray(rotated).rotateClockwise();
+    const Rotation270 = Grid.fromArray([
+      [CellType.Empty, CellType.J, CellType.Empty],
+      [CellType.Empty, CellType.J, CellType.Empty],
+      [CellType.J, CellType.J, CellType.Empty],
+    ]);
+    expectGridArrayToEqual(rotated, Rotation270.array);
+
+    rotated = Grid.fromArray(rotated).rotateClockwise();
+    expectGridArrayToEqual(rotated, arrayBeforeRotation);
   });
 
   it("should superimpose with override", () => {
@@ -333,23 +350,10 @@ function createSuperimposeGrids() {
   };
 }
 
-function createTetrominoGridO() {
-  return Grid.fromArray([
-    [CellType.O, CellType.O],
-    [CellType.O, CellType.O],
-  ]);
-}
-
-function createTetrominoGridZ() {
-  return Grid.fromArray([
-    [CellType.Z, CellType.Z, CellType.Empty],
-    [CellType.Empty, CellType.Z, CellType.Z],
-  ]);
-}
-
-function createTetrominoGridJ() {
-  return Grid.fromArray([
-    [CellType.J, CellType.Empty, CellType.Empty],
-    [CellType.J, CellType.J, CellType.J],
-  ]);
+/**
+ * @param {TetrominoType} tetrominoType
+ * @returns {Grid}
+ */
+function createTetrominoGrid(tetrominoType) {
+  return Grid.fromArray(Tetrominoes[tetrominoType]);
 }

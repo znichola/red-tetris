@@ -7,9 +7,9 @@ import {
 } from "../shared/DTOs.js";
 import Grid from "./Grid.js";
 import Piece from "./Piece.js";
-import { DROP_RATE } from "./TetrisConfig.js";
 import {
   bombHoleGrid,
+  DropRate,
   VectorDown,
   VectorLeft,
   VectorRight,
@@ -128,10 +128,12 @@ export default class Player {
 
     const kicks = [
       { direction: VectorLeft, strength: 1 },
+      { direction: VectorLeft, strength: 2 },
       { direction: VectorRight, strength: 1 },
+      { direction: VectorRight, strength: 2 },
       { direction: VectorUp, strength: 1 },
       { direction: VectorUp, strength: 2 },
-      { direction: VectorUp, strength: 3 },
+      { direction: VectorDown, strength: 1 },
     ];
 
     for (const { direction, strength } of kicks) {
@@ -273,6 +275,10 @@ export default class Player {
       y: 0,
     };
 
+    if (tetrominoType === TetrominoType.I) {
+      position.y -= 1;
+    }
+
     return new Piece(
       tetrominoType,
       position,
@@ -288,7 +294,7 @@ export default class Player {
   }
 
   #getDropRate() {
-    return this.#gameConfig.heavy ? DROP_RATE * 3 : DROP_RATE;
+    return this.#gameConfig.heavy ? DropRate * 3 : DropRate;
   }
 
   /**

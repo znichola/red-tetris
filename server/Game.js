@@ -1,7 +1,11 @@
 import Player from "./Player.js";
-import { TICK_RATE } from "./TetrisConfig.js";
-import { VectorDown, VectorLeft, VectorRight } from "./TetrisConsts.js";
 import { ActionType, RulesetType } from "../shared/DTOs.js";
+import {
+  TickRate,
+  VectorDown,
+  VectorLeft,
+  VectorRight,
+} from "./TetrisConsts.js";
 import { scoreStore } from "./server.js";
 import { convertToPlayerScores } from "./ScoreStore.js";
 import { DefaultGameGridDimensions } from "../shared/Consts.js";
@@ -121,7 +125,7 @@ export default class Game {
       //TODO: since the boards will not necessarily change every tick,
       //TODO: we could skip some broadcasts when no changes are made.
       this.#broadcastState();
-      await new Promise((res) => setTimeout(res, 1000 / TICK_RATE));
+      await new Promise((res) => setTimeout(res, 1000 / TickRate));
     }
 
     //NOTE: It is possible no winner is declared if one of the following happens:

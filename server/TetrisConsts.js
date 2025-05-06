@@ -1,8 +1,16 @@
 import Grid from "./Grid.js";
 import { CellType, TetrominoType } from "../shared/DTOs.js";
 
+export const TickRate = 20;
+export const DropRate = 1;
+
 export const Tetrominoes = deepFreeze({
-  [TetrominoType.I]: [[CellType.I, CellType.I, CellType.I, CellType.I]],
+  [TetrominoType.I]: [
+    [CellType.Empty, CellType.Empty, CellType.Empty, CellType.Empty],
+    [CellType.I, CellType.I, CellType.I, CellType.I],
+    [CellType.Empty, CellType.Empty, CellType.Empty, CellType.Empty],
+    [CellType.Empty, CellType.Empty, CellType.Empty, CellType.Empty],
+  ],
   [TetrominoType.O]: [
     [CellType.O, CellType.O],
     [CellType.O, CellType.O],
@@ -10,22 +18,27 @@ export const Tetrominoes = deepFreeze({
   [TetrominoType.T]: [
     [CellType.Empty, CellType.T, CellType.Empty],
     [CellType.T, CellType.T, CellType.T],
+    [CellType.Empty, CellType.Empty, CellType.Empty],
   ],
   [TetrominoType.J]: [
     [CellType.J, CellType.Empty, CellType.Empty],
     [CellType.J, CellType.J, CellType.J],
+    [CellType.Empty, CellType.Empty, CellType.Empty],
   ],
   [TetrominoType.L]: [
     [CellType.Empty, CellType.Empty, CellType.L],
     [CellType.L, CellType.L, CellType.L],
+    [CellType.Empty, CellType.Empty, CellType.Empty],
   ],
   [TetrominoType.S]: [
     [CellType.Empty, CellType.S, CellType.S],
     [CellType.S, CellType.S, CellType.Empty],
+    [CellType.Empty, CellType.Empty, CellType.Empty],
   ],
   [TetrominoType.Z]: [
     [CellType.Z, CellType.Z, CellType.Empty],
     [CellType.Empty, CellType.Z, CellType.Z],
+    [CellType.Empty, CellType.Empty, CellType.Empty],
   ],
 });
 
