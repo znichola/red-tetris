@@ -19,13 +19,13 @@ export default class Game {
   getGameData(playerName) {
     /** @type {Object<string, import("../shared/DTOs.js").Spectrum>} */
     const playerNameToSpectrum = {};
-
     this.#players
       .filter((player) => player.name !== playerName)
       .forEach((player) => {
         playerNameToSpectrum[player.name] = player.spectrum;
       });
     const player = this.#players.find((player) => player.name === playerName);
+
     return {
       grid: player.gridArray,
       playerNameToSpectrum,
