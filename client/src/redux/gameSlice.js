@@ -14,6 +14,7 @@ export const /**@type {import("../../../shared/DTOs.js").GameData} */ initialSta
       ),
       score: 0,
       playerNameToSpectrum: {},
+      nextTetromino: undefined,
     };
 
 /**
@@ -32,6 +33,7 @@ export const gameSlice = createSlice({
       state.grid = action.payload.grid;
       state.playerNameToSpectrum = action.payload.playerNameToSpectrum;
       state.score = action.payload.score;
+      state.nextTetromino = action.payload.nextTetromino;
     },
   },
   extraReducers: (builder) => builder.addCase(resetAll, () => initialState),

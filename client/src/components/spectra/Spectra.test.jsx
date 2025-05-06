@@ -23,6 +23,7 @@ describe("SpectraOverview component", () => {
         grid: mockGrid,
         score: 0,
         playerNameToSpectrum: mockAllPlayers,
+        nextTetromino: undefined,
       }),
     );
   };

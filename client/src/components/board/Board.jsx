@@ -173,4 +173,4 @@ function Button({ icon, className, shortcutKeyCodes = [], onClick }) {
   );
 }
 
-export { Board, Keypad, Grid };
+export { Board, Keypad, Grid, Cell };

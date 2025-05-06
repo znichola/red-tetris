@@ -1,7 +1,7 @@
 import Player from "./Player.js";
 import { TICK_RATE } from "./TetrisConfig.js";
 import { VectorDown, VectorLeft, VectorRight } from "./TetrisConsts.js";
-import { ActionType } from "../shared/DTOs.js";
+import { ActionType, TetrominoType } from "../shared/DTOs.js";
 import { scoreStore } from "./server.js";
 import { convertToPlayerScores } from "./ScoreStore.js";
 
@@ -30,6 +30,7 @@ export default class Game {
       grid: player.gridArray,
       playerNameToSpectrum,
       score: player.score,
+      nextTetromino: player.nextTetromino.type,
     };
   }
 

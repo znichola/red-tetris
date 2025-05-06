@@ -7,6 +7,7 @@ import {
   GameState,
   RulesetType,
   SocketEvents,
+  TetrominoType,
 } from "../shared/DTOs.js";
 import { DefaultGameGridDimensions } from "../shared/Consts.js";
 
@@ -176,6 +177,7 @@ describe("server", () => {
         [PlayerNames[1]]: expect.any(Array),
       }),
       score: expect.any(Number),
+      nextTetromino: expect.any(Number),
     };
     expect(gameData).toMatchObject(expectedGameDataStructure);
   });

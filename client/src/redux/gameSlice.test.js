@@ -1,22 +1,11 @@
 import { describe, it, expect } from "vitest";
-import gameReducer, { replaceGameData, selectGame } from "./gameSlice.js";
+import gameReducer, { initialState, replaceGameData, selectGame } from "./gameSlice.js";
 import { CellType } from "../../../shared/DTOs.js";
 import { initiaStoreState } from "./store.js";
 import { DefaultGameGridDimensions } from "../../../shared/Consts.js";
 
 describe("gameSlice", () => {
-  const createEmptyGrid = () =>
-    Array.from({ length: DefaultGameGridDimensions.y }, () =>
-      Array.from({ length: DefaultGameGridDimensions.x }, () => CellType.Empty),
-    );
-
   it("should handle replaceGrid", () => {
-    const initialState = {
-      grid: createEmptyGrid(),
-      playerNameToSpectrum: {},
-      score: 0,
-    };
-
     const withNewGrid = {
       ...initialState,
       grid: Array.from({ length: DefaultGameGridDimensions.y }, () =>
@@ -35,6 +24,7 @@ describe("gameSlice", () => {
         grid: [[CellType.I]],
         playerNameToSpectrum: { JARED: [0, 2, 3, 1, 0] },
         score: 0,
+        nextTetromino: undefined,
       },
     };
 
