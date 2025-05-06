@@ -1,3 +1,4 @@
+import { DefaultGameGridDimensions } from "../shared/Consts.js";
 import {
   CellType,
   PowerUpCellType,
@@ -18,7 +19,7 @@ import seedrandom from "seedrandom";
 
 export default class Player {
   #name;
-  /**@type {import("../shared/DTOs.js").GameConfig} */
+  /** @type {Readonly<import("../shared/DTOs.js").GameConfig>} */
   #gameConfig;
   #powerUpsPrng;
   #piecesPrng;
@@ -41,10 +42,16 @@ export default class Player {
   }
 
   get gridArray() {
-    if (this.#gameConfig.ruleset == RulesetType.Invisible) {
-      return this.#invisibleGridWithTetromino.array;
-    }
-    return this.#gridWithTetromino.array;
+    const grid =
+      this.#gameConfig.ruleset === RulesetType.Invisible
+        ? this.#invisibleGridWithTetromino
+        : this.#gridWithTetromino;
+    const showShadow =
+      this.#gameConfig.ruleset !== RulesetType.Classic ||
+      this.#gameConfig.gridDimensions.x > DefaultGameGridDimensions.x ||
+      this.#gameConfig.gridDimensions.y > DefaultGameGridDimensions.y;
+
+    return showShadow ? this.#addShadowToGrid(grid).array : grid.array;
   }
 
   get spectrum() {
@@ -60,34 +67,21 @@ export default class Player {
   }
 
   get #invisibleGridWithTetromino() {
-    var emptyGrid = Grid.fromArray(
-      (this.array = Array.from({ length: this.#pileGrid.rows }, () =>
-        Array(this.#pileGrid.cols).fill(CellType.Empty),
-      )),
-    );
-    const tet = this.#currentTetromino.duplicate();
-
-    while (tet.canMove(this.#pileGrid, VectorDown)) {
-      tet.move(VectorDown);
-    }
-    tet.array = tet.array.map((a) =>
-      a.map((v) => (v === CellType.Empty ? CellType.Empty : CellType.Shadow)),
+    const emptyGrid = Grid.fromRowsCols(
+      this.#pileGrid.rows,
+      this.#pileGrid.cols,
     );
 
     return Grid.superimposeOnEmptyCellsAtPosition(
-      Grid.superimposeOnEmptyCellsAtPosition(
-        emptyGrid,
-        this.#currentTetromino,
-        this.#currentTetromino.position,
-      ),
-      tet,
-      tet.position,
+      emptyGrid,
+      this.#currentTetromino,
+      this.#currentTetromino.position,
     );
   }
 
   /**
    * @param {string} name
-   * @param {import("../shared/DTOs.js").GameConfig} gameConfig
+   * @param {Readonly<import("../shared/DTOs.js").GameConfig>} gameConfig
    * @param {any} randomSeed
    */
   constructor(name, gameConfig, randomSeed) {
@@ -99,7 +93,6 @@ export default class Player {
       gameConfig.gridDimensions.y,
       gameConfig.gridDimensions.x,
     );
-    this.#gameConfig = gameConfig;
     this.#nextTetromino = this.#getRandomTetromino();
     this.#spawnNextTetromino();
   }
@@ -282,7 +275,9 @@ export default class Player {
     return new Piece(
       tetrominoType,
       position,
-      this.#gameConfig.enabledPowerUps,
+      this.#gameConfig.ruleset === RulesetType.PowerUp
+        ? this.#gameConfig.enabledPowerUps
+        : [],
       this.#powerUpsPrng,
     );
   }
@@ -293,5 +288,26 @@ export default class Player {
 
   #getDropRate() {
     return this.#gameConfig.heavy ? DROP_RATE * 3 : DROP_RATE;
+  }
+
+  /**
+   * @param {Grid} grid
+   */
+  #addShadowToGrid(grid) {
+    const shadow = this.#currentTetromino.duplicate();
+
+    while (shadow.canMove(this.#pileGrid, VectorDown)) {
+      shadow.move(VectorDown);
+    }
+
+    shadow.array = shadow.array.map((a) =>
+      a.map((v) => (v === CellType.Empty ? CellType.Empty : CellType.Shadow)),
+    );
+
+    return Grid.superimposeOnEmptyCellsAtPosition(
+      grid,
+      shadow,
+      shadow.position,
+    );
   }
 }

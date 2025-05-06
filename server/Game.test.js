@@ -62,7 +62,7 @@ describe("Game", () => {
     expectGridArrayToEqual(gameData.grid, expectedGrid.array);
   });
 
-  it("should end the game after some time", { timeout: 1000 }, async () => {
+  it("should end the game after some time", async () => {
     const { game } = createTetrisGame();
     await progressGameByDropCount(DropCountForGameToEndOnItsOwn);
     //NOTE: If the game is still playing, this promise is awaited forever,

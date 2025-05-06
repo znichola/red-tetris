@@ -41,6 +41,7 @@ describe("Board view", () => {
         tetClasses.add(tetClass);
       }
     }
+
     expect(tetClasses.size).toBe(
       Object.values(CellType).filter((v) => v !== CellType.None).length,
     );

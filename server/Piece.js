@@ -18,15 +18,17 @@ export default class Piece extends Grid {
    * @param {import("../shared/DTOs.js").TetrominoType} tetrominoType
    * @param {import("./TetrisConsts.js").Vector} position
    * @param {PowerUpCellType[]} enabledPowerUps
-   * @param {Function} prng
+   * @param {Function | null} prng
    */
   constructor(tetrominoType, position, enabledPowerUps, prng) {
     const array = structuredClone(Tetrominoes[tetrominoType]);
     super(array, null, null);
 
-    const hasPowerUp = prng() < PowerUpSpawnChance;
-
-    if (hasPowerUp && enabledPowerUps.length > 0) {
+    if (
+      enabledPowerUps.length > 0 &&
+      prng !== null &&
+      prng() < PowerUpSpawnChance
+    ) {
       const randomPowerUpIndex = Math.floor(prng() * enabledPowerUps.length);
       const powerUp = enabledPowerUps[randomPowerUpIndex];
       const possiblePowerUpLocations = this.array.flatMap((row, y) =>
@@ -111,14 +113,12 @@ export default class Piece extends Grid {
   duplicate() {
     const dupe = new Piece(
       this.#type,
-      {
-        x: this.#position.x,
-        y: this.#position.y,
-      },
+      structuredClone(this.#position),
       [],
-      () => {},
+      null,
     );
     dupe.array = structuredClone(this.array);
+
     return dupe;
   }
 }
