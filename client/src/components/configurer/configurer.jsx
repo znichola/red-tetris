@@ -59,7 +59,7 @@ function OptsB({ config }) {
           value={config.gridDimensions.x}
           onChange={(e) => dispatch(setGridX(Number(e.target.value)))}
         />
-        <output>{config.gridDimensions.x}</output>
+        <output className="opt-range-num">{config.gridDimensions.x}</output>
       </div>
       <div className="field-row">
         <label htmlFor="gridY">Y:</label>
@@ -71,7 +71,7 @@ function OptsB({ config }) {
           value={config.gridDimensions.y}
           onChange={(e) => dispatch(setGridY(Number(e.target.value)))}
         />
-        <output>{config.gridDimensions.y}</output>
+        <output className="opt-range-num">{config.gridDimensions.y}</output>
       </div>
     </div>
   );
