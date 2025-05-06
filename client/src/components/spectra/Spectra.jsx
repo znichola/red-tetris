@@ -1,6 +1,7 @@
 import "./spectra.css";
 import { useSelector } from "react-redux";
 import { convertSpectaToArray, selectGame } from "../../redux/gameSlice.js";
+import ClipText from "../cliptext/ClipText.jsx";
 
 /**
  * @typedef {import("../../../../shared/DTOs.js").Spectrum} Spectrum
@@ -71,7 +72,7 @@ function PlayerView({ playerInfo, numRows }) {
   return (
     <div className="spectra-view">
       <SpectraView spectra={playerInfo.spectra} numRows={numRows} />
-      <div>{playerInfo.player}</div>
+      <ClipText text={playerInfo.player} maxWidth="8em" />
     </div>
   );
 }

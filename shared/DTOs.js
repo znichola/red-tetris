@@ -7,6 +7,7 @@
  * @property {Grid} grid
  * @property {number} score
  * @property {PlayerNameToSpectrum} playerNameToSpectrum
+ * @property {TetrominoType} nextTetromino
  *
  * @typedef {CellType[][]} Grid
  *

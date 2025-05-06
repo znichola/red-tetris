@@ -4,6 +4,7 @@ import { CellType, TetrominoType } from "../shared/DTOs.js";
 export const TickRate = 20;
 export const DropRate = 1;
 
+/** @type {Record<TetrominoType, import("../shared/DTOs.js").Grid>} */
 export const Tetrominoes = deepFreeze({
   [TetrominoType.I]: [
     [CellType.Empty, CellType.Empty, CellType.Empty, CellType.Empty],

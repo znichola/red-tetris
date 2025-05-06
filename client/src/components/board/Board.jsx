@@ -13,6 +13,7 @@ import { useKeyPress } from "../../hooks/useKeyPress.js";
 import { useSelector } from "react-redux";
 import { selectGame } from "../../redux/gameSlice.js";
 import { socket } from "../../socket.js";
+import ClipText from "../cliptext/ClipText.jsx";
 
 /**
  * @param {Object} props
@@ -25,8 +26,9 @@ function Board({ room, player }) {
   return (
     <div className="standard-dialog thing">
       <div className="title-bar">
-        <h1 className="title">
-          {room}/{player}
+        <h1 className="title" style={{ display: "flex" }}>
+          <ClipText text={room} maxWidth="5em" />
+          /<ClipText text={player} maxWidth="5em" />
         </h1>
       </div>
       <Grid grid={grid} />
@@ -171,4 +173,4 @@ function Button({ icon, className, shortcutKeyCodes = [], onClick }) {
   );
 }
 
-export { Board, Keypad, Grid };
+export { Board, Keypad, Grid, Cell };

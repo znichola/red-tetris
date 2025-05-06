@@ -55,3 +55,8 @@
 .status-circle:hover::after {
   opacity: 1;
 }
+
+.players-in-lobby {
+  word-break: break-word;
+  overflow-wrap: break-word;
+}

@@ -25,14 +25,18 @@
   color: var(--red);
 }
 
-.winner {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.3em;
+.winner svg {
+  padding-right: 0.3em;
 }
 
 .table-header > div {
   background: var(--grey);
   font-weight: 700;
+}
+
+.player-sb {
+  max-width: 20em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

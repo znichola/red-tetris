@@ -1,4 +1,4 @@
-import { CellType, PowerUpCellType } from "../shared/DTOs.js";
+import { CellType } from "../shared/DTOs.js";
 import Grid from "./Grid.js";
 import { PowerUpSpawnChance, Tetrominoes } from "./TetrisConsts.js";
 
@@ -17,7 +17,7 @@ export default class Piece extends Grid {
   /**
    * @param {import("../shared/DTOs.js").TetrominoType} tetrominoType
    * @param {import("./TetrisConsts.js").Vector} position
-   * @param {PowerUpCellType[]} enabledPowerUps
+   * @param {import("../shared/DTOs.js").PowerUpCellType[]} enabledPowerUps
    * @param {Function | null} prng
    */
   constructor(tetrominoType, position, enabledPowerUps, prng) {

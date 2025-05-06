@@ -3,6 +3,7 @@ import { socket } from "../../socket.js";
 import { SocketEvents } from "../../../../shared/DTOs.js";
 import "./scoreboard.css";
 import { Trophy } from "lucide-react";
+import ClipText from "../cliptext/ClipText.jsx";
 
 /**@typedef {import("../../../../shared/DTOs.js").ScoreRecord} ScoreRecord */
 
@@ -42,7 +43,7 @@ function Scoreboard() {
         </div>
         {scores.map(({ player, score, time, gameMode, winner }, i) => (
           <div className="table-row" key={i}>
-            <div>{player}</div>
+            <ClipText text={player} maxWidth="7em" />
             <div className="score">{score}</div>
             <div>
               {new Intl.DateTimeFormat("en-gb", {
@@ -53,12 +54,11 @@ function Scoreboard() {
                 hour12: false,
               }).format(new Date(time))}
             </div>
-            <div className="winner">
+            <ClipText text={gameMode} className="winner" maxWidth="6em">
               {winner && (
                 <Trophy size={16} color="var(--red)" strokeWidth={3} />
               )}
-              {gameMode}
-            </div>
+            </ClipText>
           </div>
         ))}
       </div>

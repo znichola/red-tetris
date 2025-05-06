@@ -7,7 +7,7 @@ function Home() {
   const [playerName, setPlayerName] = useState("");
 
   return (
-    <div className="layout">
+    <div className="layout" style={{ flexWrap: "nowrap" }}>
       <div className="standard-dialog">
         <div className="title-bar">
           <h1 className="title">start game</h1>

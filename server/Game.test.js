@@ -3,12 +3,7 @@ import { describe, it, vi, beforeEach, afterEach } from "vitest";
 import Game from "./Game.js";
 import { DropRate, Tetrominoes } from "./TetrisConsts.js";
 import Grid from "./Grid.js";
-import {
-  ActionType,
-  CellType,
-  RulesetType,
-  TetrominoType,
-} from "../shared/DTOs.js";
+import { ActionType, CellType, RulesetType } from "../shared/DTOs.js";
 import { DefaultGameGridDimensions } from "../shared/Consts.js";
 
 //NOTE: ensure the score store does nothing

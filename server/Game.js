@@ -42,6 +42,7 @@ export default class Game {
       grid: player.gridArray,
       playerNameToSpectrum,
       score: player.score,
+      nextTetromino: player.nextTetromino.type,
     };
   }
 

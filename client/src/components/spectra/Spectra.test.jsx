@@ -6,6 +6,7 @@ import { SpectraOverview } from "./Spectra.jsx";
 import { replaceGameData } from "../../redux/gameSlice.js";
 import { mockAllPlayers } from "./mockAllPlayers.js";
 import { DefaultGameGridDimensions } from "../../../../shared/Consts.js";
+import { TetrominoType } from "../../../../shared/DTOs.js";
 
 describe("SpectraOverview component", () => {
   beforeEach(() => {
@@ -23,6 +24,7 @@ describe("SpectraOverview component", () => {
         grid: mockGrid,
         score: 0,
         playerNameToSpectrum: mockAllPlayers,
+        nextTetromino: TetrominoType.I,
       }),
     );
   };
