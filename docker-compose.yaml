@@ -10,4 +10,4 @@ services:
       - "5173:5173"
       - "127.0.0.1:9229:9229"
       - "5000:5000"
-    command: sh -c "set +x && npm install && npm run build && npm run devserv & npx vite --host"
+    command: sh -c "set +x && npm install && npm run build && npm run serv"
