@@ -1,26 +1,36 @@
-import { CellType, TetrominoType } from "../shared/DTOs.js";
+import {
+  CellType,
+  PowerUpCellType,
+  RulesetType,
+  TetrominoType,
+} from "../shared/DTOs.js";
 import Grid from "./Grid.js";
 import Piece from "./Piece.js";
 import { DROP_RATE } from "./TetrisConfig.js";
 import {
+  bombHoleGrid,
   VectorDown,
   VectorLeft,
   VectorRight,
   VectorUp,
 } from "./TetrisConsts.js";
+import seedrandom from "seedrandom";
 
 export default class Player {
   #name;
+  /** @type {Readonly<import("../shared/DTOs.js").GameConfig>} */
+  #gameConfig;
+  #powerUpsPrng;
+  #piecesPrng;
   #score = 0;
-  #prng;
   #pileGrid;
   #gameOver = false;
   /** @type {import("./Piece.js").default} */
   #currentTetromino;
   #nextTetromino;
   #dropTimer = 0;
-  /**@type {import("../shared/DTOs.js").GameConfig} */
-  #gameConfig;
+  #duplicatedTetrominoType = null;
+  #duplicatedTetrominoCount = 0;
 
   get name() {
     return this.#name;
@@ -31,7 +41,7 @@ export default class Player {
   }
 
   get gridArray() {
-    if (this.#gameConfig.ruleset == "invisible") {
+    if (this.#gameConfig.ruleset == RulesetType.Invisible) {
       return this.#invisibleGridWithTetromino.array;
     }
     return this.#gridWithTetromino.array;
@@ -42,7 +52,7 @@ export default class Player {
   }
 
   get #gridWithTetromino() {
-    return Grid.superimposeAtPosition(
+    return Grid.superimposeOnEmptyCellsAtPosition(
       this.#pileGrid,
       this.#currentTetromino,
       this.#currentTetromino.position,
@@ -64,8 +74,8 @@ export default class Player {
       a.map((v) => (v === CellType.Empty ? CellType.Empty : CellType.Shadow)),
     );
 
-    return Grid.superimposeAtPosition(
-      Grid.superimposeAtPosition(
+    return Grid.superimposeOnEmptyCellsAtPosition(
+      Grid.superimposeOnEmptyCellsAtPosition(
         emptyGrid,
         this.#currentTetromino,
         this.#currentTetromino.position,
@@ -77,17 +87,18 @@ export default class Player {
 
   /**
    * @param {string} name
-   * @param {import("../shared/DTOs.js").GameConfig} startGameData
-   * @param {function} prng
+   * @param {Readonly<import("../shared/DTOs.js").GameConfig>} gameConfig
+   * @param {any} randomSeed
    */
-  constructor(name, startGameData, prng) {
+  constructor(name, gameConfig, randomSeed) {
     this.#name = name;
-    this.#prng = prng;
+    this.#gameConfig = gameConfig;
+    this.#powerUpsPrng = seedrandom(randomSeed);
+    this.#piecesPrng = seedrandom(randomSeed);
     this.#pileGrid = Grid.fromRowsCols(
-      startGameData.gridDimensions.y,
-      startGameData.gridDimensions.x,
+      gameConfig.gridDimensions.y,
+      gameConfig.gridDimensions.x,
     );
-    this.#gameConfig = startGameData;
     this.#nextTetromino = this.#getRandomTetromino();
     this.#spawnNextTetromino();
   }
@@ -98,6 +109,10 @@ export default class Player {
   tryMoveTetromino(direction) {
     if (this.#currentTetromino.canMove(this.#pileGrid, direction)) {
       this.#currentTetromino.move(direction);
+
+      if (direction === VectorDown) {
+        this.#dropTimer = 0;
+      }
     }
   }
 
@@ -153,14 +168,41 @@ export default class Player {
         this.#currentTetromino.move(VectorDown);
       } else {
         this.#pileCurrentTetromino();
-        const clearedRows = this.#pileGrid.clearAndDropFullRows();
-        const attackRowsCount = clearedRows - 1;
-        this.#score +=
-          Math.max(1, clearedRows + 1) * this.#currentTetromino.getScoreValue();
+
+        const { clearedRows, clearedSpecialCells } =
+          this.#pileGrid.clearAndDropFullRows(Object.values(PowerUpCellType));
+
+        const clearedDuplicationPowerUpsCount = clearedSpecialCells.filter(
+          (cell) => cell.type === PowerUpCellType.Duplication,
+        ).length;
+        this.#duplicatedTetrominoType = this.#currentTetromino.type;
+        this.#duplicatedTetrominoCount += clearedDuplicationPowerUpsCount;
+
+        const clearedBombPowerUps = clearedSpecialCells.filter(
+          (cell) => cell.type === PowerUpCellType.Bomb,
+        );
+        clearedBombPowerUps.forEach((bomb) => {
+          this.#pileGrid = Grid.superimposeWithOverrideAtPosition(
+            this.#pileGrid,
+            bombHoleGrid,
+            {
+              x: bomb.position.x - Math.floor(bombHoleGrid.cols / 2),
+              y: bomb.position.y - Math.floor(bombHoleGrid.rows / 2),
+            },
+          );
+        });
+
+        const clearedAttackPowerUpsCount = clearedSpecialCells.filter(
+          (cell) => cell.type === PowerUpCellType.Attack,
+        ).length;
+        const attackRowsCount = clearedRows - 1 + clearedAttackPowerUpsCount;
 
         if (attackRowsCount > 0) {
           this.#attackOpponents(opponents, attackRowsCount);
         }
+
+        this.#score +=
+          Math.max(1, clearedRows + 1) * this.#currentTetromino.getScoreValue();
 
         this.#spawnNextTetromino();
       }
@@ -172,8 +214,15 @@ export default class Player {
   }
 
   #spawnNextTetromino() {
-    this.#currentTetromino = this.#nextTetromino;
-    this.#nextTetromino = this.#getRandomTetromino();
+    if (this.#duplicatedTetrominoCount > 0) {
+      this.#currentTetromino = this.#getNewTetromino(
+        this.#duplicatedTetrominoType,
+      );
+      --this.#duplicatedTetrominoCount;
+    } else {
+      this.#currentTetromino = this.#nextTetromino;
+      this.#nextTetromino = this.#getRandomTetromino();
+    }
 
     if (
       Grid.overlapsAtPosition(
@@ -213,15 +262,30 @@ export default class Player {
 
   #getRandomTetromino() {
     const tetrominoTypes = Object.values(TetrominoType);
-    const randomNumber = this.#prng();
+    const randomNumber = this.#piecesPrng();
     const randomType =
       tetrominoTypes[Math.floor(randomNumber * tetrominoTypes.length)];
+
+    return this.#getNewTetromino(randomType);
+  }
+
+  /**
+   * @param {import("../shared/DTOs.js").TetrominoType} tetrominoType
+   */
+  #getNewTetromino(tetrominoType) {
     const position = {
       x: Math.floor(this.#pileGrid.cols / 2) - 1,
       y: 0,
     };
 
-    return new Piece(randomType, position);
+    return new Piece(
+      tetrominoType,
+      position,
+      this.#gameConfig.ruleset === RulesetType.PowerUp
+        ? this.#gameConfig.enabledPowerUps
+        : [],
+      this.#powerUpsPrng,
+    );
   }
 
   isGameOver() {

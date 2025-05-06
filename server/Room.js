@@ -4,6 +4,7 @@ import {
 } from "../shared/Consts.js";
 import { GameState, SocketEvents } from "../shared/DTOs.js";
 import Game from "./Game.js";
+import { deepFreeze } from "./TetrisConsts.js";
 
 export default class Room {
   #io;
@@ -79,15 +80,16 @@ export default class Room {
 
   /**
    * @param {string} playerName
-   * @param {import("../shared/DTOs.js").GameConfig} startGameData
+   * @param {Readonly<import("../shared/DTOs.js").GameConfig>} gameConfig
    */
-  startGame(playerName, startGameData) {
+  startGame(playerName, gameConfig) {
+    gameConfig = deepFreeze(gameConfig);
     const isValidGridHeight =
-      startGameData.gridDimensions.y >= MinGameGridDimensions.y &&
-      startGameData.gridDimensions.y <= MaxGameGridDimensions.y;
+      gameConfig.gridDimensions.y >= MinGameGridDimensions.y &&
+      gameConfig.gridDimensions.y <= MaxGameGridDimensions.y;
     const isValidGridWidth =
-      startGameData.gridDimensions.x >= MinGameGridDimensions.x &&
-      startGameData.gridDimensions.x <= MaxGameGridDimensions.x;
+      gameConfig.gridDimensions.x >= MinGameGridDimensions.x &&
+      gameConfig.gridDimensions.x <= MaxGameGridDimensions.x;
     const isValidGridDimensions = isValidGridHeight && isValidGridWidth;
 
     if (
@@ -101,7 +103,7 @@ export default class Room {
     this.#gameState = GameState.Playing;
     this.#tetrisGame = new Game(
       this.#players.map((player) => player.name),
-      startGameData,
+      gameConfig,
     );
     this.#tetrisGame.addGameUpdateListener(this.#OnGameUpdate);
     this.#tetrisGame.gameLoop();

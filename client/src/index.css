@@ -24,6 +24,9 @@
   --tet-color-empty: #e4e3e3;
   --tet-color-indestructible: var(--grey);
   --tet-color-shadow: #b8c4ee;
+  --tet-color-attack: var(--violet);
+  --tet-color-duplication: var(--pink);
+  --tet-color-bomb: var(--dark);
 }
 
 .red-title {
