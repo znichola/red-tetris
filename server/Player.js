@@ -260,6 +260,11 @@ export default class Player {
       CellType.Indestructible,
     );
 
+    this.#currentTetromino.move({
+      x: 0,
+      y: -attackRowsCount,
+    });
+
     if (overflowed) {
       this.#gameOver = true;
     }
