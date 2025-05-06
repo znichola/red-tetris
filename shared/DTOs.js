@@ -79,7 +79,7 @@ export const CellType = Object.freeze({
 
 /**
  * Used for the scoring table
- * @typedef {"solo" | "multiplayer"} GameMode
+ * @typedef {string} GameMode
  * @typedef {{player: string, score: number, time: string, gameMode: GameMode, winner: boolean}} ScoreRecord
  */
 

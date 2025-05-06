@@ -1,10 +1,6 @@
 import { describe, it, expect } from "vitest";
 import ScoreStore from "./ScoreStore.js";
 
-/**
- * @typedef {import("../shared/DTOs.js").GameMode} GameMode
- */
-
 const mockFilename = "test_scores.json";
 
 describe("ScoreStore", () => {

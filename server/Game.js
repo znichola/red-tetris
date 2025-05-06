@@ -1,12 +1,14 @@
 import Player from "./Player.js";
 import { TICK_RATE } from "./TetrisConfig.js";
 import { VectorDown, VectorLeft, VectorRight } from "./TetrisConsts.js";
-import { ActionType } from "../shared/DTOs.js";
+import { ActionType, RulesetType } from "../shared/DTOs.js";
 import { scoreStore } from "./server.js";
 import { convertToPlayerScores } from "./ScoreStore.js";
+import { DefaultGameGridDimensions } from "../shared/Consts.js";
 
 export default class Game {
   #isSoloGame;
+  #gameConfig;
   #lastLoopTime = new Date();
   #players;
   /** @type {function[]} */
@@ -46,6 +48,7 @@ export default class Game {
    */
   constructor(playerNames, gameConfig, randomSeed = null) {
     this.#isSoloGame = playerNames.length === 1;
+    this.#gameConfig = gameConfig;
     randomSeed = randomSeed ?? this.#lastLoopTime;
     this.#players = playerNames.map(
       (playerName) => new Player(playerName, gameConfig, randomSeed),
@@ -121,13 +124,25 @@ export default class Game {
       await new Promise((res) => setTimeout(res, 1000 / TICK_RATE));
     }
 
-    // NOTE: It is possible no winner is declared if one of the following happens:
-    // NOTE:  - It's a solo game
-    // NOTE:  - The game ends in a draw (all players game over at the same time)
+    //NOTE: It is possible no winner is declared if one of the following happens:
+    //NOTE:  - It's a solo game
+    //NOTE:  - The game ends in a draw (all players game over at the same time)
     const winnerPlayer = this.#players.find((player) => !player.isGameOver());
 
-    /**@type {import("../shared/DTOs.js").GameMode} */
-    const gameMode = this.#isSoloGame ? "solo" : "multiplayer";
+    const prefix = this.#isSoloGame ? null : "battle";
+    const ruleSet = Object.entries(RulesetType).find(
+      ([, value]) => value === this.#gameConfig.ruleset,
+    )?.[0];
+
+    const gridDimension =
+      this.#gameConfig.gridDimensions.x === DefaultGameGridDimensions.x &&
+      this.#gameConfig.gridDimensions.y === DefaultGameGridDimensions.y
+        ? null
+        : `${this.#gameConfig.gridDimensions.x}x${this.#gameConfig.gridDimensions.y}`;
+    const gameMode = [prefix, ruleSet, gridDimension]
+      .filter((x) => x !== null)
+      .join("-")
+      .toLowerCase();
 
     scoreStore.pushPlayerScores(
       convertToPlayerScores(this.#players),
