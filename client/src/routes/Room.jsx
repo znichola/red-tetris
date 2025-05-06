@@ -9,6 +9,7 @@ import { useDispatch } from "react-redux";
 import { replaceRoom, setIsRoomAdmin } from "../redux/roomSlice.js";
 import { setIsSocketConnected } from "../redux/socketSlice.js";
 import { replaceGameData } from "../redux/gameSlice.js";
+import { resetAll } from "../redux/hooks.js";
 import "./room.css";
 
 /**
@@ -54,6 +55,7 @@ function Room({ params }) {
       socket.off("connect", onConnectionChange);
       socket.off("disconnect", onConnectionChange);
       socket.disconnect();
+      dispatch(resetAll());
     };
   }, [params, dispatch]);
 
