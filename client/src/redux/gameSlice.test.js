@@ -28,7 +28,7 @@ describe("gameSlice", () => {
         grid: [[CellType.I]],
         playerNameToSpectrum: { JARED: [0, 2, 3, 1, 0] },
         score: 0,
-        nextTetromino: undefined,
+        nextTetromino: null,
       },
     };
 

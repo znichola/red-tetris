@@ -22,7 +22,6 @@ vi.mock("../../socket.js", () => {
   };
 });
 import { socket } from "../../socket.js";
-import { DefaultGameGridDimensions } from "../../../../shared/Consts.js";
 import { initialState } from "../../redux/configSlice.js";
 
 describe("GameManager component", () => {

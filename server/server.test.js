@@ -7,7 +7,6 @@ import {
   GameState,
   RulesetType,
   SocketEvents,
-  TetrominoType,
 } from "../shared/DTOs.js";
 import { DefaultGameGridDimensions } from "../shared/Consts.js";
 

@@ -4,16 +4,12 @@ import "./game_manager.css";
 import { selectSocket } from "../../redux/socketSlice.js";
 import { selectRoom } from "../../redux/roomSlice.js";
 import { socket } from "../../socket.js";
-import {
-  GameState,
-  PowerUpCellType,
-  SocketEvents,
-} from "../../../../shared/DTOs.js";
+import { GameState, SocketEvents } from "../../../../shared/DTOs.js";
 import { selectGame } from "../../redux/gameSlice.js";
 import Configurer from "../configurer/configurer.jsx";
 import { selectGameConfig } from "../../redux/configSlice.js";
 import { Tetrominoes } from "../../../../server/TetrisConsts.js";
-import { Cell, Grid } from "../board/Board.jsx";
+import { Cell } from "../board/Board.jsx";
 
 function GameManager() {
   const socketState = useSelector(selectSocket);
@@ -124,13 +120,13 @@ function PlayersInLobby() {
 
 function NextTetromino() {
   const gameData = useSelector(selectGame);
-  const currentType = gameData?.nextTetromino;
+  const tetrominoType = gameData?.nextTetromino;
 
-  if (!currentType || !Tetrominoes[currentType]) {
+  if (!tetrominoType || !Tetrominoes[tetrominoType]) {
     return <div>No active tetromino</div>;
   }
 
-  const matrix = Tetrominoes[currentType];
+  const matrix = Tetrominoes[tetrominoType];
 
   return (
     <div className="grid" style={{ width: "8em" }}>

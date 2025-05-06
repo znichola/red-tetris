@@ -1,6 +1,7 @@
 import Grid from "./Grid.js";
 import { CellType, TetrominoType } from "../shared/DTOs.js";
 
+/** @type {Record<TetrominoType, CellType[][]>} */
 export const Tetrominoes = deepFreeze({
   [TetrominoType.I]: [[CellType.I, CellType.I, CellType.I, CellType.I]],
   [TetrominoType.O]: [

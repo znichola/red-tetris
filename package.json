@@ -10,6 +10,7 @@
     "coverage:serv": "serve -l tcp://0.0.0.0:5000 coverage",
     "build": "vite build",
     "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "format": "npx prettier . --check",
     "format:write": "npx prettier . --write",
     "typecheck": "npx tsc --project ./jsconfig.json --noEmit",
@@ -20,6 +21,8 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.6.1",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-unused-imports": "^4.1.4",
     "express": "^5.1.0",
     "lucide-react": "^0.488.0",
     "react": "^19.0.0",
