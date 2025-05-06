@@ -1,6 +1,10 @@
 import Player from "./Player.js";
-import { TICK_RATE } from "./TetrisConfig.js";
-import { VectorDown, VectorLeft, VectorRight } from "./TetrisConsts.js";
+import {
+  TickRate,
+  VectorDown,
+  VectorLeft,
+  VectorRight,
+} from "./TetrisConsts.js";
 import { ActionType } from "../shared/DTOs.js";
 import { scoreStore } from "./server.js";
 import { convertToPlayerScores } from "./ScoreStore.js";
@@ -93,7 +97,7 @@ export default class Game {
       //TODO: since the boards will not necessarily change every tick,
       //TODO: we could skip some broadcasts when no changes are made.
       this.#broadcastState();
-      await new Promise((res) => setTimeout(res, 1000 / TICK_RATE));
+      await new Promise((res) => setTimeout(res, 1000 / TickRate));
     }
 
     //NOTE: A draw can occur when all players game over at the same time.
