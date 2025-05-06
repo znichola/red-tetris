@@ -176,6 +176,7 @@ describe("server", () => {
         [PlayerNames[1]]: expect.any(Array),
       }),
       score: expect.any(Number),
+      nextTetromino: expect.any(Number),
     };
     expect(gameData).toMatchObject(expectedGameDataStructure);
   });

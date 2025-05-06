@@ -1,20 +1,21 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { CellType, GameState } from "../../../shared/DTOs.js";
+import { CellType } from "../../../shared/DTOs.js";
 import { resetAll } from "./hooks.js";
 
 // https://redux.js.org/tutorials/essentials/part-2-app-structure#creating-slice-reducers-and-actions
 
 /**
  * Define the initial value for the slice state
+ * @type {import("../../../shared/DTOs.js").GameData}
  */
-export const /**@type {import("../../../shared/DTOs.js").GameData} */ initialState =
-    {
-      grid: Array.from({ length: 20 }, () =>
-        Array.from({ length: 10 }, () => CellType.Empty),
-      ),
-      score: 0,
-      playerNameToSpectrum: {},
-    };
+export const initialState = {
+  grid: Array.from({ length: 20 }, () =>
+    Array.from({ length: 10 }, () => CellType.Empty),
+  ),
+  score: 0,
+  playerNameToSpectrum: {},
+  nextTetromino: null,
+};
 
 /**
  * Slices contain Redux reducer logic for updating state, and
@@ -32,6 +33,7 @@ export const gameSlice = createSlice({
       state.grid = action.payload.grid;
       state.playerNameToSpectrum = action.payload.playerNameToSpectrum;
       state.score = action.payload.score;
+      state.nextTetromino = action.payload.nextTetromino;
     },
   },
   extraReducers: (builder) => builder.addCase(resetAll, () => initialState),

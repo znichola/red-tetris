@@ -4,14 +4,12 @@ import "./game_manager.css";
 import { selectSocket } from "../../redux/socketSlice.js";
 import { selectRoom } from "../../redux/roomSlice.js";
 import { socket } from "../../socket.js";
-import {
-  GameState,
-  PowerUpCellType,
-  SocketEvents,
-} from "../../../../shared/DTOs.js";
+import { GameState, SocketEvents } from "../../../../shared/DTOs.js";
 import { selectGame } from "../../redux/gameSlice.js";
 import Configurer from "../configurer/configurer.jsx";
 import { selectGameConfig } from "../../redux/configSlice.js";
+import { Tetrominoes } from "../../../../server/TetrisConsts.js";
+import { Cell } from "../board/Board.jsx";
 
 function GameManager() {
   const socketState = useSelector(selectSocket);
@@ -40,6 +38,7 @@ function GameManager() {
             <div>
               Score : <strong>{score}</strong>
             </div>
+            <NextTetromino />
           </>
         ) : roomState == GameState.Pending ? (
           <Pending />
@@ -115,6 +114,29 @@ function PlayersInLobby() {
         (prev, player) => `${prev}${prev == "" ? "" : ", "} ${player}`,
         "",
       )}
+    </div>
+  );
+}
+
+function NextTetromino() {
+  const gameData = useSelector(selectGame);
+  const tetrominoType = gameData?.nextTetromino;
+
+  if (!tetrominoType || !Tetrominoes[tetrominoType]) {
+    return <div>No active tetromino</div>;
+  }
+
+  const matrix = Tetrominoes[tetrominoType];
+
+  return (
+    <div className="grid" style={{ width: "8em" }}>
+      {matrix.map((line, i) => (
+        <div key={`${i}`} className="line">
+          {line.map((cell, ii) => (
+            <Cell key={`${ii}`} tet_color={cell} />
+          ))}
+        </div>
+      ))}
     </div>
   );
 }

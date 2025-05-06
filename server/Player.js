@@ -51,6 +51,10 @@ export default class Player {
     return this.#pileGrid.spectrum;
   }
 
+  get nextTetromino() {
+    return this.#nextTetromino;
+  }
+
   get #gridWithTetromino() {
     return Grid.superimposeOnEmptyCellsAtPosition(
       this.#pileGrid,
