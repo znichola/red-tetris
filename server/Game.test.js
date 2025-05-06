@@ -7,7 +7,7 @@ import Grid from "./Grid.js";
 import { ActionType, CellType, RulesetType } from "../shared/DTOs.js";
 import { DefaultGameGridDimensions } from "../shared/Consts.js";
 
-// NOTE ensure the score store does nothing
+//NOTE: ensure the score store does nothing
 vi.mock("./ScoreStore.js", () => {
   return {
     default: class {

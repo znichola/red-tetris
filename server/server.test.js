@@ -14,7 +14,7 @@ const TestPort = 3001;
 const RoomNames = ["testRoom1", "testRoom2"];
 const PlayerNames = Array.from({ length: 100 }, (_, i) => `Player${i + 1}`);
 
-// NOTE ensure the score store does nothing
+//NOTE: ensure the score store does nothing
 vi.mock("./ScoreStore.js", () => {
   return {
     default: class {

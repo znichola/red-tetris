@@ -1,6 +1,6 @@
 import { CellType as CT } from "../../../../shared/DTOs.js";
 
-// prettier-ignore
+//prettier-ignore
 const mockGrid = [
     [CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty],
     [CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty, CT.Empty],

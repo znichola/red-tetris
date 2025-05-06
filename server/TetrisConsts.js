@@ -62,7 +62,7 @@ export const VectorDown = Object.freeze({ x: 0, y: 1 });
 
 export const PowerUpSpawnChance = 0.1;
 
-// prettier-ignore
+//prettier-ignore
 export const bombHoleGrid = Grid.fromArray([
   [CellType.None, CellType.None, CellType.Empty, CellType.None, CellType.None],
   [CellType.None, CellType.Empty, CellType.Empty, CellType.Empty, CellType.None],

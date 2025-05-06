@@ -20,10 +20,9 @@ export default class ScoreStore {
     this.#loadScores();
   }
 
-  // NOTE I'm converting the players to a simpler list becasue testing the ScoreStore
-  // with player class does so much that mocking it is non trivial
-
   /**
+   * Converting the players to a simpler list becasue testing `ScoreStore`
+   * with player class does so much that mocking it is non trivial
    * @param {{name: string, score: number}[]} players
    * @param {GameMode} gameMode
    * @param {string | null} winnerName
@@ -62,7 +61,7 @@ export default class ScoreStore {
   }
 
   #loadScores() {
-    // NOTE this is a read from a file, but it could easily be switched to a database call
+    //NOTE: This is a read from a file, but it could easily be switched to a database call
     if (fs.existsSync(this.#filePath)) {
       const fileContent = fs.readFileSync(this.#filePath, "utf-8");
       try {
@@ -85,7 +84,7 @@ export default class ScoreStore {
   }
 
   #saveScores() {
-    // NOTE this is a write to file, but it could easily be switched to a database call
+    //NOTE: This is a write to file, but it could easily be switched to a database call
     if (this.#permanentStoreActive) {
       fs.writeFileSync(this.#filePath, JSON.stringify(this.#scores, null, 2));
     }

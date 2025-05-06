@@ -263,7 +263,7 @@ describe("Grid", () => {
       [CellType.O, CellType.O, CellType.O, CellType.O, CellType.O],
       [CellType.O, CellType.O, CellType.O, CellType.O, CellType.O],
     ]);
-    // prettier-ignore
+    //prettier-ignore
     const expectedGrid = Grid.fromArray([
       [CellType.O, CellType.O, CellType.Empty, CellType.O, CellType.O],
       [CellType.O, CellType.Empty, CellType.Empty, CellType.Empty, CellType.O],
@@ -276,7 +276,7 @@ describe("Grid", () => {
   });
 
   it("should superimpose with override at a position", () => {
-    // prettier-ignore
+    //prettier-ignore
     const grid = Grid.fromArray([
       [CellType.O, CellType.O, CellType.O, CellType.O, CellType.O, CellType.O, CellType.O],
       [CellType.O, CellType.O, CellType.Empty, CellType.O, CellType.O, CellType.O, CellType.O],
@@ -284,7 +284,7 @@ describe("Grid", () => {
       [CellType.O, CellType.O, CellType.O, CellType.O, CellType.Empty, CellType.Bomb, CellType.O],
       [CellType.O, CellType.O, CellType.O, CellType.O, CellType.Empty, CellType.O, CellType.O],
     ]);
-    // prettier-ignore
+    //prettier-ignore
     const expectedGrid = Grid.fromArray([
       [CellType.O, CellType.O, CellType.O, CellType.O, CellType.O, CellType.O, CellType.O],
       [CellType.O, CellType.O, CellType.Empty, CellType.O, CellType.O, CellType.Empty, CellType.O],
