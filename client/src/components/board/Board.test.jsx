@@ -42,7 +42,9 @@ describe("Board view", () => {
       }
     }
 
-    expect(bgColors.size).toBe(Object.values(CellType).length);
+    expect(bgColors.size).toBe(
+      Object.values(CellType).filter((v) => v !== CellType.None).length,
+    );
   });
 
   it("should have 5 action buttons visible", () => {

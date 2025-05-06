@@ -8,3 +8,10 @@
   font-size: smaller;
   margin-bottom: 0.3em;
 }
+
+.opt-powerups {
+  display: flex;
+  gap: 1em;
+  justify-content: center;
+  margin-top: 1em;
+}

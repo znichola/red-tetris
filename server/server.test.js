@@ -5,6 +5,7 @@ import {
   ActionType,
   CellType,
   GameState,
+  RulesetType,
   SocketEvents,
 } from "../shared/DTOs.js";
 import { DefaultGameGridDimensions } from "../shared/Consts.js";
@@ -30,7 +31,7 @@ vi.mock("./ScoreStore.js", () => {
 describe("server", () => {
   /** @type { import("http").Server} */
   let server;
-  /** @type {function} */
+  /** @type {Function} */
   let closeServer;
 
   beforeEach(async () => {
@@ -223,9 +224,14 @@ function waitFor(socket, event) {
  * @param {import("socket.io-client").Socket} socket
  */
 function emitStartGame(socket) {
-  socket.emit(SocketEvents.StartGame, {
+  /** @type {import("../shared/DTOs.js").GameConfig} */
+  const gameConfig = {
     gridDimensions: DefaultGameGridDimensions,
-  });
+    heavy: false,
+    ruleset: RulesetType.Classic,
+    enabledPowerUps: [],
+  };
+  socket.emit(SocketEvents.StartGame, gameConfig);
 }
 
 /**

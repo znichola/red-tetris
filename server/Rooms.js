@@ -1,5 +1,6 @@
-import { ActionType, SocketEvents } from "../shared/DTOs.js";
+import { SocketEvents } from "../shared/DTOs.js";
 import Room from "./Room.js";
+import { deepFreeze } from "./TetrisConsts.js";
 
 export default class Rooms {
   #io;
@@ -31,9 +32,11 @@ export default class Rooms {
       room.addPlayer(socket, playerName);
     }
 
-    socket.on(SocketEvents.StartGame, (startGameData) =>
-      this.#OnStartGame(room, playerName, startGameData),
-    );
+    socket.on(SocketEvents.StartGame, (gameConfig) => {
+      /** @type {Readonly<import("../shared/DTOs.js").GameConfig>} */
+      const frozenGameConfig = deepFreeze(gameConfig);
+      this.#OnStartGame(room, playerName, frozenGameConfig);
+    });
     socket.on(SocketEvents.GameAction, (actionType) =>
       this.#OnGameAction(room, playerName, actionType),
     );
@@ -45,10 +48,10 @@ export default class Rooms {
   /**
    * @param {Room} room
    * @param {string} playerName
-   * @param {import("../shared/DTOs.js").GameConfig} startGameData
+   * @param {Readonly<import("../shared/DTOs.js").GameConfig>} gameConfig
    */
-  #OnStartGame(room, playerName, startGameData) {
-    room.startGame(playerName, startGameData);
+  #OnStartGame(room, playerName, gameConfig) {
+    room.startGame(playerName, gameConfig);
   }
 
   /**
