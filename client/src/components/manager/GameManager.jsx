@@ -109,7 +109,7 @@ function GameOver() {
 function PlayersInLobby() {
   const players = useSelector(selectRoom).data?.playerNames || [];
   return (
-    <div>
+    <div className="players-in-lobby">
       <strong>Players in lobby:</strong>{" "}
       {players.reduce(
         (prev, player) => `${prev}${prev == "" ? "" : ", "} ${player}`,
