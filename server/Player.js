@@ -1,4 +1,9 @@
-import { CellType, PowerUpCellType, TetrominoType } from "../shared/DTOs.js";
+import {
+  CellType,
+  PowerUpCellType,
+  RulesetType,
+  TetrominoType,
+} from "../shared/DTOs.js";
 import Grid from "./Grid.js";
 import Piece from "./Piece.js";
 import { DROP_RATE } from "./TetrisConfig.js";
@@ -248,7 +253,9 @@ export default class Player {
     return new Piece(
       tetrominoType,
       position,
-      this.#gameConfig.enabledPowerUps,
+      this.#gameConfig.ruleset === RulesetType.PowerUp
+        ? this.#gameConfig.enabledPowerUps
+        : [],
       this.#powerUpsPrng,
     );
   }
