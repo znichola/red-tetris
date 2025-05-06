@@ -129,17 +129,17 @@ export default class Game {
     //NOTE:  - The game ends in a draw (all players game over at the same time)
     const winnerPlayer = this.#players.find((player) => !player.isGameOver());
 
-    const prefix = this.#isSoloGame ? null : "battle";
+    const battle = this.#isSoloGame ? null : "battle";
+    const heavy = this.#gameConfig.heavy ? "heavy" : null;
     const ruleSet = Object.entries(RulesetType).find(
       ([, value]) => value === this.#gameConfig.ruleset,
     )?.[0];
-
     const gridDimension =
       this.#gameConfig.gridDimensions.x === DefaultGameGridDimensions.x &&
       this.#gameConfig.gridDimensions.y === DefaultGameGridDimensions.y
         ? null
         : `${this.#gameConfig.gridDimensions.x}x${this.#gameConfig.gridDimensions.y}`;
-    const gameMode = [prefix, ruleSet, gridDimension]
+    const gameMode = [battle, heavy, ruleSet, gridDimension]
       .filter((x) => x !== null)
       .join("-")
       .toLowerCase();
