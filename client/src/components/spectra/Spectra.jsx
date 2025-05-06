@@ -72,7 +72,7 @@ function PlayerView({ playerInfo, numRows }) {
   return (
     <div className="spectra-view">
       <SpectraView spectra={playerInfo.spectra} numRows={numRows} />
-      <ClipText text={playerInfo.player} maxWidth="8em"/>
+      <ClipText text={playerInfo.player} maxWidth="8em" />
     </div>
   );
 }

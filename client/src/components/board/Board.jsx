@@ -26,7 +26,7 @@ function Board({ room, player }) {
   return (
     <div className="standard-dialog thing">
       <div className="title-bar">
-        <h1 className="title" style={{display: "flex"}}>
+        <h1 className="title" style={{ display: "flex" }}>
           <ClipText text={room} maxWidth="5em" />
           /<ClipText text={player} maxWidth="5em" />
         </h1>
