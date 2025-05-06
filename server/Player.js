@@ -7,9 +7,9 @@ import {
 } from "../shared/DTOs.js";
 import Grid from "./Grid.js";
 import Piece from "./Piece.js";
-import { DROP_RATE } from "./TetrisConfig.js";
 import {
   bombHoleGrid,
+  DropRate,
   VectorDown,
   VectorLeft,
   VectorRight,

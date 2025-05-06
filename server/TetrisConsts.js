@@ -1,6 +1,9 @@
 import Grid from "./Grid.js";
 import { CellType, TetrominoType } from "../shared/DTOs.js";
 
+export const TickRate = 20;
+export const DropRate = 1;
+
 export const Tetrominoes = deepFreeze({
   [TetrominoType.I]: [[CellType.I, CellType.I, CellType.I, CellType.I]],
   [TetrominoType.O]: [
