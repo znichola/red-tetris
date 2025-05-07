@@ -30,14 +30,17 @@ function createApp() {
   });
 
   const server = http.createServer(app);
-  const io = new Server(
-    server,
-    process.env.NODE_ENV == "production"
-      ? {}
-      : {
-          cors: { origin: "*" },
-        },
-  );
+  /** @type {Partial<import("socket.io").ServerOptions>} */
+  const options = {
+    transports: ["websocket"],
+    allowUpgrades: false,
+  };
+  if (process.env.NODE_ENV !== "production") {
+    options.cors = {
+      origin: "*",
+    };
+  }
+  const io = new Server(server, options);
   const rooms = new Rooms(io);
   scoreStore.setSocket(io);
 

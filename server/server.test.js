@@ -105,6 +105,8 @@ describe("server", () => {
     const ownerUpdateRoomDataPromise = waitFor(
       ownerSocket,
       SocketEvents.UpdateRoomData,
+      (/** @type {import("../shared/DTOs.js").RoomData} */ roomData) =>
+        roomData.gameState === GameState.Playing,
     );
     emitStartGame(ownerSocket);
     await ownerUpdateRoomDataPromise;
@@ -132,6 +134,8 @@ describe("server", () => {
     const ownerUpdateRoomDataPromise = waitFor(
       ownerSocket,
       SocketEvents.UpdateRoomData,
+      (/** @type {import("../shared/DTOs.js").RoomData} */ roomData) =>
+        roomData.gameState === GameState.Playing,
     );
     const nonOwnerUpdateRoomDataPromise = waitFor(
       nonOwnerSocket,
@@ -186,7 +190,12 @@ describe("server", () => {
   it("should execute game actions", async () => {
     const socket = await connectSocket(RoomNames[0], PlayerNames[0]);
     await connectSocket(RoomNames[0], PlayerNames[1]);
-    const updateRoomDataPromise = waitFor(socket, SocketEvents.UpdateRoomData);
+    const updateRoomDataPromise = waitFor(
+      socket,
+      SocketEvents.UpdateRoomData,
+      (/** @type {import("../shared/DTOs.js").RoomData} */ roomData) =>
+        roomData.gameState === GameState.Playing,
+    );
     emitStartGame(socket);
     await updateRoomDataPromise;
     const updateGameDataPromise = waitFor(socket, SocketEvents.UpdateGameData);
@@ -206,6 +215,8 @@ describe("server", () => {
 async function connectSocket(roomName, playerName) {
   const socket = ioClient(`http://localhost:${TestPort}`, {
     auth: { roomName, playerName },
+    transports: ["websocket"],
+    upgrade: false,
   });
   await waitFor(socket, "connect");
 
@@ -215,12 +226,19 @@ async function connectSocket(roomName, playerName) {
 /**
  * @param {import("socket.io-client").Socket} socket
  * @param {string} event
+ * @param {function(any): boolean} [predicate]
  * @returns {Promise<any>}
  */
-function waitFor(socket, event) {
-  return new Promise((resolve) =>
-    socket.once(event, (...args) => resolve(args)),
-  );
+function waitFor(socket, event, predicate) {
+  return new Promise((resolve) => {
+    const handler = (...args) => {
+      if (!predicate || predicate(args[0])) {
+        socket.off(event, handler);
+        resolve(args);
+      }
+    };
+    socket.on(event, handler);
+  });
 }
 
 /**
