@@ -153,7 +153,6 @@ function Button({ icon, className, shortcutKeyCodes = [], onClick }) {
 
   useKeyPress(shortcutKeyCodes, handleClick);
 
-  const Icon = icon;
   return (
     <button
       type="button"
@@ -161,7 +160,7 @@ function Button({ icon, className, shortcutKeyCodes = [], onClick }) {
       className={`btn move-btn ${className || ""} ${keyPressed ? "pressed" : ""}`}
       onClick={handleClick}
     >
-      {}
+      {icon}
     </button>
   );
 }
