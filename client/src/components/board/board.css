@@ -95,28 +95,59 @@
   background-color: var(--tet-color-indestructible);
 }
 
+.tet-attack,
+.tet-duplication,
+.tet-bomb {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--white);
+  font-size: 100%;
+}
+
+.tet-attack::before,
+.tet-duplication::before,
+.tet-bomb::before {
+  content: " ";
+  line-height: 1;
+}
+
 .tet-attack {
   background-color: var(--tet-color-attack);
-  background-image: url("/public/attack.svg");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 24px 24px;
+}
+.tet-attack::before {
+  content: "⚔️";
 }
 
 .tet-duplication {
   background-color: var(--tet-color-duplication);
-  background-image: url("/public/duplicate.svg");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 24px 24px;
+}
+.tet-duplication::before {
+  content: "🌀";
 }
 
 .tet-bomb {
   background-color: var(--tet-color-bomb);
-  background-image: url("/public/bomb.svg");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 24px 24px;
+}
+.tet-bomb::before {
+  content: "💣";
+}
+
+@container cell-container (min-width: 40px) {
+  .tet-attack::before,
+  .tet-duplication::before,
+  .tet-bomb::before {
+    font-size: 200%;
+  }
+}
+
+@container cell-container (max-width: 20px) {
+  .tet-attack::before,
+  .tet-duplication::before,
+  .tet-bomb::before {
+    font-size: 60%;
+  }
 }
 
 .tet-shadow {
