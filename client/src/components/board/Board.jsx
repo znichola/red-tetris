@@ -1,13 +1,6 @@
 import React from "react";
 import { ActionType, CellType, SocketEvents } from "../../../../shared/DTOs.js";
 import "./board.css";
-import {
-  ArrowBigDown,
-  ArrowBigLeft,
-  ArrowBigRight,
-  ArrowBigUp,
-  Space,
-} from "lucide-react";
 import { useEffect, useState } from "react";
 import { useKeyPress } from "../../hooks/useKeyPress.js";
 import { useSelector } from "react-redux";
@@ -102,31 +95,31 @@ function Keypad() {
     <div className="keypad-line">
       <Button
         className="space"
-        icon={Space}
+        icon="⤵️"
         shortcutKeyCodes={["Space"]}
         onClick={() => emitAction(ActionType.HardDrop)}
       />
       <Button
         className="up"
-        icon={ArrowBigUp}
+        icon="⬆️"
         shortcutKeyCodes={["ArrowUp", "KeyW"]}
         onClick={() => emitAction(ActionType.Rotate)}
       />
       <Button
         className="left"
-        icon={ArrowBigLeft}
+        icon="⬅️"
         shortcutKeyCodes={["ArrowLeft", "KeyA"]}
         onClick={() => emitAction(ActionType.MoveLeft)}
       />
       <Button
         className="down"
-        icon={ArrowBigDown}
+        icon="⬇️"
         shortcutKeyCodes={["ArrowDown", "KeyS"]}
         onClick={() => emitAction(ActionType.SoftDrop)}
       />
       <Button
         className="right"
-        icon={ArrowBigRight}
+        icon="➡️"
         shortcutKeyCodes={["ArrowRight", "KeyD"]}
         onClick={() => emitAction(ActionType.MoveRight)}
       />
@@ -136,7 +129,7 @@ function Keypad() {
 
 /**
  * @param {Object} props
- * @param {import("lucide-react").LucideIcon} props.icon
+ * @param {string} props.icon
  * @param {() => void} props.onClick
  * @param {string=} props.className
  * @param {string[]=} props.shortcutKeyCodes
@@ -168,7 +161,7 @@ function Button({ icon, className, shortcutKeyCodes = [], onClick }) {
       className={`btn move-btn ${className || ""} ${keyPressed ? "pressed" : ""}`}
       onClick={handleClick}
     >
-      <Icon size={35} strokeWidth={2} />
+      {}
     </button>
   );
 }

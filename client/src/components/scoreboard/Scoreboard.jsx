@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { socket } from "../../socket.js";
 import { SocketEvents } from "../../../../shared/DTOs.js";
 import "./scoreboard.css";
-import { Trophy } from "lucide-react";
 import ClipText from "../cliptext/ClipText.jsx";
 
 /**@typedef {import("../../../../shared/DTOs.js").ScoreRecord} ScoreRecord */
@@ -56,7 +55,7 @@ function Scoreboard() {
             </div>
             <ClipText text={gameMode} className="winner" maxWidth="6em">
               {winner && (
-                <Trophy size={16} color="var(--red)" strokeWidth={3} />
+                <div style={{ fontSize: "0.7em", display: "inline" }}>🏆</div>
               )}
             </ClipText>
           </div>
