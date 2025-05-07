@@ -52,7 +52,7 @@ describe("server", () => {
 
   it("should not join the same room with the same name twice", async () => {
     await connectSocket(RoomNames[0], PlayerNames[0]);
-    const socket = await connectSocket(RoomNames[0], PlayerNames[0]);
+    const socket = await connectSocket(RoomNames[0], PlayerNames[0], false);
     expect(socket.connected).toBe(false);
   });
 
@@ -91,31 +91,34 @@ describe("server", () => {
   it("should not start a game when a non-owner tries to start it", async () => {
     await connectSocket(RoomNames[0], PlayerNames[0]);
     const nonOwnerSocket = await connectSocket(RoomNames[0], PlayerNames[1]);
-    const noRoomDataUpdatePromise = waitForUnexpectedSocketEventOrTimeout(
+    const noUpdateRoomDataPromise = waitForUnexpectedSocketEventOrTimeout(
       nonOwnerSocket,
       SocketEvents.UpdateRoomData,
     );
     emitStartGame(nonOwnerSocket);
-    await noRoomDataUpdatePromise;
+    await noUpdateRoomDataPromise;
   });
 
   it("should not start a game if one game is already in progress", async () => {
     const ownerSocket = await connectSocket(RoomNames[0], PlayerNames[0]);
+    const nonOwnerJoinedRoomPromise = waitFor(
+      ownerSocket,
+      SocketEvents.UpdateRoomData,
+    );
     await connectSocket(RoomNames[0], PlayerNames[1]);
+    await nonOwnerJoinedRoomPromise;
     const ownerUpdateRoomDataPromise = waitFor(
       ownerSocket,
       SocketEvents.UpdateRoomData,
-      (/** @type {import("../shared/DTOs.js").RoomData} */ roomData) =>
-        roomData.gameState === GameState.Playing,
     );
     emitStartGame(ownerSocket);
     await ownerUpdateRoomDataPromise;
-    const noRoomDataUpdatePromise = waitForUnexpectedSocketEventOrTimeout(
+    const noUpdateRoomDataPromise = waitForUnexpectedSocketEventOrTimeout(
       ownerSocket,
       SocketEvents.UpdateRoomData,
     );
     emitStartGame(ownerSocket);
-    await noRoomDataUpdatePromise;
+    await noUpdateRoomDataPromise;
   });
 
   it("should start a solo game", async () => {
@@ -130,12 +133,15 @@ describe("server", () => {
 
   it("should start a game when the owner starts it", async () => {
     const ownerSocket = await connectSocket(RoomNames[0], PlayerNames[0]);
+    const nonOwnerJoinedRoomPromise = waitFor(
+      ownerSocket,
+      SocketEvents.UpdateRoomData,
+    );
     const nonOwnerSocket = await connectSocket(RoomNames[0], PlayerNames[1]);
+    await nonOwnerJoinedRoomPromise;
     const ownerUpdateRoomDataPromise = waitFor(
       ownerSocket,
       SocketEvents.UpdateRoomData,
-      (/** @type {import("../shared/DTOs.js").RoomData} */ roomData) =>
-        roomData.gameState === GameState.Playing,
     );
     const nonOwnerUpdateRoomDataPromise = waitFor(
       nonOwnerSocket,
@@ -163,7 +169,7 @@ describe("server", () => {
     );
     emitStartGame(ownerSocket);
     await updateRoomDataPromise;
-    const newSocket = await connectSocket(RoomNames[0], PlayerNames[2]);
+    const newSocket = await connectSocket(RoomNames[0], PlayerNames[2], false);
     expect(newSocket.connected).toBe(false);
   });
 
@@ -189,13 +195,10 @@ describe("server", () => {
 
   it("should execute game actions", async () => {
     const socket = await connectSocket(RoomNames[0], PlayerNames[0]);
+    const otherJoinedRoomPromise = waitFor(socket, SocketEvents.UpdateRoomData);
     await connectSocket(RoomNames[0], PlayerNames[1]);
-    const updateRoomDataPromise = waitFor(
-      socket,
-      SocketEvents.UpdateRoomData,
-      (/** @type {import("../shared/DTOs.js").RoomData} */ roomData) =>
-        roomData.gameState === GameState.Playing,
-    );
+    await otherJoinedRoomPromise;
+    const updateRoomDataPromise = waitFor(socket, SocketEvents.UpdateRoomData);
     emitStartGame(socket);
     await updateRoomDataPromise;
     const updateGameDataPromise = waitFor(socket, SocketEvents.UpdateGameData);
@@ -211,14 +214,26 @@ describe("server", () => {
 /**
  * @param {string} roomName
  * @param {string} playerName
+ * @param {boolean} [waitForUpdateRoomData]
  */
-async function connectSocket(roomName, playerName) {
+async function connectSocket(
+  roomName,
+  playerName,
+  waitForUpdateRoomData = true,
+) {
   const socket = ioClient(`http://localhost:${TestPort}`, {
     auth: { roomName, playerName },
     transports: ["websocket"],
     upgrade: false,
   });
-  await waitFor(socket, "connect");
+
+  if (waitForUpdateRoomData) {
+    const updateRoomDataPromise = waitFor(socket, SocketEvents.UpdateRoomData);
+    await waitFor(socket, "connect");
+    await updateRoomDataPromise;
+  } else {
+    await waitFor(socket, "connect");
+  }
 
   return socket;
 }
@@ -226,19 +241,12 @@ async function connectSocket(roomName, playerName) {
 /**
  * @param {import("socket.io-client").Socket} socket
  * @param {string} event
- * @param {function(any): boolean} [predicate]
  * @returns {Promise<any>}
  */
-function waitFor(socket, event, predicate) {
-  return new Promise((resolve) => {
-    const handler = (...args) => {
-      if (!predicate || predicate(args[0])) {
-        socket.off(event, handler);
-        resolve(args);
-      }
-    };
-    socket.on(event, handler);
-  });
+function waitFor(socket, event) {
+  return new Promise((resolve) =>
+    socket.once(event, (...args) => resolve(args)),
+  );
 }
 
 /**
