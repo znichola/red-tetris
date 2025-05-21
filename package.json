@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.6.1",
+    "bad-words": "^4.0.0",
     "eslint-plugin-unused-imports": "^4.1.4",
     "express": "^5.1.0",
     "react": "^19.0.0",

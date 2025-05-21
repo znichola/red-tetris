@@ -1,9 +1,11 @@
 import { SocketEvents } from "../shared/DTOs.js";
 import Room from "./Room.js";
 import { deepFreeze } from "./TetrisConsts.js";
+import { Filter } from "bad-words";
 
 export default class Rooms {
   #io;
+  #filter;
   /** @type {Map<string, Room>} */
   #rooms = new Map();
 
@@ -12,6 +14,7 @@ export default class Rooms {
    */
   constructor(io) {
     this.#io = io;
+    this.#filter = new Filter();
   }
 
   /**
@@ -21,6 +24,13 @@ export default class Rooms {
    * @return {boolean}
    */
   tryAddPlayer(socket, roomName, playerName) {
+    if (
+      this.#filter.isProfane(roomName) ||
+      this.#filter.isProfane(playerName)
+    ) {
+      return false;
+    }
+
     let room = this.#rooms.get(roomName);
 
     if (!room) {
